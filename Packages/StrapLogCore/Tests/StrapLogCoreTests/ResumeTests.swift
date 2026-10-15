@@ -56,4 +56,45 @@ struct ResumeTests {
         try await FakeHeartSource(clock: rig.clock, script: [.emit(.disconnected(reason: nil))]).pump(into: relaunched)
         #expect(try rig.kinds(id) == [.start, .relaunch, .disconnect])
     }
+
+    @Test("silent past the cutoff → closed at last activity with a stale stop, not resumed")
+    func staleIsClosed() async throws {
+        let rig = try TestRig()
+        let id = try await rig.session.start(name: "evening")
+        try await rig.play([.wait(ms: 5000), hr([1000])])
+        let lastHeard = try #require(try rig.notifications().last).receivedAtMs
+
+        rig.clock.advance(byMs: 17 * 3_600_000)
+        let relaunched = rig.relaunched()
+        #expect(try await relaunched.resumeIfOpen() == nil)
+        #expect(await relaunched.recordingId == nil)
+
+        let rec = try #require(try rig.recording(id))
+        #expect(rec.endedAtMs == lastHeard)
+        #expect(try rig.kinds(id) == [.start, .stop])
+        #expect(try rig.events(id).last?.note == RecordingSession.staleNote)
+        #expect(try DBInvariants.violations(rig.database.writer).isEmpty)
+        // The stale recording no longer blocks a new one.
+        #expect(try await relaunched.start(name: "next") != id)
+    }
+
+    @Test("a recording with no beats goes stale from its start event")
+    func staleWithoutBeats() async throws {
+        let rig = try TestRig()
+        let id = try await rig.session.start(name: "empty")
+        let startedAt = try #require(try rig.recording(id)).startedAtMs
+        rig.clock.advance(byMs: RecordingSession.defaultStaleAfterMs + 1)
+        #expect(try await rig.relaunched().resumeIfOpen() == nil)
+        #expect(try rig.recording(id)?.endedAtMs == startedAt)
+    }
+
+    @Test("a marker counts as activity, and exactly the cutoff still resumes")
+    func cutoffBoundary() async throws {
+        let rig = try TestRig()
+        let id = try await rig.session.start(name: "x")
+        rig.clock.advance(byMs: 3_600_000)
+        try await rig.session.marker("a")
+        rig.clock.advance(byMs: RecordingSession.defaultStaleAfterMs)
+        #expect(try await rig.relaunched().resumeIfOpen() == id)
+    }
 }

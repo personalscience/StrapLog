@@ -16,15 +16,25 @@ public actor RecordingSession {
 
     private let database: StrapLogDatabase
     private let clock: any WallClock
+    private let staleAfterMs: Int64
     private var link = Link.unknown
     private var lastBattery: Int?
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
 
-    public init(database: StrapLogDatabase, clock: any WallClock = SystemClock()) {
+    /// `stop` note on a recording closed by `resumeIfOpen` because it went stale.
+    public static let staleNote = "stale"
+
+    /// Default `staleAfterMs`: 6 h. Generous on purpose: closing too early drops the rest
+    /// of a night, while resuming too late only inflates duration across a bracketed gap.
+    public static let defaultStaleAfterMs: Int64 = 6 * 3_600_000
+
+    public init(database: StrapLogDatabase, clock: any WallClock = SystemClock(),
+                staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs) {
         self.database = database
         self.clock = clock
+        self.staleAfterMs = staleAfterMs
     }
 
     // MARK: User actions
@@ -68,13 +78,7 @@ public actor RecordingSession {
         let id = try requireRecording()
         let now = clock.nowMs()
         let rec = try database.writer.write { db -> Recording in
-            guard var rec = try Recording.fetchOne(db, key: id) else {
-                throw RecordingSessionError.notRecording
-            }
-            rec.endedAtMs = now
-            try rec.update(db)
-            var stop = RecordingEvent(recordingId: id, atMs: now, kind: .stop)
-            try stop.insert(db)
+            let rec = try Self.finish(id, atMs: now, note: nil, db: db)
             if directory != nil {
                 var snap = RecordingEvent(recordingId: id, atMs: now, kind: .snapshot,
                                           note: Snapshot.fileName(for: rec))
@@ -111,12 +115,21 @@ public actor RecordingSession {
 
     /// After a launch: reattach to an unfinished recording, logging `relaunch`.
     /// Returns its id, or nil if every recording is finished. Idempotent within a process.
+    ///
+    /// A recording silent for longer than `staleAfterMs` was abandoned, not interrupted:
+    /// it is closed at its last activity with a `stop` noted `stale`, and nil is returned.
     @discardableResult
     public func resumeIfOpen() throws -> Int64? {
         if let recordingId { return recordingId }
         let now = clock.nowMs()
+        let staleAfterMs = self.staleAfterMs
         let id = try database.writer.write { db -> Int64? in
             guard let open = try Recording.open(db), let id = open.id else { return nil }
+            let last = try Self.lastActivityMs(id, db: db) ?? open.startedAtMs
+            if now - last > staleAfterMs {
+                try Self.finish(id, atMs: last, note: Self.staleNote, db: db)
+                return nil
+            }
             var relaunch = RecordingEvent(recordingId: id, atMs: now, kind: .relaunch)
             try relaunch.insert(db)
             return id
@@ -178,6 +191,27 @@ public actor RecordingSession {
     }
 
     // MARK: Helpers
+
+    /// Sets `ended_at_ms` and logs the `stop` event in the caller's transaction.
+    @discardableResult
+    private static func finish(_ id: Int64, atMs: Int64, note: String?, db: Database) throws -> Recording {
+        guard var rec = try Recording.fetchOne(db, key: id) else { throw RecordingSessionError.notRecording }
+        rec.endedAtMs = atMs
+        try rec.update(db)
+        var stop = RecordingEvent(recordingId: id, atMs: atMs, kind: .stop, note: note)
+        try stop.insert(db)
+        return rec
+    }
+
+    /// Latest event or notification time in the recording, or nil if it has neither.
+    private static func lastActivityMs(_ id: Int64, db: Database) throws -> Int64? {
+        try Int64.fetchOne(db, sql: """
+            SELECT MAX(t) FROM (
+                SELECT MAX(at_ms) AS t FROM event WHERE recording_id = ?
+                UNION ALL
+                SELECT MAX(received_at_ms) FROM notification WHERE recording_id = ?)
+            """, arguments: [id, id])
+    }
 
     private func requireRecording() throws -> Int64 {
         guard let recordingId else { throw RecordingSessionError.notRecording }

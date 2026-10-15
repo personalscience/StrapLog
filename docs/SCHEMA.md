@@ -68,7 +68,7 @@ INSERT INTO meta(key, value) VALUES ('format', 'straplog'), ('schema_version', '
 - `beat.t_end_ms_est = received_at_ms − round(Σ later rr_1024 in the same notification × 1000/1024)`. The H10 sends no beat timestamps, so this is an estimate anchored on phone receipt.
 - `beat.idx`: position within the notification, oldest first. `notification.n_rr == count(beat)` always.
 - `notification.contact`: 1/0, NULL when the sensor does not report skin contact.
-- `recording.ended_at_ms` NULL ⇒ unfinished. A relaunch reattaches to the latest such recording (`relaunch` event) rather than starting a new one; `start` refuses while one exists.
+- `recording.ended_at_ms` NULL ⇒ unfinished. A relaunch reattaches to the latest such recording (`relaunch` event) rather than starting a new one; `start` refuses while one exists. If its last event or notification is older than 6 h (`RecordingSession.defaultStaleAfterMs`), the relaunch instead closes it at that last activity with a `stop` noted `stale`.
 - `recording.device_id`/`firmware`: first values seen. `battery_start`: last reading before or at start; `battery_end`: latest reading.
 - `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery` (`EventKind`). Markers carry the label (`a`, `b`, `c`, `end`, free text) in `note`; `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name.
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
