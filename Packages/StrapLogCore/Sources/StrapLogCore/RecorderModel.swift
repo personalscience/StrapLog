@@ -30,10 +30,16 @@ public final class RecorderModel {
     private let session: RecordingSession
     private let database: StrapLogDatabase
     private let snapshotDirectory: URL
+    private let snapshotEveryMs: Int64
 
-    public init(database: StrapLogDatabase, snapshotDirectory: URL, clock: any WallClock = SystemClock()) {
+    /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
+    public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
+
+    public init(database: StrapLogDatabase, snapshotDirectory: URL, clock: any WallClock = SystemClock(),
+                snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs) {
         self.database = database
         self.snapshotDirectory = snapshotDirectory
+        self.snapshotEveryMs = snapshotEveryMs
         self.session = RecordingSession(database: database, clock: clock)
     }
 
@@ -48,7 +54,13 @@ public final class RecorderModel {
     /// Feeds `source` into the session until it finishes. Runs for the app's lifetime.
     public func consume(_ source: some HeartSource) async {
         for await event in source.events() {
-            await perform { try await session.ingest(event) }
+            await perform {
+                try await session.ingest(event)
+                guard case .heartRate = event.payload,
+                      let url = try await session.snapshotIfDue(into: snapshotDirectory, everyMs: snapshotEveryMs)
+                else { return }
+                lastSnapshot = url
+            }
             apply(event)
         }
     }
@@ -78,6 +90,16 @@ public final class RecorderModel {
         await perform {
             lastMarker = try await session.marker(note)
             markerCount += 1
+        }
+    }
+
+    /// Scene phase changes. Going to the background while recording also exports a snapshot,
+    /// since the app may not come back to the foreground before it is killed.
+    public func appPhase(_ phase: AppPhase) async {
+        await perform {
+            try await session.appPhase(phase)
+            guard phase == .background, isRecording else { return }
+            lastSnapshot = try await session.snapshot(into: snapshotDirectory)
         }
     }
 

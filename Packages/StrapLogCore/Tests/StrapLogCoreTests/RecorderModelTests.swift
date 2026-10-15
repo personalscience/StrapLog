@@ -125,4 +125,26 @@ struct RecorderModelTests {
         await play([.emit(.bluetooth(poweredOn: true))])
         #expect(model.link == .searching)
     }
+
+    @Test("going to the background while recording logs it and exports a snapshot; idle does neither")
+    func backgroundSnapshot() async throws {
+        await model.appPhase(.background)
+        #expect(model.lastSnapshot == nil)
+        await model.appPhase(.foreground)
+        await model.start(name: "night")
+        await model.appPhase(.background)
+        let url = try #require(model.lastSnapshot)
+        #expect(FileManager.default.fileExists(atPath: url.path))
+        #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "background", "snapshot"])
+    }
+
+    @Test("periodic snapshots during consume update lastSnapshot")
+    func periodicSnapshot() async throws {
+        let model = RecorderModel(database: database, snapshotDirectory: dir, clock: clock, snapshotEveryMs: 10_000)
+        await model.start(name: "night")
+        await model.consume(FakeHeartSource(clock: clock, script: [.wait(ms: 6000), hr([1000]), .wait(ms: 6000), hr([1000])]))
+        let url = try #require(model.lastSnapshot)
+        #expect(FileManager.default.fileExists(atPath: url.path))
+        #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "snapshot"])
+    }
 }

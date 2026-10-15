@@ -43,3 +43,4 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 - 2026-10-14: The injectable clock is `WallClock` (the stdlib owns `Clock`). Feed sessions with `HeartSource.pump(into:)`.
 - 2026-10-14: The view model (`RecorderModel`) lives in StrapLogCore, not the app, so its tests run on macOS. Simulator/UI runs use `-replay resting -speed 20 -freshDatabase`. Check device exports with `tools/check_snapshot.sh`.
 - 2026-10-14: `git rm` of a directory's last file deletes the directory; XcodeGen then fails on the missing source path.
+- 2026-10-15: Recording work starts in `AppDelegate.didFinishLaunching` via `Launcher`, not a view `.task`: Bluetooth restoration launches have no scene. Periodic snapshots ride on HR notifications (`snapshotIfDue`), no timer.

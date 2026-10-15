@@ -21,3 +21,8 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - Firmware is not in `deviceConnected`; it arrives later through DIS. P3 records `firmware = NULL`.
 - Device selection: the remembered id lives in `UserDefaults["polarDeviceId"]`; first run scans `searchForDevice(withNameContaining: "H10")` and takes the first hit. Delete the app (or that key) to pair a different strap.
 - `restoreIdentifier` is deliberately not set yet; P4 adds it with the restoration path.
+
+## Learned in P4 (2026-10-15)
+
+- `restoreIdentifier: "com.personalscience.straplog.central"` is passed to `polarImplementation`. The SDK's `CBDeviceListenerImpl.centralManager(_:willRestoreState:)` rebuilds a session for each restored peripheral and sets its delegate, but deliberately does not mark it connected until the central powers on; our `connectToDevice(rememberedId)` at launch then completes the reconnection.
+- The SDK object must exist before `didFinishLaunching` returns, so `AppDelegate.init` builds `AppDependencies` (and so `PolarHeartSource`). See `docs/BACKGROUND.md`.

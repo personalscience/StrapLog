@@ -30,4 +30,10 @@
 
 ## Checking a device export
 
-`tools/check_snapshot.sh <snapshot.sqlite> [recording_id]` runs the P3 acceptance checks with plain `sqlite3`: no sidecars, monotonic `received_at_ms`, Σrr vs notification span within 1 %, markers present, ≥1 notification with `n_rr ≥ 2`, `n_rr == count(beat)`. Exit code 0 only if all pass.
+`tools/check_snapshot.sh <snapshot.sqlite> [recording_id]` runs the P3 acceptance checks with plain `sqlite3`: no sidecars, monotonic `received_at_ms`, Σrr vs notification span within 1 %, markers present, ≥1 notification with `n_rr ≥ 2`, `n_rr == count(beat)`, and (P4) coverage ≥ 0.98 or every > 3 s gap bracketed, listing the ten longest gaps with the events inside each. Exit code 0 only if all pass.
+
+## Background resilience (P4)
+
+- `BackgroundTests`: Bluetooth off→on script, 30-min snapshot cadence on the fake clock (also across a relaunch), `low_battery` once per recording, `foreground`/`background` de-duplication. `CoverageTests`: gap detection and bracketing. `LauncherTests`: the restoration path (open recording + `Launcher.start()` → `relaunch`, data lands in the same recording, idempotent).
+- On the P3 device export the longest notification gap is 1.93 s, so the 3 s coverage threshold never fires on a clean recording.
+- Device fault injection and the overnight: `docs/BACKGROUND.md`.

@@ -1,21 +1,19 @@
+import StrapLogCore
 import SwiftUI
 
 @main
 struct StrapLogApp: App {
-    private let dependencies: Result<AppDependencies, Error>
-
-    init() {
-        dependencies = Result { try AppDependencies() }
-    }
+    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
-            switch dependencies {
+            switch appDelegate.dependencies {
             case .success(let deps):
                 RootView(model: deps.model)
-                    .task {
-                        await deps.model.launch()
-                        await deps.model.consume(deps.source)
+                    .onChange(of: scenePhase, initial: true) { _, phase in
+                        guard let phase = AppPhase(phase) else { return }
+                        Task { await deps.model.appPhase(phase) }
                     }
             case .failure(let error):
                 ContentUnavailableView("StrapLog could not start", systemImage: "exclamationmark.triangle",

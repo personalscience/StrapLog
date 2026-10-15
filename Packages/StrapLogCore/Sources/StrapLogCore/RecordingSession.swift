@@ -19,6 +19,9 @@ public actor RecordingSession {
     private let staleAfterMs: Int64
     private var link = Link.unknown
     private var lastBattery: Int?
+    private var phase: AppPhase?
+    /// Time of the active recording's latest snapshot, or its start; drives `snapshotIfDue`.
+    private var lastSnapshotMs: Int64?
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
@@ -29,6 +32,9 @@ public actor RecordingSession {
     /// Default `staleAfterMs`: 6 h. Generous on purpose: closing too early drops the rest
     /// of a night, while resuming too late only inflates duration across a bracketed gap.
     public static let defaultStaleAfterMs: Int64 = 6 * 3_600_000
+
+    /// Strap battery at or below this logs one `low_battery` event per recording.
+    public static let lowBatteryPercent = 10
 
     public init(database: StrapLogDatabase, clock: any WallClock = SystemClock(),
                 staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs) {
@@ -68,6 +74,7 @@ public actor RecordingSession {
             return id
         }
         recordingId = id
+        lastSnapshotMs = now
         return id
     }
 
@@ -87,6 +94,7 @@ public actor RecordingSession {
             return rec
         }
         recordingId = nil
+        lastSnapshotMs = nil
         if let directory {
             try Snapshot.write(database, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
         }
@@ -107,10 +115,29 @@ public actor RecordingSession {
         let rec = try database.writer.read { db in try Recording.fetchOne(db, key: id) }
         guard let rec else { throw RecordingSessionError.notRecording }
         let name = Snapshot.fileName(for: rec)
-        try log(.snapshot, note: name, recordingId: id, atMs: clock.nowMs())
+        let now = clock.nowMs()
+        try log(.snapshot, note: name, recordingId: id, atMs: now)
+        lastSnapshotMs = now
         let url = directory.appendingPathComponent(name)
         try Snapshot.write(database, to: url)
         return url
+    }
+
+    /// `snapshot(into:)` if at least `everyMs` has passed since the recording's last snapshot
+    /// (or its start). Called after each HR notification, so the cadence needs no timer:
+    /// while the strap is streaming, Bluetooth keeps the app running in the background.
+    @discardableResult
+    public func snapshotIfDue(into directory: URL, everyMs: Int64) throws -> URL? {
+        guard recordingId != nil, let last = lastSnapshotMs, clock.nowMs() - last >= everyMs else { return nil }
+        return try snapshot(into: directory)
+    }
+
+    /// Records a foreground/background transition; logged only while recording and only on change.
+    public func appPhase(_ newPhase: AppPhase) throws {
+        guard newPhase != phase else { return }
+        phase = newPhase
+        guard let id = recordingId else { return }
+        try log(newPhase.eventKind, note: nil, recordingId: id, atMs: clock.nowMs())
     }
 
     /// After a launch: reattach to an unfinished recording, logging `relaunch`.
@@ -123,7 +150,7 @@ public actor RecordingSession {
         if let recordingId { return recordingId }
         let now = clock.nowMs()
         let staleAfterMs = self.staleAfterMs
-        let id = try database.writer.write { db -> Int64? in
+        let resumed = try database.writer.write { db -> (id: Int64, lastSnapshotMs: Int64)? in
             guard let open = try Recording.open(db), let id = open.id else { return nil }
             let last = try Self.lastActivityMs(id, db: db) ?? open.startedAtMs
             if now - last > staleAfterMs {
@@ -132,10 +159,14 @@ public actor RecordingSession {
             }
             var relaunch = RecordingEvent(recordingId: id, atMs: now, kind: .relaunch)
             try relaunch.insert(db)
-            return id
+            let lastSnapshot = try Int64.fetchOne(db, sql: """
+                SELECT MAX(at_ms) FROM event WHERE recording_id = ? AND kind = 'snapshot'
+                """, arguments: [id])
+            return (id, lastSnapshot ?? open.startedAtMs)
         }
-        recordingId = id
-        return id
+        recordingId = resumed?.id
+        lastSnapshotMs = resumed?.lastSnapshotMs
+        return resumed?.id
     }
 
     // MARK: Sensor events
@@ -182,6 +213,13 @@ public actor RecordingSession {
                     UPDATE recording SET battery_start = COALESCE(battery_start, ?), battery_end = ?
                     WHERE id = ?
                     """, arguments: [percent, percent, id])
+                guard percent <= Self.lowBatteryPercent else { return }
+                let logged = try RecordingEvent
+                    .filter(sql: "recording_id = ? AND kind = ?", arguments: [id, EventKind.lowBattery.rawValue])
+                    .fetchCount(db) > 0
+                guard !logged else { return }
+                var e = RecordingEvent(recordingId: id, atMs: event.atMs, kind: .lowBattery, note: "\(percent)%")
+                try e.insert(db)
             }
 
         case .bluetooth(let poweredOn):

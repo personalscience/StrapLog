@@ -7,4 +7,5 @@ public enum EventKind: String, Codable, Sendable, CaseIterable {
     case pacerStart = "pacer_start"
     case pacerStop = "pacer_stop"
     case lowBattery = "low_battery"
+    case foreground, background
 }

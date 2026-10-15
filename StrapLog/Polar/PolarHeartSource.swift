@@ -11,6 +11,9 @@ import Synchronization
 final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     static let deviceIdKey = "polarDeviceId"
     private static let nameFragment = "H10"
+    /// Turns on CoreBluetooth state restoration: if iOS kills the app while connected, a
+    /// later event from the strap relaunches it in the background (docs/BACKGROUND.md).
+    private static let restoreIdentifier = "com.personalscience.straplog.central"
 
     private let api: PolarBleApi
     private let clock: any WallClock
@@ -23,7 +26,8 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
         self.defaults = defaults
         self.api = PolarBleApiDefaultImpl.polarImplementation(
             DispatchQueue(label: "com.personalscience.straplog.polar"),
-            features: [.feature_hr, .feature_battery_info, .feature_device_info])
+            features: [.feature_hr, .feature_battery_info, .feature_device_info],
+            restoreIdentifier: Self.restoreIdentifier)
         super.init()
         // `PolarBleApi` is not class-bound, so its setters need a `var`; the instance is a class.
         var api = self.api
