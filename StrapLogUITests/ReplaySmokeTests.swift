@@ -28,6 +28,20 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(snapshot.waitForExistence(timeout: 10))
         XCTAssertTrue(snapshot.label.contains("SMOKE.sqlite"))
     }
+
+    @MainActor
+    func testGuideOpensAndCloses() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+
+        let help = app.buttons["helpButton"]
+        XCTAssertTrue(help.waitForExistence(timeout: 10))
+        help.tap()
+        XCTAssertTrue(app.staticTexts["Understanding Your Numbers"].waitForExistence(timeout: 5))
+        app.buttons["helpDone"].tap()
+        XCTAssertTrue(app.buttons["startButton"].waitForExistence(timeout: 5))
+    }
 }
 
 private extension XCUIElement {

@@ -24,3 +24,8 @@ Packages/*/Package.resolved
 __pycache__/
 
 .DS_Store
+
+# StrapLog / HRV Logger databases and exports (personal health data)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
