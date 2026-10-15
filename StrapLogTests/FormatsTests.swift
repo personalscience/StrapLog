@@ -40,4 +40,30 @@ struct FormatsTests {
         #expect(Formats.marker(e, count: 1, nowMs: 10_400) == "b · 0 s ago · 1 marker")
         #expect(Formats.marker(e, count: 5, nowMs: 22_000) == "b · 12 s ago · 5 markers")
     }
+
+    @Test("live metric values, with -- when a window has none")
+    func liveMetrics() {
+        #expect(Formats.decimal(0.8234) == "0.82")
+        #expect(Formats.decimal(nil) == "--")
+        #expect(Formats.ms(42.06) == "42.1 ms")
+        #expect(Formats.bpm(61.4) == "61 bpm")
+        #expect(Formats.percent(0.0123) == "1.2 %")
+        #expect(Formats.percent(nil) == "--")
+        #expect(Formats.contact(false) == "No skin contact")
+    }
+
+    @Test("window status before, with and without features")
+    func windowStatus() {
+        #expect(Formats.window(endMs: nil, hasFeatures: false, nowMs: 0) == "First values after 2 min of beats")
+        #expect(Formats.window(endMs: 10_000, hasFeatures: true, nowMs: 22_500) == "2-min window ending 12 s ago")
+        #expect(Formats.window(endMs: 10_000, hasFeatures: false, nowMs: 10_000)
+                == "Too few beats in the window ending 0 s ago")
+    }
+
+    @Test("pacer rate and countdown")
+    func pacer() {
+        #expect(Formats.rate(4.5) == "4.5 breaths / min")
+        #expect(Formats.countdown(seconds: 5) == "5")
+        #expect(Formats.countdown(seconds: 0.2) == "1")
+    }
 }

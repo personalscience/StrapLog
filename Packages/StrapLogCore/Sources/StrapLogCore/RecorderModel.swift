@@ -21,6 +21,10 @@ public final class RecorderModel {
     /// Latest marker in the active recording, so the UI can confirm a tap.
     public private(set) var lastMarker: RecordingEvent?
     public private(set) var markerCount = 0
+    /// HRV windows and tachogram for the active recording.
+    public private(set) var live = LiveMetrics()
+    /// The running breathing pacer, or nil.
+    public private(set) var pacer: BreathingPacer?
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     public private(set) var errorMessage: String?
@@ -75,12 +79,14 @@ public final class RecorderModel {
     }
 
     public func stop() async {
+        await stopPacer()
         await perform {
             let rec = try await session.stop(snapshotInto: snapshotDirectory)
             lastSnapshot = snapshotDirectory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
             lastMarker = nil
             markerCount = 0
+            live = LiveMetrics()
             try refreshRecordings()
         }
     }
@@ -91,6 +97,20 @@ public final class RecorderModel {
             lastMarker = try await session.marker(note)
             markerCount += 1
         }
+    }
+
+    /// Starts the pacer at `breathsPerMinute` (within `BreathingPacer.rates`), replacing a running one.
+    public func startPacer(breathsPerMinute: Double) async {
+        await stopPacer()
+        await perform {
+            pacer = try await session.startPacer(breathsPerMinute: breathsPerMinute)
+        }
+    }
+
+    public func stopPacer() async {
+        guard pacer != nil else { return }
+        pacer = nil
+        await perform { try await session.stopPacer() }
     }
 
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
@@ -118,6 +138,9 @@ public final class RecorderModel {
             if let last = lastHeardAtMs { longestGapMs = max(longestGapMs, event.atMs - last) }
             lastHeardAtMs = event.atMs
             beatCount += rr1024.count
+            for (rr, end) in zip(rr1024, BeatTiming.endTimesMs(receivedAtMs: event.atMs, rr1024: rr1024)) {
+                live.add(tEndMs: end, rrMs: BeatTiming.ms(fromRR1024: rr))
+            }
         case .connected(let deviceId, _):
             link = .connected(deviceId: deviceId)
         case .disconnected:
@@ -134,14 +157,17 @@ public final class RecorderModel {
     private func loadActive(_ id: Int64) throws {
         let (rec, beats, lastHeard, markers) = try database.writer.read { db in
             (try Recording.fetchOne(db, key: id),
-             try Beat.filter(sql: "recording_id = ?", arguments: [id]).fetchCount(db),
+             try Beat.filter(sql: "recording_id = ?", arguments: [id]).order(sql: "id").fetchAll(db),
              try Int64.fetchOne(db, sql: "SELECT MAX(received_at_ms) FROM notification WHERE recording_id = ?",
                                 arguments: [id]),
              try RecordingEvent.fetchAll(db, sql: "SELECT * FROM event WHERE recording_id = ? AND kind = 'marker' ORDER BY id",
                                          arguments: [id]))
         }
         activeRecording = rec
-        beatCount = beats
+        beatCount = beats.count
+        live = LiveMetrics()
+        for beat in beats { live.add(beat) }
+        pacer = nil
         lastHeardAtMs = lastHeard
         lastMarker = markers.last
         markerCount = markers.count

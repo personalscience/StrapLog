@@ -49,9 +49,7 @@ struct ReplayHeartSourceTests {
 
     @Test("loads a fixture's rr_ms")
     func fixture() throws {
-        let url = URL(filePath: #filePath).deletingLastPathComponent()
-            .appending(path: "../../../../Tests/fixtures/resting.json").standardized
-        let source = try ReplayHeartSource.fixture(at: url)
+        let source = try ReplayHeartSource.fixture(at: RRFixture.url("resting"))
         #expect(source.rrMs.count == 961)
         #expect(source.notifications.flatMap { $0 }.count == 961)
     }

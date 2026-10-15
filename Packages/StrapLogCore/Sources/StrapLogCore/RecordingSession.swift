@@ -108,6 +108,19 @@ public actor RecordingSession {
         return try log(.marker, note: note, recordingId: id, atMs: clock.nowMs())
     }
 
+    /// Starts a breathing pacer now and logs `pacer_start` noted with its rate.
+    public func startPacer(breathsPerMinute: Double) throws -> BreathingPacer {
+        let id = try requireRecording()
+        let pacer = BreathingPacer(breathsPerMinute: breathsPerMinute, startedAtMs: clock.nowMs())
+        try log(.pacerStart, note: pacer.note, recordingId: id, atMs: pacer.startedAtMs)
+        return pacer
+    }
+
+    public func stopPacer() throws {
+        let id = try requireRecording()
+        try log(.pacerStop, note: nil, recordingId: id, atMs: clock.nowMs())
+    }
+
     /// Periodic mid-recording export: logs a `snapshot` event, then overwrites the file.
     @discardableResult
     public func snapshot(into directory: URL) throws -> URL {

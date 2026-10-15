@@ -39,7 +39,22 @@ public struct SlidingWindow: Sendable {
         let start = width / 2, stop = tEnd - width / 2 + 1
         guard stop > start else { return [] }
         let count = Int(((stop - start) / stride).rounded(.up))   // numpy arange length
-        return (0..<count).map { start + Double($0) * stride }
+        return (0..<count).map(center(ofWindow:))
+    }
+
+    /// Center of the `k`-th window (k = 0, 1, …); it covers `center ± width/2`, half-open.
+    public func center(ofWindow k: Int) -> Double {
+        width / 2 + Double(k) * stride
+    }
+
+    /// Start (inclusive) of the `k`-th window.
+    public func lower(ofWindow k: Int) -> Double {
+        center(ofWindow: k) - width / 2
+    }
+
+    /// End (exclusive) of the `k`-th window: a sample at or after it closes the window.
+    public func upper(ofWindow k: Int) -> Double {
+        center(ofWindow: k) + width / 2
     }
 
     /// Windows over `samples`, which must be sorted by `t` (time zero = first sample's clock).

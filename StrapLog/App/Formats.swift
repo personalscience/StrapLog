@@ -44,4 +44,48 @@ enum Formats {
         guard let end = summary.endedAtMs else { return "open" }
         return elapsed(ms: end - summary.startedAtMs)
     }
+
+    // MARK: Live metrics
+
+    /// Two decimals (α1, LnRMSSD), or `--`.
+    static func decimal(_ v: Double?) -> String {
+        v.map { String(format: "%.2f", $0) } ?? "--"
+    }
+
+    /// `42.1 ms`, or `--`.
+    static func ms(_ v: Double?) -> String {
+        v.map { String(format: "%.1f ms", $0) } ?? "--"
+    }
+
+    /// `61 bpm`, or `--`.
+    static func bpm(_ v: Double?) -> String {
+        v.map { String(format: "%.0f bpm", $0) } ?? "--"
+    }
+
+    /// A fraction as `1.2 %`, or `--`.
+    static func percent(_ fraction: Double?) -> String {
+        fraction.map { String(format: "%.1f %%", $0 * 100) } ?? "--"
+    }
+
+    /// Where the latest 2-minute window stands.
+    static func window(endMs: Int64?, hasFeatures: Bool, nowMs: Int64) -> String {
+        guard let endMs else { return "First values after 2 min of beats" }
+        let ago = "\(max(0, nowMs - endMs) / 1000) s ago"
+        return hasFeatures ? "2-min window ending \(ago)" : "Too few beats in the window ending \(ago)"
+    }
+
+    static func contact(_ contact: Bool) -> String {
+        contact ? "Skin contact" : "No skin contact"
+    }
+
+    // MARK: Pacer
+
+    static func rate(_ breathsPerMinute: Double) -> String {
+        String(format: "%.1f breaths / min", breathsPerMinute)
+    }
+
+    /// Whole seconds left in this half-breath, rounded up so it never shows 0 while running.
+    static func countdown(seconds: Double) -> String {
+        String(Int(seconds.rounded(.up)))
+    }
 }

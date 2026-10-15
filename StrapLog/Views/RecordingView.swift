@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// Live screen while recording: HR, elapsed time, beat count, gaps, markers, Stop.
+/// Live screen while recording: HR, tachogram, HRV window, pacer, beat count, gaps, markers, Stop.
 struct RecordingView: View {
     let model: RecorderModel
 
@@ -20,7 +20,23 @@ struct RecordingView: View {
                             .font(.system(size: 72, weight: .bold, design: .rounded).monospacedDigit())
                             .accessibilityIdentifier("heartRate")
                         Text("bpm").foregroundStyle(.secondary)
+                        Spacer()
+                        if let contact = model.contact {
+                            Label(Formats.contact(contact), systemImage: contact ? "hand.raised.fill" : "hand.raised.slash")
+                                .font(.caption)
+                                .foregroundStyle(contact ? Color.secondary : Color.orange)
+                                .accessibilityIdentifier("contact")
+                        }
                     }
+                    TachogramChart(points: model.live.tachogram)
+                }
+                Section("HRV") {
+                    LiveMetricsRows(live: model.live, nowMs: nowMs)
+                }
+                Section("Paced breathing") {
+                    PacerSection(model: model)
+                }
+                Section {
                     LabeledContent("Elapsed",
                                    value: Formats.elapsed(ms: nowMs - (model.activeRecording?.startedAtMs ?? nowMs)))
                     LabeledContent("Beats", value: "\(model.beatCount)")
