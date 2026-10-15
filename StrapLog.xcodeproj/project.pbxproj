@@ -1,0 +1,612 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734ED09A3CD0628C06A46818 /* RootView.swift */; };
+		699B5767AC61B2B7BEF4C7E2 /* PolarSDKLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */; };
+		97A10110948AC67527B11C97 /* HarnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B45A5C1F5D520374C5678CD /* HarnessTests.swift */; };
+		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
+		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
+		C36395F405A5FF1ECDECB4E6 /* LaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0708F994623550A3871534 /* LaunchTests.swift */; };
+		D4C6537612F0F3B9918CF861 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 76CC64949C4120565D9DFA8B /* StrapLogCore */; };
+		D861014B8606CDFBA67FC8A5 /* PolarBleSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1F50A2DF14FC2E71594AF61A /* PolarBleSdk */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2BFD40F3BD5AC4A38F7D2B72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D634FDA4416ACCC9F51585B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8AEC78E6D9D6B9645BB795EF;
+			remoteInfo = StrapLog;
+		};
+		99B5E97EE3FA250010BC247A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D634FDA4416ACCC9F51585B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8AEC78E6D9D6B9645BB795EF;
+			remoteInfo = StrapLog;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B0708F994623550A3871534 /* LaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchTests.swift; sourceTree = "<group>"; };
+		734ED09A3CD0628C06A46818 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8B45A5C1F5D520374C5678CD /* HarnessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarnessTests.swift; sourceTree = "<group>"; };
+		A46081A1E699BACE9992A77C /* StrapLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StrapLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA2EE715B9CE35D456E62655 /* StrapLogCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StrapLogCore; path = Packages/StrapLogCore; sourceTree = SOURCE_ROOT; };
+		C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogApp.swift; sourceTree = "<group>"; };
+		E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarSDKLink.swift; sourceTree = "<group>"; };
+		FD2D5442358A337BFA7EBBC6 /* HRVKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HRVKit; path = Packages/HRVKit; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		810DA853533BC219D03E7F81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */,
+				D4C6537612F0F3B9918CF861 /* StrapLogCore in Frameworks */,
+				D861014B8606CDFBA67FC8A5 /* PolarBleSdk in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0457F6A3BD1D57BA776452ED /* App */ = {
+			isa = PBXGroup;
+			children = (
+				734ED09A3CD0628C06A46818 /* RootView.swift */,
+				C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		22056BA17F1412DDD534701E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				849DE00058EC3CD1F7CDB061 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2330DBCCBD50D87D1DBD741D /* StrapLogTests */ = {
+			isa = PBXGroup;
+			children = (
+				8B45A5C1F5D520374C5678CD /* HarnessTests.swift */,
+			);
+			path = StrapLogTests;
+			sourceTree = "<group>";
+		};
+		3ABDAA8CDD6E7229CC834281 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				FD2D5442358A337BFA7EBBC6 /* HRVKit */,
+				BA2EE715B9CE35D456E62655 /* StrapLogCore */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		465547A91DD766A92C361558 /* Polar */ = {
+			isa = PBXGroup;
+			children = (
+				E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */,
+			);
+			path = Polar;
+			sourceTree = "<group>";
+		};
+		7A572399302A7275825E5E13 /* StrapLogUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6B0708F994623550A3871534 /* LaunchTests.swift */,
+			);
+			path = StrapLogUITests;
+			sourceTree = "<group>";
+		};
+		80DE4771A4FBF6732ECFEBCF = {
+			isa = PBXGroup;
+			children = (
+				3ABDAA8CDD6E7229CC834281 /* Packages */,
+				E521BE11427C642DCD4E5AF1 /* StrapLog */,
+				2330DBCCBD50D87D1DBD741D /* StrapLogTests */,
+				7A572399302A7275825E5E13 /* StrapLogUITests */,
+				ACD468BC484EF4747E149A07 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ACD468BC484EF4747E149A07 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A46081A1E699BACE9992A77C /* StrapLog.app */,
+				051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */,
+				A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E521BE11427C642DCD4E5AF1 /* StrapLog */ = {
+			isa = PBXGroup;
+			children = (
+				0457F6A3BD1D57BA776452ED /* App */,
+				465547A91DD766A92C361558 /* Polar */,
+				22056BA17F1412DDD534701E /* Resources */,
+			);
+			path = StrapLog;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		765107C6B4183FBE58CDAA54 /* StrapLogUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4DAB3BADB35C3C0D1D55B502 /* Build configuration list for PBXNativeTarget "StrapLogUITests" */;
+			buildPhases = (
+				8A7E8C2F86C55A82CE7F7F57 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83276BD0C4E173BC6440650D /* PBXTargetDependency */,
+			);
+			name = StrapLogUITests;
+			packageProductDependencies = (
+			);
+			productName = StrapLogUITests;
+			productReference = A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		8AEC78E6D9D6B9645BB795EF /* StrapLog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 16F4BEB9008823E312767FC2 /* Build configuration list for PBXNativeTarget "StrapLog" */;
+			buildPhases = (
+				57CE5A4760F44D99072FBC21 /* Sources */,
+				810DA853533BC219D03E7F81 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StrapLog;
+			packageProductDependencies = (
+				38A30B8A880731261E37530F /* HRVKit */,
+				76CC64949C4120565D9DFA8B /* StrapLogCore */,
+				1F50A2DF14FC2E71594AF61A /* PolarBleSdk */,
+			);
+			productName = StrapLog;
+			productReference = A46081A1E699BACE9992A77C /* StrapLog.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F5ADF38357B7362CA9058FB4 /* StrapLogTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02C2891A26A6EB1770D6C3F4 /* Build configuration list for PBXNativeTarget "StrapLogTests" */;
+			buildPhases = (
+				172CE72A3CCDD976EF540171 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				23E453C5756B3DCE513AF4BA /* PBXTargetDependency */,
+			);
+			name = StrapLogTests;
+			packageProductDependencies = (
+			);
+			productName = StrapLogTests;
+			productReference = 051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0D634FDA4416ACCC9F51585B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					765107C6B4183FBE58CDAA54 = {
+						DevelopmentTeam = 4RZ2RJUXC8;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 8AEC78E6D9D6B9645BB795EF;
+					};
+					8AEC78E6D9D6B9645BB795EF = {
+						DevelopmentTeam = 4RZ2RJUXC8;
+						ProvisioningStyle = Automatic;
+					};
+					F5ADF38357B7362CA9058FB4 = {
+						DevelopmentTeam = 4RZ2RJUXC8;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = CB03A6BEA3F2B27BC3DEEA63 /* Build configuration list for PBXProject "StrapLog" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 80DE4771A4FBF6732ECFEBCF;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BE5EC883494510320C98141C /* XCRemoteSwiftPackageReference "polar-ble-sdk" */,
+				C087C45ECBCD1F32087C7278 /* XCLocalSwiftPackageReference "Packages/HRVKit" */,
+				DE80A10D9B444A51BFA889B2 /* XCLocalSwiftPackageReference "Packages/StrapLogCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = ACD468BC484EF4747E149A07 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8AEC78E6D9D6B9645BB795EF /* StrapLog */,
+				F5ADF38357B7362CA9058FB4 /* StrapLogTests */,
+				765107C6B4183FBE58CDAA54 /* StrapLogUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		172CE72A3CCDD976EF540171 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97A10110948AC67527B11C97 /* HarnessTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		57CE5A4760F44D99072FBC21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				699B5767AC61B2B7BEF4C7E2 /* PolarSDKLink.swift in Sources */,
+				28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */,
+				99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A7E8C2F86C55A82CE7F7F57 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C36395F405A5FF1ECDECB4E6 /* LaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		23E453C5756B3DCE513AF4BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8AEC78E6D9D6B9645BB795EF /* StrapLog */;
+			targetProxy = 2BFD40F3BD5AC4A38F7D2B72 /* PBXContainerItemProxy */;
+		};
+		83276BD0C4E173BC6440650D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8AEC78E6D9D6B9645BB795EF /* StrapLog */;
+			targetProxy = 99B5E97EE3FA250010BC247A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		063B140D8862B04FA54040EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4RZ2RJUXC8;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		20E34B12EA1F6F4C44AD313D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = StrapLog;
+			};
+			name = Release;
+		};
+		2CFBC15AFD803DCF4543E6FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StrapLog.app/StrapLog";
+			};
+			name = Debug;
+		};
+		74B5FB8670E4E14128459AEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = StrapLog;
+			};
+			name = Debug;
+		};
+		8D29DDB2879DF3FD78994654 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = StrapLog/Resources/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		9D30E473F18971079B108A64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = StrapLog/Resources/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		C1A7EF3995B90C5E7A92EC14 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.straplog.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StrapLog.app/StrapLog";
+			};
+			name = Release;
+		};
+		C894A10C4EE3F0072E560BF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4RZ2RJUXC8;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		02C2891A26A6EB1770D6C3F4 /* Build configuration list for PBXNativeTarget "StrapLogTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2CFBC15AFD803DCF4543E6FB /* Debug */,
+				C1A7EF3995B90C5E7A92EC14 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		16F4BEB9008823E312767FC2 /* Build configuration list for PBXNativeTarget "StrapLog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D29DDB2879DF3FD78994654 /* Debug */,
+				9D30E473F18971079B108A64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4DAB3BADB35C3C0D1D55B502 /* Build configuration list for PBXNativeTarget "StrapLogUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74B5FB8670E4E14128459AEA /* Debug */,
+				20E34B12EA1F6F4C44AD313D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CB03A6BEA3F2B27BC3DEEA63 /* Build configuration list for PBXProject "StrapLog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C894A10C4EE3F0072E560BF7 /* Debug */,
+				063B140D8862B04FA54040EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		C087C45ECBCD1F32087C7278 /* XCLocalSwiftPackageReference "Packages/HRVKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/HRVKit;
+		};
+		DE80A10D9B444A51BFA889B2 /* XCLocalSwiftPackageReference "Packages/StrapLogCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/StrapLogCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BE5EC883494510320C98141C /* XCRemoteSwiftPackageReference "polar-ble-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/polarofficial/polar-ble-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1F50A2DF14FC2E71594AF61A /* PolarBleSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE5EC883494510320C98141C /* XCRemoteSwiftPackageReference "polar-ble-sdk" */;
+			productName = PolarBleSdk;
+		};
+		38A30B8A880731261E37530F /* HRVKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HRVKit;
+		};
+		76CC64949C4120565D9DFA8B /* StrapLogCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StrapLogCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 0D634FDA4416ACCC9F51585B /* Project object */;
+}

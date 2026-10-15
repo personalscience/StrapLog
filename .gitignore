@@ -5,3 +5,22 @@
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+
+# Xcode / SwiftPM
+build/
+DerivedData/
+.build/
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/configuration/
+Packages/*/Package.resolved
+
+# Beads local engine
+.beads/embeddeddolt/
+
+# Python (tools/)
+.venv/
+__pycache__/
+
+.DS_Store

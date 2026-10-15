@@ -1,77 +1,41 @@
-# Project Instructions for AI Agents
+# CLAUDE.md — StrapLog
 
-This file provides instructions and context for AI coding agents working on this project.
+Personal iOS app (sideloaded, team `4RZ2RJUXC8`) that logs per-beat RR intervals from a Polar H10 to crash-safe SQLite, replacing Marco Altini's HRV Logger for Rik's HRV skills in `~/dev/skills/*`. Built in phases tracked as beads; the plan is `~/.claude/plans/i-d-like-to-make-velvety-wreath.md` (read only the current phase's section).
 
-<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:1105d646 -->
-## Beads Issue Tracker
+## Commands
 
-This project uses **bd (beads)** for issue tracking. Run `bd prime` to see full workflow context and commands.
-
-### Quick Reference
-
-```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work
-bd close <id>         # Complete work
+```
+xcodegen generate                                   # after any project.yml or file-tree change
+(cd Packages/HRVKit && swift test)                  # pure algorithms, macOS, seconds
+(cd Packages/StrapLogCore && swift test)            # model, schema, session, macOS
+xcodebuild test -scheme StrapLog -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/dd
+xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build
 ```
 
-### Rules
+## Map
 
-- Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
-- Run `bd prime` for detailed command reference and session close protocol
-- Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+| Area | Path | Read first |
+|---|---|---|
+| Algorithms (RR cleaning, RMSSD, DFA α1) | `Packages/HRVKit` | constants mirror `~/dev/skills/h10-session/.../analyze_h10.py` |
+| Domain, GRDB schema, `RecordingSession` | `Packages/StrapLogCore` | `docs/SCHEMA.md` before touching migrations |
+| App: Polar adapter, SwiftUI, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
+| Tests and fixtures | `*Tests/`, `Tests/fixtures/` | `docs/TESTING.md` |
+| Xcode project | `project.yml` | never hand-edit `StrapLog.xcodeproj` |
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md for details and anti-patterns.
+## Rules that the tree does not tell you
 
-## Agent Context Profiles
+- Only `StrapLog/Polar/` may `import PolarBleSdk`; everything else talks to `HeartSource`. Keeps the SDK swappable for a raw CoreBluetooth client.
+- Packages stay macOS-buildable (no UIKit, no SDK) so all logic is testable with `swift test` and no Bluetooth.
+- Packages are Swift 6 language mode; the app target is Swift 5 mode with complete strict-concurrency checking, because the SDK's tuple typealiases are not `Sendable`.
+- Times in the DB are Unix epoch ms UTC plus `tz_offset_s`. HRV Logger stored local time as UTC; never repeat that.
+- Never ship a `-wal`/`-shm` off device: exports are `VACUUM INTO` single-file snapshots.
+- No logic in views; one type per file.
+- Phase protocol: `bd update <id> --status in_progress` → build with tests → `bd note` + `bd close` → update the plan's Status line → `git add -A` → wait for "commit".
 
-The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
+## Vault
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
-- **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
-- **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
+- Hub note: `~/Documents/Notes/Sprague2026/Health2026/Fitness/H10 R-R Capture After iOS 27.md`
 
-## Session Completion
+## Learned
 
-This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.
-
-1. **File issues for remaining work** - Create beads for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **Handle git/sync by active profile**:
-   ```bash
-   # Conservative/minimal/default: report status and proposed commands; wait for approval.
-   git status
-
-   # Team-maintainer opt-in only, unless current instructions forbid it:
-   git pull --rebase
-   git push
-   git status
-   ```
-5. **Hand off** - Summarize changes, validation, issue status, and any blocked sync/commit/push step
-
-**Critical rules:**
-- Explicit user or orchestrator instructions override this Beads block.
-- Do not commit or push without clear authority from the active profile or the current user request.
-- If a required sync or push is blocked, stop and report the exact command and error.
-<!-- END BEADS INTEGRATION -->
-
-
-## Build & Test
-
-_Add your build and test commands here_
-
-```bash
-# Example:
-# npm install
-# npm test
-```
-
-## Architecture Overview
-
-_Add a brief overview of your project architecture_
-
-## Conventions & Patterns
-
-_Add your project-specific conventions here_
+- 2026-10-14: `bd init` also writes AGENTS.md plus `.codex/`, `.cursor/`, `.agents/` scaffolding; removed as unused in this solo repo.
