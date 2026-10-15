@@ -1,6 +1,7 @@
 import GRDB
 
-/// Database migrations. `v1` is the SQL in `docs/SCHEMA.md`, verbatim (a test enforces it).
+/// Database migrations. Each is an SQL block in `docs/SCHEMA.md`, verbatim and in order
+/// (a test enforces it).
 public enum Schema {
     public static let v1 = """
         CREATE TABLE meta(
@@ -60,9 +61,32 @@ public enum Schema {
         INSERT INTO meta(key, value) VALUES ('format', 'straplog'), ('schema_version', '1');
         """
 
+    /// Rebuilds `motion` as `WITHOUT ROWID`: the primary key becomes the table, dropping the
+    /// rowid and the separate key index, so a night of motion stays under 1 MB. v1 never wrote
+    /// `motion`, so nothing is lost.
+    public static let v2 = """
+        DROP TABLE motion;
+        CREATE TABLE motion(
+          recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+          second_ms INTEGER NOT NULL,
+          rms_mg REAL NOT NULL,
+          gx_mg REAL NOT NULL,
+          gy_mg REAL NOT NULL,
+          gz_mg REAL NOT NULL,
+          n INTEGER NOT NULL,
+          PRIMARY KEY(recording_id, second_ms)
+        ) WITHOUT ROWID;
+        UPDATE meta SET value = '2' WHERE key = 'schema_version';
+        """
+
+    /// Migrations in order; `docs/SCHEMA.md` holds one SQL block per entry.
+    public static let migrations = [("v1", v1), ("v2", v2)]
+
     public static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()
-        m.registerMigration("v1") { db in try db.execute(sql: v1) }
+        for (name, sql) in migrations {
+            m.registerMigration(name) { db in try db.execute(sql: sql) }
+        }
         return m
     }
 }

@@ -8,6 +8,8 @@ public struct SensorEvent: Sendable, Equatable {
         case disconnected(reason: String?)
         case battery(percent: Int)
         case bluetooth(poweredOn: Bool)
+        /// One accelerometer notification, oldest sample first. Streamed only while recording.
+        case motion(samples: [AccSample])
     }
 
     /// Unix epoch ms UTC at which the phone received it.

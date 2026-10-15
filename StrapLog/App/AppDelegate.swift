@@ -25,4 +25,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
         return true
     }
+
+    /// Best effort: a force-quit from the switcher of a suspended app never gets here, and the
+    /// strap ends PMD streams when the link drops anyway; a later start clears a leftover stream.
+    func applicationWillTerminate(_ application: UIApplication) {
+        if case .success(let deps) = dependencies { deps.source.setMotionStreaming(false) }
+    }
 }

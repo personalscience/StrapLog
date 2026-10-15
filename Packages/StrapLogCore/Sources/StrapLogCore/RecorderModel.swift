@@ -35,6 +35,8 @@ public final class RecorderModel {
     private let database: StrapLogDatabase
     private let snapshotDirectory: URL
     private let snapshotEveryMs: Int64
+    /// The source being consumed; told to stream motion only while recording.
+    private var source: (any HeartSource)?
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
@@ -57,6 +59,8 @@ public final class RecorderModel {
 
     /// Feeds `source` into the session until it finishes. Runs for the app's lifetime.
     public func consume(_ source: some HeartSource) async {
+        self.source = source
+        source.setMotionStreaming(isRecording)
         for await event in source.events() {
             await perform {
                 try await session.ingest(event)
@@ -73,6 +77,7 @@ public final class RecorderModel {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         await perform {
             let id = try await session.start(name: trimmed)
+            source?.setMotionStreaming(true)
             try loadActive(id)
             try refreshRecordings()
         }
@@ -82,6 +87,7 @@ public final class RecorderModel {
         await stopPacer()
         await perform {
             let rec = try await session.stop(snapshotInto: snapshotDirectory)
+            source?.setMotionStreaming(false)
             lastSnapshot = snapshotDirectory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
             lastMarker = nil
@@ -151,6 +157,8 @@ public final class RecorderModel {
         case .bluetooth(let poweredOn):
             if !poweredOn { link = .bluetoothOff; heartRate = nil }
             else if link == .bluetoothOff { link = .searching }
+        case .motion:
+            break
         }
     }
 

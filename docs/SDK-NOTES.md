@@ -26,3 +26,11 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 
 - `restoreIdentifier: "com.personalscience.straplog.central"` is passed to `polarImplementation`. The SDK's `CBDeviceListenerImpl.centralManager(_:willRestoreState:)` rebuilds a session for each restored peripheral and sets its delegate, but deliberately does not mark it connected until the central powers on; our `connectToDevice(rememberedId)` at launch then completes the reconnection.
 - The SDK object must exist before `didFinishLaunching` returns, so `AppDelegate.init` builds `AppDependencies` (and so `PolarHeartSource`). See `docs/BACKGROUND.md`.
+
+## Learned in P6 (2026-10-15)
+
+- ACC needs `.feature_polar_online_streaming` in `features`; readiness arrives per connection through `PolarBleApiDeviceFeaturesObserver.bleSdkFeatureReady`. `PolarHeartSource` remembers the device there, clears it on disconnect, and (re)starts ACC whenever a recording wants it, so a reconnect mid-night resumes motion without the model's help.
+- `PolarAccData` is `[(timeStamp: UInt64, x: Int32, y: Int32, z: Int32)]`, mg, ns on the strap's clock. Only within-batch deltas are used; wall time comes from phone receipt (`MotionReducer.timesMs`).
+- Settings: `requestStreamSettings(id, feature: .acc)`, then 25 Hz and 8 G if offered, every other setting (resolution) at its max. Not yet confirmed on the strap: check the first device recording's `motion.n` is ≈ 25.
+- Start always calls `stopStreaming(id, type: .acc)` first (errors ignored): a stream left running by a killed process would make the new start fail. Stop cancels the consuming task **and** calls `stopStreaming`, per KnownIssues. `applicationWillTerminate` turns motion off best-effort.
+- The model calls `HeartSource.setMotionStreaming` (on at start/resume, off at Stop); sources without an accelerometer inherit a no-op.

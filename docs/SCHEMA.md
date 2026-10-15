@@ -1,6 +1,6 @@
-# Schema v1
+# Schema (v2)
 
-Source of truth: the `v1` migration in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. The block below is that SQL verbatim; `SchemaTests.docsMatch` fails if they drift.
+Source of truth: `Schema.migrations` in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. Each `sql` block below is one migration, verbatim and in order; `SchemaTests.docsMatch` fails if they drift.
 
 Times are **Unix epoch ms UTC**; `tz_offset_s` is the local offset at start, stored per recording. Local wall-clock = `ms/1000 + tz_offset_s`.
 
@@ -62,6 +62,25 @@ CREATE TABLE motion(
 INSERT INTO meta(key, value) VALUES ('format', 'straplog'), ('schema_version', '1');
 ```
 
+### v2: `motion` without rowid (Phase 6)
+
+`motion` becomes a `WITHOUT ROWID` table, so its primary key is the table itself: no rowid and no separate key index. With whole-mg values (SQLite stores integral `REAL`s as small integers), an 8 h night adds ~0.7 MB rather than ~1.2 MB (`MotionSessionTests.nightlySize`). v1 never wrote `motion`, so dropping it loses nothing.
+
+```sql
+DROP TABLE motion;
+CREATE TABLE motion(
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  second_ms INTEGER NOT NULL,
+  rms_mg REAL NOT NULL,
+  gx_mg REAL NOT NULL,
+  gy_mg REAL NOT NULL,
+  gz_mg REAL NOT NULL,
+  n INTEGER NOT NULL,
+  PRIMARY KEY(recording_id, second_ms)
+) WITHOUT ROWID;
+UPDATE meta SET value = '2' WHERE key = 'schema_version';
+```
+
 ## Columns that need explaining
 
 - `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
@@ -72,8 +91,8 @@ INSERT INTO meta(key, value) VALUES ('format', 'straplog'), ('schema_version', '
 - `recording.device_id`/`firmware`: first values seen. `battery_start`: last reading before or at start; `battery_end`: latest reading.
 - `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery foreground background` (`EventKind`). Markers carry the label (`a`, `b`, `c`, `end`, free text) in `note`; `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name; `low_battery` the strap's percent (once per recording, at ≤ 10 %). `foreground`/`background` are scene-phase changes while recording (none during a background-only restoration launch). `snapshot` is written on Stop, every 30 min of recording, and on each move to the background.
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
-- `meta`: `format = straplog`, `schema_version = 1`, so loaders can recognise the file.
-- `motion` is created in v1 but written from Phase 6.
+- `meta`: `format = straplog`, `schema_version = 2`, so loaders can recognise the file.
+- `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the RMS of |a| − 1000 mg over the second: ~0 when still, larger with movement. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop.
 
 ## Files
 

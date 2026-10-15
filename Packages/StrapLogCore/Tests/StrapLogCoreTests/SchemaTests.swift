@@ -36,19 +36,25 @@ struct SchemaTests {
         let db = try StrapLogDatabase.inMemory()
         let rows = try db.writer.read { try Row.fetchAll($0, sql: "SELECT key, value FROM meta ORDER BY key") }
         #expect(rows.map { $0["key"] as String } == ["format", "schema_version"])
-        #expect(rows.map { $0["value"] as String } == ["straplog", "1"])
+        #expect(rows.map { $0["value"] as String } == ["straplog", "2"])
     }
 
-    @Test("docs/SCHEMA.md contains the v1 migration verbatim")
+    @Test("motion is WITHOUT ROWID, so a night of it stays small")
+    func motionWithoutRowid() throws {
+        let db = try StrapLogDatabase.inMemory()
+        let sql = try db.writer.read { try String.fetchOne($0, sql: "SELECT sql FROM sqlite_master WHERE name = 'motion'") }
+        #expect(sql?.hasSuffix("WITHOUT ROWID") == true)
+    }
+
+    @Test("docs/SCHEMA.md contains every migration verbatim, in order")
     func docsMatch() throws {
         let docs = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
             .deletingLastPathComponent().deletingLastPathComponent()
             .appendingPathComponent("docs/SCHEMA.md")
         let text = try String(contentsOf: docs, encoding: .utf8)
-        let block = try #require(text.components(separatedBy: "```sql\n").dropFirst().first?
-            .components(separatedBy: "```").first)
-        #expect(block.trimmingCharacters(in: .whitespacesAndNewlines)
-                == Schema.v1.trimmingCharacters(in: .whitespacesAndNewlines))
+        let blocks = text.components(separatedBy: "```sql\n").dropFirst()
+            .compactMap { $0.components(separatedBy: "```").first?.trimmingCharacters(in: .whitespacesAndNewlines) }
+        #expect(blocks == Schema.migrations.map { $0.1.trimmingCharacters(in: .whitespacesAndNewlines) })
     }
 }

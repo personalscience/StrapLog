@@ -110,6 +110,25 @@ struct RecorderModelTests {
         #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "relaunch"])
     }
 
+    @Test("motion streams only while recording: on for a resumed or started recording, off at Stop")
+    func motionSwitch() async throws {
+        let idle = MotionSwitchSpy(FakeHeartSource(clock: clock, script: []))
+        await model.consume(idle)
+        #expect(idle.calls == [false])
+
+        await model.start(name: "night")
+        #expect(idle.calls == [false, true])
+        await model.stop()
+        #expect(idle.calls == [false, true, false])
+
+        await model.start(name: "resumed")
+        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        await relaunched.launch()
+        let source = MotionSwitchSpy(FakeHeartSource(clock: clock, script: []))
+        await relaunched.consume(source)
+        #expect(source.calls == [true])
+    }
+
     @Test("errors surface in errorMessage instead of throwing")
     func errorsSurface() async {
         await model.marker("a")

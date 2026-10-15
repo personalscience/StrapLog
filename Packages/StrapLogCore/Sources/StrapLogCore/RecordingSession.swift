@@ -22,6 +22,8 @@ public actor RecordingSession {
     private var phase: AppPhase?
     /// Time of the active recording's latest snapshot, or its start; drives `snapshotIfDue`.
     private var lastSnapshotMs: Int64?
+    /// Per-second accelerometer reduction for the active recording.
+    private var motion: MotionReducer?
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
@@ -75,6 +77,7 @@ public actor RecordingSession {
         }
         recordingId = id
         lastSnapshotMs = now
+        motion = MotionReducer(recordingId: id)
         return id
     }
 
@@ -84,7 +87,9 @@ public actor RecordingSession {
     public func stop(snapshotInto directory: URL? = nil) throws -> Recording {
         let id = try requireRecording()
         let now = clock.nowMs()
+        let lastMotion = motion?.flush()
         let rec = try database.writer.write { db -> Recording in
+            try MotionSecond.save(lastMotion.map { [$0] } ?? [], db: db)
             let rec = try Self.finish(id, atMs: now, note: nil, db: db)
             if directory != nil {
                 var snap = RecordingEvent(recordingId: id, atMs: now, kind: .snapshot,
@@ -95,6 +100,7 @@ public actor RecordingSession {
         }
         recordingId = nil
         lastSnapshotMs = nil
+        motion = nil
         if let directory {
             try Snapshot.write(database, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
         }
@@ -179,6 +185,7 @@ public actor RecordingSession {
         }
         recordingId = resumed?.id
         lastSnapshotMs = resumed?.lastSnapshotMs
+        motion = resumed.map { MotionReducer(recordingId: $0.id) }
         return resumed?.id
     }
 
@@ -238,6 +245,10 @@ public actor RecordingSession {
         case .bluetooth(let poweredOn):
             guard let id = recordingId else { return }
             try log(poweredOn ? .bleOn : .bleOff, note: nil, recordingId: id, atMs: event.atMs)
+
+        case .motion(let samples):
+            guard let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples), !seconds.isEmpty else { return }
+            try database.writer.write { db in try MotionSecond.save(seconds, db: db) }
         }
     }
 

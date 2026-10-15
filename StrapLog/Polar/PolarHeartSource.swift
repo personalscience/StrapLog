@@ -1,5 +1,6 @@
 import CoreBluetooth
 import Foundation
+import OSLog
 @preconcurrency import PolarBleSdk
 import StrapLogCore
 import Synchronization
@@ -14,19 +15,27 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     /// Turns on CoreBluetooth state restoration: if iOS kills the app while connected, a
     /// later event from the strap relaunches it in the background (docs/BACKGROUND.md).
     private static let restoreIdentifier = "com.personalscience.straplog.central"
+    /// Accelerometer: 25 Hz is plenty for per-second motion; 8 G never clips a fall or a sprint.
+    private static let accSampleRate: UInt32 = 25
+    private static let accRangeG: UInt32 = 8
+    private static let log = Logger(subsystem: "com.personalscience.straplog", category: "polar")
 
     private let api: PolarBleApi
     private let clock: any WallClock
     private let defaults: UserDefaults
     private let continuation = Mutex<AsyncStream<SensorEvent>.Continuation?>(nil)
     private let searchTask = Mutex<Task<Void, Never>?>(nil)
+    /// The device whose online streaming (PMD) is ready, or nil while disconnected.
+    private let streamingDevice = Mutex<String?>(nil)
+    private let motionWanted = Mutex(false)
+    private let motionTask = Mutex<Task<Void, Never>?>(nil)
 
     init(clock: any WallClock = SystemClock(), defaults: UserDefaults = .standard) {
         self.clock = clock
         self.defaults = defaults
         self.api = PolarBleApiDefaultImpl.polarImplementation(
             DispatchQueue(label: "com.personalscience.straplog.polar"),
-            features: [.feature_hr, .feature_battery_info, .feature_device_info],
+            features: [.feature_hr, .feature_battery_info, .feature_device_info, .feature_polar_online_streaming],
             restoreIdentifier: Self.restoreIdentifier)
         super.init()
         // `PolarBleApi` is not class-bound, so its setters need a `var`; the instance is a class.
@@ -37,6 +46,7 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
         api.deviceHrObserver = self
         api.deviceInfoObserver = self
         api.powerStateObserver = self
+        api.deviceFeaturesObserver = self
     }
 
     /// One consumer for the app's lifetime; calling again replaces the previous stream.
@@ -66,6 +76,50 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
         searchTask.withLock { $0?.cancel(); $0 = task }
     }
 
+    /// Wanted state survives reconnects: the stream (re)starts whenever streaming becomes ready.
+    func setMotionStreaming(_ on: Bool) {
+        motionWanted.withLock { $0 = on }
+        guard let id = streamingDevice.withLock({ $0 }) else { return }
+        if on { startMotion(id) } else { stopMotion(id) }
+    }
+
+    private func startMotion(_ id: String) {
+        let task = Task { [api] in
+            // A stream left running (by a killed process, say) makes a new start fail; clear it.
+            try? await api.stopStreaming(id, type: .acc)
+            do {
+                let available = try await api.requestStreamSettings(id, feature: .acc)
+                for try await batch in api.startAccStreaming(id, settings: try Self.accSettings(from: available)) {
+                    self.emit(.motion(samples: batch.map {
+                        AccSample(deviceNs: $0.timeStamp, x: Int($0.x), y: Int($0.y), z: Int($0.z))
+                    }))
+                }
+            } catch {
+                if !Task.isCancelled { Self.log.error("ACC stream ended: \(String(describing: error))") }
+            }
+        }
+        motionTask.withLock { $0?.cancel(); $0 = task }
+    }
+
+    /// The SDK requires ACC to be stopped explicitly (KnownIssues); cancelling alone is not enough.
+    private func stopMotion(_ id: String) {
+        motionTask.withLock { $0?.cancel(); $0 = nil }
+        Task { [api] in try? await api.stopStreaming(id, type: .acc) }
+    }
+
+    /// 25 Hz and 8 G when offered (the H10 offers both), else the nearest; other settings at max.
+    private static func accSettings(from available: PolarSensorSetting) throws -> PolarSensorSetting {
+        var chosen: [PolarSensorSetting.SettingType: UInt32] = [:]
+        for (type, values) in available.settings {
+            chosen[type] = switch type {
+            case .sampleRate: values.contains(accSampleRate) ? accSampleRate : values.min()
+            case .range: values.contains(accRangeG) ? accRangeG : values.max()
+            default: values.max()
+            }
+        }
+        return try PolarSensorSetting(chosen)
+    }
+
     private func emit(_ payload: SensorEvent.Payload) {
         let event = SensorEvent(atMs: clock.nowMs(), payload)
         continuation.withLock { _ = $0?.yield(event) }
@@ -80,7 +134,18 @@ extension PolarHeartSource: PolarBleApiObserver {
     }
 
     func deviceDisconnected(_ identifier: PolarDeviceInfo, info: PolarBleDisconnectInfo) {
+        streamingDevice.withLock { $0 = nil }
+        motionTask.withLock { $0?.cancel(); $0 = nil }
         emit(.disconnected(reason: "\(info.reason)"))
+    }
+}
+
+extension PolarHeartSource: PolarBleApiDeviceFeaturesObserver {
+    /// After every (re)connection: resume the ACC stream if a recording wants it.
+    func bleSdkFeatureReady(_ identifier: String, feature: PolarBleSdkFeature) {
+        guard feature == .feature_polar_online_streaming else { return }
+        streamingDevice.withLock { $0 = identifier }
+        if motionWanted.withLock({ $0 }) { startMotion(identifier) }
     }
 }
 
