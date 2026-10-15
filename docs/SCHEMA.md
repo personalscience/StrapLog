@@ -1,20 +1,85 @@
-# Schema v1 (DRAFT until Phase 2 lands the migration)
+# Schema v1
 
-Times are **Unix epoch ms UTC**; `tz_offset_s` is stored per recording. Phase 2 makes this file match the GRDB migration exactly.
+Source of truth: the `v1` migration in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. The block below is that SQL verbatim; `SchemaTests.docsMatch` fails if they drift.
+
+Times are **Unix epoch ms UTC**; `tz_offset_s` is the local offset at start, stored per recording. Local wall-clock = `ms/1000 + tz_offset_s`.
 
 ```sql
-meta(key TEXT PRIMARY KEY, value TEXT);
-recording(id INTEGER PRIMARY KEY, name TEXT, started_at_ms INT, ended_at_ms INT, tz_offset_s INT,
-          device_id TEXT, firmware TEXT, battery_start INT, battery_end INT, notes TEXT);
-notification(id INTEGER PRIMARY KEY, recording_id INT, received_at_ms INT, hr_bpm INT, contact INT, n_rr INT);
-beat(id INTEGER PRIMARY KEY, recording_id INT, notification_id INT, idx INT,
-     rr_1024 INT, rr_ms REAL, t_end_ms_est INT);
-event(id INTEGER PRIMARY KEY, recording_id INT, at_ms INT, kind TEXT, note TEXT);
-motion(recording_id INT, second_ms INT, rms_mg REAL, gx_mg REAL, gy_mg REAL, gz_mg REAL, n INT,
-       PRIMARY KEY(recording_id, second_ms));
+CREATE TABLE meta(
+  key TEXT PRIMARY KEY NOT NULL,
+  value TEXT NOT NULL
+);
+CREATE TABLE recording(
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  started_at_ms INTEGER NOT NULL,
+  ended_at_ms INTEGER,
+  tz_offset_s INTEGER NOT NULL,
+  device_id TEXT,
+  firmware TEXT,
+  battery_start INTEGER,
+  battery_end INTEGER,
+  notes TEXT
+);
+CREATE TABLE notification(
+  id INTEGER PRIMARY KEY,
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  received_at_ms INTEGER NOT NULL,
+  hr_bpm INTEGER NOT NULL,
+  contact INTEGER,
+  n_rr INTEGER NOT NULL
+);
+CREATE INDEX notification_by_recording ON notification(recording_id, received_at_ms);
+CREATE TABLE beat(
+  id INTEGER PRIMARY KEY,
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  notification_id INTEGER NOT NULL REFERENCES notification(id) ON DELETE CASCADE,
+  idx INTEGER NOT NULL,
+  rr_1024 INTEGER NOT NULL,
+  rr_ms REAL NOT NULL,
+  t_end_ms_est INTEGER NOT NULL,
+  UNIQUE(notification_id, idx)
+);
+CREATE INDEX beat_by_recording ON beat(recording_id, id);
+CREATE TABLE event(
+  id INTEGER PRIMARY KEY,
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  at_ms INTEGER NOT NULL,
+  kind TEXT NOT NULL,
+  note TEXT
+);
+CREATE INDEX event_by_recording ON event(recording_id, at_ms);
+CREATE TABLE motion(
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  second_ms INTEGER NOT NULL,
+  rms_mg REAL NOT NULL,
+  gx_mg REAL NOT NULL,
+  gy_mg REAL NOT NULL,
+  gz_mg REAL NOT NULL,
+  n INTEGER NOT NULL,
+  PRIMARY KEY(recording_id, second_ms)
+);
+INSERT INTO meta(key, value) VALUES ('format', 'straplog'), ('schema_version', '1');
 ```
 
-- `rr_ms = rr_1024 * 1000 / 1024`.
-- `t_end_ms_est = received_at_ms − Σ(later RRs in the same notification)`.
-- `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery`.
-- Live DB: `Application Support/StrapLog/live.sqlite`, WAL, one transaction per notification. Export: `VACUUM INTO Documents/StrapLog/<YYMMDD-HHMM>-<name>.sqlite`.
+## Columns that need explaining
+
+- `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
+- `beat.t_end_ms_est = received_at_ms − round(Σ later rr_1024 in the same notification × 1000/1024)`. The H10 sends no beat timestamps, so this is an estimate anchored on phone receipt.
+- `beat.idx`: position within the notification, oldest first. `notification.n_rr == count(beat)` always.
+- `notification.contact`: 1/0, NULL when the sensor does not report skin contact.
+- `recording.ended_at_ms` NULL ⇒ unfinished. A relaunch reattaches to the latest such recording (`relaunch` event) rather than starting a new one; `start` refuses while one exists.
+- `recording.device_id`/`firmware`: first values seen. `battery_start`: last reading before or at start; `battery_end`: latest reading.
+- `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery` (`EventKind`). Markers carry the label (`a`, `b`, `c`, `end`, free text) in `note`; `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name.
+- `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
+- `meta`: `format = straplog`, `schema_version = 1`, so loaders can recognise the file.
+- `motion` is created in v1 but written from Phase 6.
+
+## Files
+
+- Live: `Application Support/StrapLog/live.sqlite`, WAL (`DatabasePool`), one transaction per notification or event.
+- Export: `Documents/StrapLog/<YYMMDD-HHMM>-<name>.sqlite` (`Snapshot.fileName`, local start time, name sanitised). `Snapshot.write` runs `VACUUM INTO` a temp file, sets `journal_mode = DELETE`, then atomically replaces the target, so readers never see a partial file or create `-wal`/`-shm`. The snapshot holds **all** recordings in the live DB; select by `recording.id`.
+
+## Invariants (`DBInvariants`)
+
+`n_rr == count(beat)` per notification · beat and notification share `recording_id` · `rr_ms == rr_1024 * 1000/1024` · `received_at_ms` non-decreasing per recording · exactly one `start` per recording, and one `stop` iff `ended_at_ms` is set.

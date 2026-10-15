@@ -39,3 +39,5 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 ## Learned
 
 - 2026-10-14: `bd init` also writes AGENTS.md plus `.codex/`, `.cursor/`, `.agents/` scaffolding; removed as unused in this solo repo.
+- 2026-10-14: In `async` test functions GRDB's `read`/`write` resolve to the async overloads and need `await`; keep `TestRig` helpers synchronous so tests stay terse.
+- 2026-10-14: The injectable clock is `WallClock` (the stdlib owns `Clock`). Feed sessions with `HeartSource.pump(into:)`.

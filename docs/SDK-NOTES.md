@@ -12,3 +12,4 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - Info.plist: `NSBluetoothAlwaysUsageDescription`, `UIBackgroundModes: [bluetooth-central]`.
 - Call patterns reference: `examples/example-ios/polar-sensor-data-collector` in the SDK repo.
 - Import as `@preconcurrency import PolarBleSdk`.
+- **StrapLogCore takes RR as `rr1024` (1/1024 s), the H10's native unit.** `PolarHrData.rrsMs` is already rounded to ms; prefer the `hrValueReceived` observer's `rrs`. If only ms is available, `round(ms * 1.024)` can be off by one unit; record that choice in this file.
