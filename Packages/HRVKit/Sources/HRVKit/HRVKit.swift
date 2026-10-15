@@ -1,4 +1,4 @@
-/// Namespace marker for the HRVKit module. Algorithms arrive in Phase 1.
+/// Namespace marker for the HRVKit module.
 public enum HRVKit {
-    public static let version = "0.0.1"
+    public static let version = "0.1.0"
 }
