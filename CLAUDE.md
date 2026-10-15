@@ -1,6 +1,6 @@
 # CLAUDE.md — StrapLog
 
-Personal iOS app (sideloaded, team `4RZ2RJUXC8`) that logs per-beat RR intervals from a Polar H10 to crash-safe SQLite, replacing Marco Altini's HRV Logger for Rik's HRV skills in `~/dev/skills/*`. Built in phases tracked as beads; the plan is `~/.claude/plans/i-d-like-to-make-velvety-wreath.md` (read only the current phase's section).
+Personal iOS app (sideloaded, team `4RZ2RJUXC8`) that logs per-beat RR intervals from a Polar H10 to crash-safe SQLite, replacing Marco Altini's HRV Logger for Rik's HRV skills (live copies in `~/Documents/Notes/.claude/skills/*`). Built in phases tracked as beads; the plan is `~/.claude/plans/i-d-like-to-make-velvety-wreath.md` (read only the current phase's section).
 
 ## Commands
 
@@ -44,3 +44,4 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 - 2026-10-14: The view model (`RecorderModel`) lives in StrapLogCore, not the app, so its tests run on macOS. Simulator/UI runs use `-replay resting -speed 20 -freshDatabase`. Check device exports with `tools/check_snapshot.sh`.
 - 2026-10-14: `git rm` of a directory's last file deletes the directory; XcodeGen then fails on the missing source path.
 - 2026-10-15: Recording work starts in `AppDelegate.didFinishLaunching` via `Launcher`, not a view `.task`: Bluetooth restoration launches have no scene. Periodic snapshots ride on HR notifications (`snapshotIfDue`), no timer.
+- 2026-10-15: The live HRV skills are the vault copies (`~/Documents/Notes/.claude/skills/`), not `~/dev/skills/*` (stale Sep-12 package snapshots). StrapLog support is `_hrv_shared/straplog_db.py`, pushed by `_hrv_shared/sync.sh`; tests in `_hrv_shared/tests/`. The vault is not under git: back up before editing.
