@@ -20,3 +20,14 @@
 - HRVKit parity (`FixtureParityTests`): identical removed-beat indices and per-window counts; RMSSD/SDNN ±0.1 ms; α1 ±0.02. SDNN is ddof = 1 (Python's script doesn't compute SDNN; the fixture tool does, with `np.std(ddof=1)`).
 - DFA at scales 4–16 reads white noise as α1 ≈ 0.59, not the theoretical 0.5 (numpy reference: 0.587 ± 0.013 over 30 seeds); random walk reads 1.50. Synthetic tests assert the estimator's values.
 - Data checks on exported snapshots use plain `sqlite3`: monotonic `received_at_ms`, Σrr vs elapsed, balanced connect/disconnect, `n_rr == count(beat)`.
+
+## App without a strap (P3)
+
+- Launch arguments (`LaunchOptions`): `-replay resting` plays `Tests/fixtures/resting.json` (bundled as an app resource) through `ReplayHeartSource`; `-speed 20` speeds it up; `-freshDatabase` uses an empty temp DB. Set them in the scheme's Run → Arguments for manual simulator runs.
+- `RecorderModel` (the view model) lives in StrapLogCore and is tested on macOS with `FakeHeartSource`; the app target holds only `LaunchOptions`, `Formats`, the SwiftUI views and `PolarHeartSource`.
+- `StrapLogUITests/ReplaySmokeTests` drives Start → marker → Stop at 20× and checks the export label.
+- Replayed data has compressed receive times, so `check_snapshot.sh` fails its Σrr check on it by design.
+
+## Checking a device export
+
+`tools/check_snapshot.sh <snapshot.sqlite> [recording_id]` runs the P3 acceptance checks with plain `sqlite3`: no sidecars, monotonic `received_at_ms`, Σrr vs notification span within 1 %, markers present, ≥1 notification with `n_rr ≥ 2`, `n_rr == count(beat)`. Exit code 0 only if all pass.

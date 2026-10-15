@@ -41,3 +41,5 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 - 2026-10-14: `bd init` also writes AGENTS.md plus `.codex/`, `.cursor/`, `.agents/` scaffolding; removed as unused in this solo repo.
 - 2026-10-14: In `async` test functions GRDB's `read`/`write` resolve to the async overloads and need `await`; keep `TestRig` helpers synchronous so tests stay terse.
 - 2026-10-14: The injectable clock is `WallClock` (the stdlib owns `Clock`). Feed sessions with `HeartSource.pump(into:)`.
+- 2026-10-14: The view model (`RecorderModel`) lives in StrapLogCore, not the app, so its tests run on macOS. Simulator/UI runs use `-replay resting -speed 20 -freshDatabase`. Check device exports with `tools/check_snapshot.sh`.
+- 2026-10-14: `git rm` of a directory's last file deletes the directory; XcodeGen then fails on the missing source path.

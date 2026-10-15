@@ -7,14 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0318E0502E07C55D48AF768C /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16AEFFB732918F52EACD94D /* LaunchOptions.swift */; };
+		14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */; };
+		170DD80BBA3B2B7C6248D112 /* LinkStatusRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E5AA0DB10A767D0CD51903 /* LinkStatusRow.swift */; };
+		19A828ECE45D764939F3FF70 /* FormatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */; };
 		28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734ED09A3CD0628C06A46818 /* RootView.swift */; };
-		699B5767AC61B2B7BEF4C7E2 /* PolarSDKLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */; };
-		97A10110948AC67527B11C97 /* HarnessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B45A5C1F5D520374C5678CD /* HarnessTests.swift */; };
+		325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */; };
+		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
+		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
-		C36395F405A5FF1ECDECB4E6 /* LaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0708F994623550A3871534 /* LaunchTests.swift */; };
+		AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4053711F9AE1E85F78BE1168 /* RecordingRow.swift */; };
+		B9B1249E21A08D152131C631 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
+		BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */; };
+		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
+		CD9A10BCDE886C58D252C497 /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC07072223907ACD363FA3D1 /* Formats.swift */; };
 		D4C6537612F0F3B9918CF861 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 76CC64949C4120565D9DFA8B /* StrapLogCore */; };
 		D861014B8606CDFBA67FC8A5 /* PolarBleSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1F50A2DF14FC2E71594AF61A /* PolarBleSdk */; };
+		F3B2104627C475AAB7781FE2 /* MarkerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,15 +46,25 @@
 
 /* Begin PBXFileReference section */
 		051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B0708F994623550A3871534 /* LaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchTests.swift; sourceTree = "<group>"; };
+		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
+		2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarHeartSource.swift; sourceTree = "<group>"; };
+		4053711F9AE1E85F78BE1168 /* RecordingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingRow.swift; sourceTree = "<group>"; };
+		418A17ED855F2E814D5B2EB8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySmokeTests.swift; sourceTree = "<group>"; };
+		5D2EC470939C5D773CF85278 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		734ED09A3CD0628C06A46818 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		74E5AA0DB10A767D0CD51903 /* LinkStatusRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStatusRow.swift; sourceTree = "<group>"; };
 		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8B45A5C1F5D520374C5678CD /* HarnessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarnessTests.swift; sourceTree = "<group>"; };
+		8728059CDA30AD297BCB2BD7 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		A46081A1E699BACE9992A77C /* StrapLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StrapLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B74EEB125A8732BB27725217 /* resting.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = resting.json; sourceTree = "<group>"; };
 		BA2EE715B9CE35D456E62655 /* StrapLogCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StrapLogCore; path = Packages/StrapLogCore; sourceTree = SOURCE_ROOT; };
+		C16AEFFB732918F52EACD94D /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogApp.swift; sourceTree = "<group>"; };
-		E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarSDKLink.swift; sourceTree = "<group>"; };
+		CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatsTests.swift; sourceTree = "<group>"; };
+		EC07072223907ACD363FA3D1 /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
+		ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerBar.swift; sourceTree = "<group>"; };
 		FD2D5442358A337BFA7EBBC6 /* HRVKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HRVKit; path = Packages/HRVKit; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -65,6 +85,9 @@
 		0457F6A3BD1D57BA776452ED /* App */ = {
 			isa = PBXGroup;
 			children = (
+				5D2EC470939C5D773CF85278 /* AppDependencies.swift */,
+				EC07072223907ACD363FA3D1 /* Formats.swift */,
+				C16AEFFB732918F52EACD94D /* LaunchOptions.swift */,
 				734ED09A3CD0628C06A46818 /* RootView.swift */,
 				C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */,
 			);
@@ -82,7 +105,8 @@
 		2330DBCCBD50D87D1DBD741D /* StrapLogTests */ = {
 			isa = PBXGroup;
 			children = (
-				8B45A5C1F5D520374C5678CD /* HarnessTests.swift */,
+				CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */,
+				17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */,
 			);
 			path = StrapLogTests;
 			sourceTree = "<group>";
@@ -99,15 +123,35 @@
 		465547A91DD766A92C361558 /* Polar */ = {
 			isa = PBXGroup;
 			children = (
-				E3264A6D40744EBF7AD42C47 /* PolarSDKLink.swift */,
+				2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */,
 			);
 			path = Polar;
+			sourceTree = "<group>";
+		};
+		5A6A59CE157D2FE79426EA17 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				418A17ED855F2E814D5B2EB8 /* HomeView.swift */,
+				74E5AA0DB10A767D0CD51903 /* LinkStatusRow.swift */,
+				ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */,
+				4053711F9AE1E85F78BE1168 /* RecordingRow.swift */,
+				8728059CDA30AD297BCB2BD7 /* RecordingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6851314174183A63BB54F385 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8741A4657A756CD58FAA8CAB /* fixtures */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		7A572399302A7275825E5E13 /* StrapLogUITests */ = {
 			isa = PBXGroup;
 			children = (
-				6B0708F994623550A3871534 /* LaunchTests.swift */,
+				54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */,
 			);
 			path = StrapLogUITests;
 			sourceTree = "<group>";
@@ -119,8 +163,17 @@
 				E521BE11427C642DCD4E5AF1 /* StrapLog */,
 				2330DBCCBD50D87D1DBD741D /* StrapLogTests */,
 				7A572399302A7275825E5E13 /* StrapLogUITests */,
+				6851314174183A63BB54F385 /* Tests */,
 				ACD468BC484EF4747E149A07 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		8741A4657A756CD58FAA8CAB /* fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				B74EEB125A8732BB27725217 /* resting.json */,
+			);
+			path = fixtures;
 			sourceTree = "<group>";
 		};
 		ACD468BC484EF4747E149A07 /* Products */ = {
@@ -139,6 +192,7 @@
 				0457F6A3BD1D57BA776452ED /* App */,
 				465547A91DD766A92C361558 /* Polar */,
 				22056BA17F1412DDD534701E /* Resources */,
+				5A6A59CE157D2FE79426EA17 /* Views */,
 			);
 			path = StrapLog;
 			sourceTree = "<group>";
@@ -169,6 +223,7 @@
 			buildConfigurationList = 16F4BEB9008823E312767FC2 /* Build configuration list for PBXNativeTarget "StrapLog" */;
 			buildPhases = (
 				57CE5A4760F44D99072FBC21 /* Sources */,
+				5A819363FDF3883D37EC35A6 /* Resources */,
 				810DA853533BC219D03E7F81 /* Frameworks */,
 			);
 			buildRules = (
@@ -253,12 +308,24 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		5A819363FDF3883D37EC35A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9B1249E21A08D152131C631 /* resting.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		172CE72A3CCDD976EF540171 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97A10110948AC67527B11C97 /* HarnessTests.swift in Sources */,
+				19A828ECE45D764939F3FF70 /* FormatsTests.swift in Sources */,
+				325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +333,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				699B5767AC61B2B7BEF4C7E2 /* PolarSDKLink.swift in Sources */,
+				C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */,
+				CD9A10BCDE886C58D252C497 /* Formats.swift in Sources */,
+				3D900950CD4C010403970238 /* HomeView.swift in Sources */,
+				0318E0502E07C55D48AF768C /* LaunchOptions.swift in Sources */,
+				170DD80BBA3B2B7C6248D112 /* LinkStatusRow.swift in Sources */,
+				F3B2104627C475AAB7781FE2 /* MarkerBar.swift in Sources */,
+				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
+				AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */,
+				4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */,
 				28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */,
 				99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */,
 			);
@@ -276,7 +351,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C36395F405A5FF1ECDECB4E6 /* LaunchTests.swift in Sources */,
+				14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

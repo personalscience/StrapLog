@@ -33,6 +33,9 @@ targets:
     platform: iOS
     sources:
       - path: StrapLog
+      # Replay fixture for the simulator and UI tests (`-replay resting`).
+      - path: Tests/fixtures/resting.json
+        buildPhase: resources
     dependencies:
       - package: HRVKit
       - package: StrapLogCore

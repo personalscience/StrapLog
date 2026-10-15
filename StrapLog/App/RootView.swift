@@ -1,22 +1,26 @@
-import HRVKit
 import StrapLogCore
 import SwiftUI
 
-/// Placeholder screen for the Phase 0 scaffold. Phase 3 replaces it with Home and Recording.
+/// Home while idle, Recording while a recording is open (including one resumed at launch).
 struct RootView: View {
-    var body: some View {
-        VStack(spacing: 12) {
-            Text("StrapLog")
-                .font(.largeTitle.bold())
-            Text("HRVKit \(HRVKit.version) · Core \(StrapLogCore.version)")
-                .font(.footnote.monospaced())
-                .foregroundStyle(.secondary)
-                .accessibilityIdentifier("versionLabel")
-        }
-        .padding()
-    }
-}
+    let model: RecorderModel
 
-#Preview {
-    RootView()
+    var body: some View {
+        NavigationStack {
+            Group {
+                if model.isRecording {
+                    RecordingView(model: model)
+                } else {
+                    HomeView(model: model)
+                }
+            }
+            .navigationTitle("StrapLog")
+        }
+        .alert("Something went wrong", isPresented: .init(get: { model.errorMessage != nil },
+                                                          set: { if !$0 { model.dismissError() } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(model.errorMessage ?? "")
+        }
+    }
 }

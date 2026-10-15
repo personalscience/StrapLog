@@ -13,3 +13,11 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - Call patterns reference: `examples/example-ios/polar-sensor-data-collector` in the SDK repo.
 - Import as `@preconcurrency import PolarBleSdk`.
 - **StrapLogCore takes RR as `rr1024` (1/1024 s), the H10's native unit.** `PolarHrData.rrsMs` is already rounded to ms; prefer the `hrValueReceived` observer's `rrs`. If only ms is available, `round(ms * 1.024)` can be off by one unit; record that choice in this file.
+
+## Learned in P3 (2026-10-14)
+
+- `deviceHrObserver` is marked deprecated ("use startHrStreaming"), but `PolarBleApiImpl.startHrObserver` still runs unconditionally whenever the HR service (0x180D) is discovered, and only it carries `rrs` in 1/1024 s. `PolarHeartSource` uses it and accepts the one deprecation warning. If a future SDK stops calling it, fall back to `startHrStreaming` + `round(ms * 1.024)` or the raw CoreBluetooth client.
+- `PolarBleApi` is not class-bound: setting observers needs a `var` copy of the existential (the implementation is a class, so it mutates the same instance).
+- Firmware is not in `deviceConnected`; it arrives later through DIS. P3 records `firmware = NULL`.
+- Device selection: the remembered id lives in `UserDefaults["polarDeviceId"]`; first run scans `searchForDevice(withNameContaining: "H10")` and takes the first hit. Delete the app (or that key) to pair a different strap.
+- `restoreIdentifier` is deliberately not set yet; P4 adds it with the restoration path.
