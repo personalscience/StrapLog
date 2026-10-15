@@ -89,10 +89,11 @@ public actor RecordingSession {
         return rec
     }
 
-    /// `marker` event; `note` is `a`, `b`, `c`, `end`, or free text.
-    public func marker(_ note: String) throws {
+    /// `marker` event; `note` is `a`, `b`, `c`, `end`, or free text. Returns the stored row.
+    @discardableResult
+    public func marker(_ note: String) throws -> RecordingEvent {
         let id = try requireRecording()
-        try log(.marker, note: note, recordingId: id, atMs: clock.nowMs())
+        return try log(.marker, note: note, recordingId: id, atMs: clock.nowMs())
     }
 
     /// Periodic mid-recording export: logs a `snapshot` event, then overwrites the file.
@@ -183,10 +184,12 @@ public actor RecordingSession {
         return recordingId
     }
 
-    private func log(_ kind: EventKind, note: String?, recordingId: Int64, atMs: Int64) throws {
+    @discardableResult
+    private func log(_ kind: EventKind, note: String?, recordingId: Int64, atMs: Int64) throws -> RecordingEvent {
         try database.writer.write { db in
             var e = RecordingEvent(recordingId: recordingId, atMs: atMs, kind: kind, note: note)
             try e.insert(db)
+            return e
         }
     }
 }

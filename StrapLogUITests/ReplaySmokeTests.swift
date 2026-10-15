@@ -21,8 +21,12 @@ final class ReplaySmokeTests: XCTestCase {
         let markerA = app.buttons["marker-a"]
         XCTAssertTrue(markerA.waitForExistence(timeout: 5))
         markerA.tap()
+        let lastMarker = app.staticTexts["lastMarker"]
+        XCTAssertTrue(lastMarker.waitForLabel(containing: "1 marker", timeout: 5))
         sleep(2)
-        app.buttons["stopButton"].tap()
+        let stop = app.buttons["stopButton"]
+        for _ in 0..<3 where !stop.isHittable { app.swipeUp() }
+        stop.tap()
 
         let snapshot = app.staticTexts["lastSnapshot"]
         XCTAssertTrue(snapshot.waitForExistence(timeout: 10))

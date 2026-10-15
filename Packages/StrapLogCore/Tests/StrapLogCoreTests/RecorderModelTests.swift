@@ -64,6 +64,27 @@ struct RecorderModelTests {
         #expect(try strings("SELECT note FROM event WHERE kind = 'marker' ORDER BY id") == ["a", "b", "free text", "end"])
     }
 
+    @Test("each marker updates lastMarker and markerCount; relaunch restores them, Stop clears them")
+    func markerFeedback() async throws {
+        await model.start(name: "m")
+        #expect(model.lastMarker == nil)
+        await model.marker("a")
+        clock.advance(byMs: 2000)
+        await model.marker("b")
+        #expect(model.lastMarker?.note == "b")
+        #expect(model.lastMarker?.atMs == clock.nowMs())
+        #expect(model.markerCount == 2)
+
+        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        await relaunched.launch()
+        #expect(relaunched.lastMarker?.note == "b")
+        #expect(relaunched.markerCount == 2)
+
+        await relaunched.stop()
+        #expect(relaunched.lastMarker == nil)
+        #expect(relaunched.markerCount == 0)
+    }
+
     @Test("Stop writes a snapshot file and remembers its URL")
     func stopSnapshots() async throws {
         defer { try? FileManager.default.removeItem(at: dir) }

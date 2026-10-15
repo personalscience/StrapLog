@@ -32,4 +32,12 @@ struct FormatsTests {
         let s = RecordingSummary(id: 1, name: "x", startedAtMs: 0, endedAtMs: nil, tzOffsetS: 0, beatCount: 0)
         #expect(Formats.duration(s) == "open")
     }
+
+    @Test("marker confirmation: note, seconds since, count")
+    func marker() {
+        #expect(Formats.marker(nil, count: 0, nowMs: 0) == "No markers yet")
+        let e = RecordingEvent(recordingId: 1, atMs: 10_000, kind: .marker, note: "b")
+        #expect(Formats.marker(e, count: 1, nowMs: 10_400) == "b · 0 s ago · 1 marker")
+        #expect(Formats.marker(e, count: 5, nowMs: 22_000) == "b · 12 s ago · 5 markers")
+    }
 }

@@ -30,7 +30,7 @@ struct RecordingView: View {
                     LabeledContent("Longest gap", value: Formats.gap(ms: model.longestGapMs))
                 }
                 Section("Markers") {
-                    MarkerBar(model: model)
+                    MarkerBar(model: model, nowMs: nowMs)
                 }
                 Section {
                     Button(role: .destructive) {

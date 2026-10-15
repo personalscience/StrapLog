@@ -15,6 +15,13 @@ enum Formats {
         String(format: "%.1f s", Double(ms) / 1000)
     }
 
+    /// Confirms the latest marker tap, e.g. `b · 12 s ago · 5 markers`.
+    static func marker(_ last: RecordingEvent?, count: Int, nowMs: Int64) -> String {
+        guard let last else { return "No markers yet" }
+        let ago = max(0, nowMs - last.atMs) / 1000
+        return "\(last.note ?? "") · \(ago) s ago · \(count) marker\(count == 1 ? "" : "s")"
+    }
+
     static func link(_ status: LinkStatus) -> String {
         switch status {
         case .searching: "Searching for H10…"

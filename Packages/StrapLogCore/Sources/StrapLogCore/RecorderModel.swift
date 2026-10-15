@@ -18,6 +18,9 @@ public final class RecorderModel {
     public private(set) var lastHeardAtMs: Int64?
     /// Longest silence between HR notifications in the active recording.
     public private(set) var longestGapMs: Int64 = 0
+    /// Latest marker in the active recording, so the UI can confirm a tap.
+    public private(set) var lastMarker: RecordingEvent?
+    public private(set) var markerCount = 0
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     public private(set) var errorMessage: String?
@@ -64,13 +67,18 @@ public final class RecorderModel {
             let rec = try await session.stop(snapshotInto: snapshotDirectory)
             lastSnapshot = snapshotDirectory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
+            lastMarker = nil
+            markerCount = 0
             try refreshRecordings()
         }
     }
 
     /// `a`, `b`, `c`, `end`, or free text.
     public func marker(_ note: String) async {
-        await perform { try await session.marker(note) }
+        await perform {
+            lastMarker = try await session.marker(note)
+            markerCount += 1
+        }
     }
 
     public func dismissError() {
@@ -102,15 +110,19 @@ public final class RecorderModel {
     }
 
     private func loadActive(_ id: Int64) throws {
-        let (rec, beats, lastHeard) = try database.writer.read { db in
+        let (rec, beats, lastHeard, markers) = try database.writer.read { db in
             (try Recording.fetchOne(db, key: id),
              try Beat.filter(sql: "recording_id = ?", arguments: [id]).fetchCount(db),
              try Int64.fetchOne(db, sql: "SELECT MAX(received_at_ms) FROM notification WHERE recording_id = ?",
-                                arguments: [id]))
+                                arguments: [id]),
+             try RecordingEvent.fetchAll(db, sql: "SELECT * FROM event WHERE recording_id = ? AND kind = 'marker' ORDER BY id",
+                                         arguments: [id]))
         }
         activeRecording = rec
         beatCount = beats
         lastHeardAtMs = lastHeard
+        lastMarker = markers.last
+        markerCount = markers.count
         longestGapMs = 0
     }
 
