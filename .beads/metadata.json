@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "straplog",
+  "project_id": "b3cdd0ff-92ac-4851-bb01-ba994a7df95b"
+}
