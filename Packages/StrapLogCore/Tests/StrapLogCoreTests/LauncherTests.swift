@@ -17,7 +17,7 @@ struct LauncherTests {
 
         let dir = try scratchDirectory()
         defer { try? FileManager.default.removeItem(at: dir) }
-        let model = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         let source = FakeHeartSource(clock: clock, script: [
             .emit(.connected(deviceId: "H10", firmware: nil)), .wait(ms: 1000),
             .emit(.heartRate(bpm: 60, contact: true, rr1024: [1024, 1000])),

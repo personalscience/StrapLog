@@ -10,14 +10,20 @@ struct AppDependencies {
     init(options: LaunchOptions = LaunchOptions()) throws {
         let fm = FileManager.default
         let dbURL: URL
+        // Documents/StrapLog is what Files shows under On My iPhone → StrapLog.
+        let local = URL.documentsDirectory.appending(path: "StrapLog")
+        let exports: ExportFolder
         if options.freshDatabase {
             dbURL = fm.temporaryDirectory.appending(path: "StrapLog-\(UUID().uuidString)/live.sqlite")
+            exports = ExportFolder(local: local)
         } else {
             dbURL = URL.applicationSupportDirectory.appending(path: "StrapLog/live.sqlite")
+            // The container's Documents is Files → iCloud Drive → StrapLog (NSUbiquitousContainers).
+            exports = ExportFolder(local: local) {
+                FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appending(path: "Documents")
+            }
         }
-        // Documents/StrapLog is what Files shows under On My iPhone → StrapLog.
-        let exports = URL.documentsDirectory.appending(path: "StrapLog")
-        model = RecorderModel(database: try .live(at: dbURL), snapshotDirectory: exports)
+        model = RecorderModel(database: try .live(at: dbURL), exports: exports)
 
         if let fixture = options.replayFixture {
             guard let url = Bundle.main.url(forResource: fixture, withExtension: "json") else {

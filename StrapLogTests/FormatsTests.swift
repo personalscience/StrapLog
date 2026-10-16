@@ -1,3 +1,4 @@
+import Foundation
 import StrapLogCore
 import Testing
 @testable import StrapLog
@@ -88,5 +89,13 @@ struct FormatsTests {
         #expect(Formats.rate(4.5) == "4.5 breaths / min")
         #expect(Formats.countdown(seconds: 5) == "5")
         #expect(Formats.countdown(seconds: 0.2) == "1")
+    }
+
+    @Test("export location names the Files path for iCloud and the local fallback")
+    func exportLocation() {
+        let cloud = URL(fileURLWithPath: "/private/var/mobile/Library/Mobile Documents/iCloud~com~personalscience~straplog/Documents/x.sqlite")
+        let local = URL(fileURLWithPath: "/var/mobile/Containers/Data/Application/ID/Documents/StrapLog/x.sqlite")
+        #expect(Formats.exportLocation(cloud) == "Files → iCloud Drive → StrapLog → x.sqlite")
+        #expect(Formats.exportLocation(local) == "Files → On My iPhone → StrapLog → StrapLog/x.sqlite")
     }
 }

@@ -14,7 +14,7 @@ struct RecorderModelTests {
     init() throws {
         database = try .inMemory()
         dir = try scratchDirectory()
-        model = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
     }
 
     /// Synchronous on purpose: in async contexts GRDB's `read` resolves to its async overload.
@@ -75,7 +75,7 @@ struct RecorderModelTests {
         #expect(model.lastMarker?.atMs == clock.nowMs())
         #expect(model.markerCount == 2)
 
-        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
         #expect(relaunched.lastMarker?.note == "b")
         #expect(relaunched.markers.map(\.note) == ["a", "b"])
@@ -118,7 +118,7 @@ struct RecorderModelTests {
         await model.start(name: "overnight")
         await play([hr([1000, 1000]), .wait(ms: 1000), hr([1000])])
 
-        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
         #expect(relaunched.activeRecording?.name == "overnight")
         #expect(relaunched.beatCount == 3)
@@ -138,7 +138,7 @@ struct RecorderModelTests {
         #expect(idle.calls == [false, true, false])
 
         await model.start(name: "resumed")
-        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
         let source = MotionSwitchSpy(FakeHeartSource(clock: clock, script: []))
         await relaunched.consume(source)
@@ -175,7 +175,7 @@ struct RecorderModelTests {
 
     @Test("periodic snapshots during consume update lastSnapshot")
     func periodicSnapshot() async throws {
-        let model = RecorderModel(database: database, snapshotDirectory: dir, clock: clock, snapshotEveryMs: 10_000)
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, snapshotEveryMs: 10_000)
         await model.start(name: "night")
         await model.consume(FakeHeartSource(clock: clock, script: [.wait(ms: 6000), hr([1000]), .wait(ms: 6000), hr([1000])]))
         let url = try #require(model.lastSnapshot)

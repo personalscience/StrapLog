@@ -38,7 +38,7 @@ public final class RecorderModel {
 
     private let session: RecordingSession
     private let database: StrapLogDatabase
-    private let snapshotDirectory: URL
+    private let exports: ExportFolder
     private let snapshotEveryMs: Int64
     /// The source being consumed; told to stream motion only while recording.
     private var source: (any HeartSource)?
@@ -46,10 +46,10 @@ public final class RecorderModel {
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
 
-    public init(database: StrapLogDatabase, snapshotDirectory: URL, clock: any WallClock = SystemClock(),
+    public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
                 snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs) {
         self.database = database
-        self.snapshotDirectory = snapshotDirectory
+        self.exports = exports
         self.snapshotEveryMs = snapshotEveryMs
         self.session = RecordingSession(database: database, clock: clock)
     }
@@ -70,7 +70,7 @@ public final class RecorderModel {
             await perform {
                 try await session.ingest(event)
                 guard case .heartRate = event.payload,
-                      let url = try await session.snapshotIfDue(into: snapshotDirectory, everyMs: snapshotEveryMs)
+                      let url = try await session.snapshotIfDue(into: exports.url(), everyMs: snapshotEveryMs)
                 else { return }
                 lastSnapshot = url
             }
@@ -91,9 +91,10 @@ public final class RecorderModel {
     public func stop() async {
         await stopPacer()
         await perform {
-            let rec = try await session.stop(snapshotInto: snapshotDirectory)
+            let directory = await exports.url()
+            let rec = try await session.stop(snapshotInto: directory)
             source?.setMotionStreaming(false)
-            lastSnapshot = snapshotDirectory.appendingPathComponent(Snapshot.fileName(for: rec))
+            lastSnapshot = directory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
             markers = []
             live = LiveMetrics()
@@ -128,7 +129,7 @@ public final class RecorderModel {
         await perform {
             try await session.appPhase(phase)
             guard phase == .background, isRecording else { return }
-            lastSnapshot = try await session.snapshot(into: snapshotDirectory)
+            lastSnapshot = try await session.snapshot(into: exports.url())
         }
     }
 

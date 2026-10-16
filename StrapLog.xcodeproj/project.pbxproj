@@ -79,6 +79,7 @@
 		443633C69E6A56647BF4CA19 /* BreathingPacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPacerView.swift; sourceTree = "<group>"; };
 		49EB97DA2322B6EDF91B176A /* DeviceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSheet.swift; sourceTree = "<group>"; };
 		502E73BD38ED8D6288A5981A /* RecordingTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTitle.swift; sourceTree = "<group>"; };
+		5148B9B491E178AD1383E09D /* StrapLog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLog.entitlements; sourceTree = "<group>"; };
 		52224F2DD8A002A51A709411 /* GuideBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlockView.swift; sourceTree = "<group>"; };
 		54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySmokeTests.swift; sourceTree = "<group>"; };
 		598364997011C1C2FF07B2C7 /* GuideParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParser.swift; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 				DB90CBD1036662A389D1322E /* Assets.xcassets */,
 				849DE00058EC3CD1F7CDB061 /* Info.plist */,
 				C7C6B6A0E743EA7FA32FB364 /* MetricsGuide.md */,
+				5148B9B491E178AD1383E09D /* StrapLog.entitlements */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -576,6 +578,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StrapLog/Resources/StrapLog.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = StrapLog/Resources/Info.plist;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -593,6 +596,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StrapLog/Resources/StrapLog.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = StrapLog/Resources/Info.plist;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

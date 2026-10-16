@@ -12,7 +12,8 @@ data shows it. Read before touching `AppDelegate`, `Launcher` or `PolarHeartSour
 - Periodic export: after each HR notification `RecordingSession.snapshotIfDue` writes a
   `VACUUM INTO` snapshot if 30 min (`RecorderModel.defaultSnapshotEveryMs`) have passed since the
   recording's last one (or its start). A move to the background also snapshots. After a
-  relaunch the cadence continues from the last `snapshot` event.
+  relaunch the cadence continues from the last `snapshot` event. Snapshots land in iCloud Drive
+  when available; the system uploads them on its own schedule, so the Mac copy can trail by minutes.
 - The live database is WAL with one transaction per notification, so a kill loses at most the
   notification being written.
 

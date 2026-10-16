@@ -16,7 +16,7 @@ struct RecorderModelLiveTests {
     init() throws {
         database = try .inMemory()
         dir = try scratchDirectory()
-        model = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
     }
 
     func strings(_ sql: String) throws -> [String] {
@@ -42,7 +42,7 @@ struct RecorderModelLiveTests {
         #expect(model.live.latest == model.live.windows.last)
         #expect(!model.live.rrHistory.isEmpty)
 
-        let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
         #expect(relaunched.live.windows == model.live.windows)
         #expect(relaunched.live.rrHistory == model.live.rrHistory)

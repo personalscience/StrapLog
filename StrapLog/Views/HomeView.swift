@@ -29,7 +29,7 @@ struct HomeView: View {
             }
             if let snapshot = model.lastSnapshot {
                 Section("Last export") {
-                    Text("Files → On My iPhone → StrapLog → StrapLog/\(snapshot.lastPathComponent)")
+                    Text(Formats.exportLocation(snapshot))
                         .font(.footnote.monospaced())
                         .accessibilityIdentifier("lastSnapshot")
                 }

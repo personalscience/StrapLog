@@ -4,13 +4,18 @@ import GRDB
 /// Single-file export of the live database for Files / AirDrop / the skills.
 /// `VACUUM INTO` a temp file, switch it to rollback journaling so readers never create
 /// `-wal`/`-shm` sidecars, then atomically replace the destination.
+///
+/// The partial file lives in a replacement directory on the destination's volume, outside
+/// the destination folder, so iCloud Drive never uploads it; the swap is file-coordinated so
+/// the iCloud daemon sees one complete write.
 public enum Snapshot {
     public static func write(_ database: StrapLogDatabase, to url: URL) throws {
         let fm = FileManager.default
-        let dir = url.deletingLastPathComponent()
-        try fm.createDirectory(at: dir, withIntermediateDirectories: true)
-        let tmp = dir.appendingPathComponent(".\(url.lastPathComponent).partial")
-        try? fm.removeItem(at: tmp)
+        try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let scratch = try fm.url(for: .itemReplacementDirectory, in: .userDomainMask,
+                                 appropriateFor: url, create: true)
+        defer { try? fm.removeItem(at: scratch) }
+        let tmp = scratch.appendingPathComponent(url.lastPathComponent)
 
         try database.writer.writeWithoutTransaction { db in
             try db.execute(sql: "VACUUM INTO ?", arguments: [tmp.path])
@@ -21,11 +26,21 @@ public enum Snapshot {
         }
         try copy.close()
 
-        if fm.fileExists(atPath: url.path) {
-            _ = try fm.replaceItemAt(url, withItemAt: tmp)
-        } else {
-            try fm.moveItem(at: tmp, to: url)
+        var coordinationError: NSError?
+        var moveError: Error?
+        NSFileCoordinator().coordinate(writingItemAt: url, options: .forReplacing,
+                                       error: &coordinationError) { target in
+            do {
+                if fm.fileExists(atPath: target.path) {
+                    _ = try fm.replaceItemAt(target, withItemAt: tmp)
+                } else {
+                    try fm.moveItem(at: tmp, to: target)
+                }
+            } catch {
+                moveError = error
+            }
         }
+        if let error = coordinationError ?? moveError { throw error }
     }
 
     /// `YYMMDD-HHMM-<name>.sqlite` in the recording's local time; name sanitised for file systems.

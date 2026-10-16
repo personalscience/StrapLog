@@ -97,7 +97,7 @@ UPDATE meta SET value = '2' WHERE key = 'schema_version';
 ## Files
 
 - Live: `Application Support/StrapLog/live.sqlite`, WAL (`DatabasePool`), one transaction per notification or event.
-- Export: `Documents/StrapLog/<YYMMDD-HHMM>-<name>.sqlite` (`Snapshot.fileName`, local start time, name sanitised). `Snapshot.write` runs `VACUUM INTO` a temp file, sets `journal_mode = DELETE`, then atomically replaces the target, so readers never see a partial file or create `-wal`/`-shm`. The snapshot holds **all** recordings in the live DB; select by `recording.id`.
+- Export: `<YYMMDD-HHMM>-<name>.sqlite` (`Snapshot.fileName`, local start time, name sanitised) in the iCloud container's `Documents/` (iCloud Drive → StrapLog; on the Mac `~/Library/Mobile Documents/iCloud~com~personalscience~straplog/Documents/`), or `Documents/StrapLog/` (On My iPhone) when iCloud is unavailable (`ExportFolder`). `Snapshot.write` runs `VACUUM INTO` a temp file outside the export folder, sets `journal_mode = DELETE`, then atomically replaces the target under `NSFileCoordinator`, so readers never see a partial file or create `-wal`/`-shm`. The snapshot holds **all** recordings in the live DB; select by `recording.id`.
 
 ## Invariants (`DBInvariants`)
 

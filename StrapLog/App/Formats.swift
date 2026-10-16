@@ -45,6 +45,14 @@ enum Formats {
         return elapsed(ms: end - summary.startedAtMs)
     }
 
+    /// Where Files shows an export: the iCloud container's Documents is iCloud Drive → StrapLog;
+    /// the local fallback is Documents/StrapLog.
+    static func exportLocation(_ url: URL) -> String {
+        url.path.contains("/Mobile Documents/")
+            ? "Files → iCloud Drive → StrapLog → \(url.lastPathComponent)"
+            : "Files → On My iPhone → StrapLog → StrapLog/\(url.lastPathComponent)"
+    }
+
     // MARK: Live metrics
 
     /// Two decimals (α1, LnRMSSD), or `--`.

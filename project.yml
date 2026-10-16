@@ -57,6 +57,18 @@ targets:
         UIBackgroundModes: [bluetooth-central]
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
+        # Exports go to the container's Documents, shown as iCloud Drive → StrapLog.
+        NSUbiquitousContainers:
+          iCloud.com.personalscience.straplog:
+            NSUbiquitousContainerIsDocumentScopePublic: true
+            NSUbiquitousContainerName: StrapLog
+            NSUbiquitousContainerSupportedFolderLevels: Any
+    entitlements:
+      path: StrapLog/Resources/StrapLog.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers: [iCloud.com.personalscience.straplog]
+        com.apple.developer.icloud-services: [CloudDocuments]
+        com.apple.developer.ubiquity-container-identifiers: [iCloud.com.personalscience.straplog]
 
   StrapLogTests:
     type: bundle.unit-test
