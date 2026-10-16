@@ -163,7 +163,14 @@ extension PolarHeartSource: PolarBleApiDeviceInfoObserver {
     }
 
     func batteryChargingStatusReceived(_ identifier: String, chargingStatus: BleBasClient.ChargeState) {}
-    func disInformationReceived(_ identifier: String, uuid: CBUUID, value: String) {}
+    /// DIS strings, read once per connection: firmware revision (0x2A26) and serial number (0x2A25).
+    func disInformationReceived(_ identifier: String, uuid: CBUUID, value: String) {
+        switch uuid {
+        case CBUUID(string: "2A26"): emit(.firmware(value))
+        case CBUUID(string: "2A25"): emit(.serialNumber(value))
+        default: break
+        }
+    }
     func disInformationReceivedWithKeysAsStrings(_ identifier: String, key: String, value: String) {}
 }
 

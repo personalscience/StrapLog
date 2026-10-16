@@ -78,11 +78,27 @@ struct RecorderModelTests {
         let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
         await relaunched.launch()
         #expect(relaunched.lastMarker?.note == "b")
-        #expect(relaunched.markerCount == 2)
+        #expect(relaunched.markers.map(\.note) == ["a", "b"])
+        #expect(relaunched.markers == model.markers)
 
         await relaunched.stop()
         #expect(relaunched.lastMarker == nil)
         #expect(relaunched.markerCount == 0)
+    }
+
+    @Test("firmware and serial from DIS reach the model and the recording; firmware is written once")
+    func deviceInformation() async throws {
+        await play([.emit(.connected(deviceId: "H10-1", firmware: nil))])
+        await model.start(name: "d")
+        await play([.emit(.firmware("5.0.0")), .emit(.serialNumber("C1234567")), .emit(.firmware("6.0.0"))])
+        #expect(model.firmware == "6.0.0")
+        #expect(model.serialNumber == "C1234567")
+        #expect(try strings("SELECT firmware FROM recording") == ["5.0.0"])
+
+        await model.stop()
+        await model.start(name: "e")
+        #expect(try strings("SELECT firmware FROM recording ORDER BY id") == ["5.0.0", "6.0.0"],
+                "a later recording opens with the latest DIS firmware")
     }
 
     @Test("Stop writes a snapshot file and remembers its URL")

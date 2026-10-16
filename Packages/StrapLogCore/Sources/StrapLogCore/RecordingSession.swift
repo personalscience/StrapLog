@@ -242,6 +242,18 @@ public actor RecordingSession {
                 try e.insert(db)
             }
 
+        case .firmware(let version):
+            guard case .connected(let deviceId, _) = link else { return }
+            link = .connected(deviceId: deviceId, firmware: version)
+            guard let id = recordingId else { return }
+            try database.writer.write { db in
+                try db.execute(sql: "UPDATE recording SET firmware = COALESCE(firmware, ?) WHERE id = ?",
+                               arguments: [version, id])
+            }
+
+        case .serialNumber:
+            break
+
         case .bluetooth(let poweredOn):
             guard let id = recordingId else { return }
             try log(poweredOn ? .bleOn : .bleOff, note: nil, recordingId: id, atMs: event.atMs)

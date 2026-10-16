@@ -36,27 +36,27 @@ struct RecorderModelLiveTests {
         await model.start(name: "rest")
         await model.consume(FakeHeartSource(clock: clock, script: notifications.flatMap { [.wait(ms: 1000), hr($0)] }))
 
-        let batch = WindowAnalyzer().features(try storedBeats())
-        #expect(model.live.windows.count >= 10)   // ≈ Σrr of the fixture, 13 windows
+        let batch = model.live.analyzer.features(try storedBeats())
+        #expect(model.live.windows.count >= 10)   // 20 s stride over ≈ 15 min of fixture
         #expect(Array(batch.prefix(model.live.windows.count)) == model.live.windows)
         #expect(model.live.latest == model.live.windows.last)
-        #expect(!model.live.tachogram.isEmpty)
+        #expect(!model.live.rrHistory.isEmpty)
 
         let relaunched = RecorderModel(database: database, snapshotDirectory: dir, clock: clock)
         await relaunched.launch()
         #expect(relaunched.live.windows == model.live.windows)
-        #expect(relaunched.live.tachogram == model.live.tachogram)
+        #expect(relaunched.live.rrHistory == model.live.rrHistory)
     }
 
     @Test("Start and Stop reset the live metrics")
     func resets() async {
         await model.start(name: "a")
         await model.consume(FakeHeartSource(clock: clock, script: [hr([1024, 1024])]))
-        #expect(model.live.tachogram.count == 2)
+        #expect(model.live.rrHistory.count == 2)
         await model.stop()
-        #expect(model.live.tachogram.isEmpty)
+        #expect(model.live.rrHistory.isEmpty)
         await model.start(name: "b")
-        #expect(model.live.tachogram.isEmpty)
+        #expect(model.live.rrHistory.isEmpty)
     }
 
     @Test("pacer start and stop are logged with the rate; changing rate restarts it")

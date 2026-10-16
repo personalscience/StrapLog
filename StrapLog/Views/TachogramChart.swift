@@ -4,7 +4,7 @@ import SwiftUI
 
 /// Raw RR over the last 5 minutes.
 struct TachogramChart: View {
-    let points: [TachogramPoint]
+    let points: [TrendPoint]
 
     var body: some View {
         if points.count < 2 {
@@ -13,7 +13,7 @@ struct TachogramChart: View {
                 .frame(maxWidth: .infinity, minHeight: 160)
         } else {
             Chart(points, id: \.atMs) { p in
-                LineMark(x: .value("Time", p.date), y: .value("RR (ms)", p.rrMs))
+                LineMark(x: .value("Time", p.date), y: .value("RR (ms)", p.value))
                     .interpolationMethod(.monotone)
             }
             .chartYScale(domain: .automatic(includesZero: false))

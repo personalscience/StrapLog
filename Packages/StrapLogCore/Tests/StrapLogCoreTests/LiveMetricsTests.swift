@@ -5,11 +5,13 @@ import Testing
 @Suite("LiveMetrics")
 struct LiveMetricsTests {
     static let origin: Int64 = 1_760_000_000_000
+    /// The skills' 60 s stride, so window counts below are easy to check by hand.
+    static func batchStride() -> LiveMetrics { LiveMetrics(analyzer: WindowAnalyzer()) }
 
     @Test("fed beat by beat, equals the WindowAnalyzer batch at every stride", arguments: RRFixture.names)
     func parity(name: String) throws {
         let fx = try RRFixture.load(name)
-        let analyzer = WindowAnalyzer()
+        let analyzer = LiveMetrics().analyzer
         let batch = analyzer.features(zip(fx.t_rel_s, fx.rr_ms).map { TimedSample(t: $0, value: $1) })
         let ends = fx.endTimesMs(originMs: Self.origin)
 
@@ -31,9 +33,31 @@ struct LiveMetricsTests {
         #expect(unclosed.allSatisfy { $0.tCenter + analyzer.window.width / 2 > fx.t_rel_s.last! })
     }
 
+    @Test("every third 20 s window is one of the skills' 60 s windows", arguments: RRFixture.names)
+    func everyThirdIsBatch(name: String) throws {
+        let fx = try RRFixture.load(name)
+        let batch = WindowAnalyzer().features(zip(fx.t_rel_s, fx.rr_ms).map { TimedSample(t: $0, value: $1) })
+        var live = LiveMetrics()
+        for (end, rr) in zip(fx.endTimesMs(originMs: Self.origin), fx.rr_ms) { live.add(tEndMs: end, rrMs: rr) }
+        let aligned = live.windows.filter { ($0.tCenter - 60).truncatingRemainder(dividingBy: 60) == 0 }
+        #expect(!aligned.isEmpty)
+        #expect(aligned == Array(batch.prefix(aligned.count)))
+    }
+
+    @Test("α1 history is stamped at each window's end")
+    func alpha1AtWindowEnd() throws {
+        let fx = try RRFixture.load(RRFixture.names[0])
+        var live = LiveMetrics()
+        for (end, rr) in zip(fx.endTimesMs(originMs: Self.origin), fx.rr_ms) { live.add(tEndMs: end, rrMs: rr) }
+        let first = try #require(live.windows.first { $0.alpha1 != nil })
+        #expect(live.alpha1History.first == TrendPoint(atMs: Self.origin + Int64((first.tCenter + 60) * 1000),
+                                                       value: first.alpha1!))
+        #expect(live.alpha1History.count == live.windows.filter { $0.alpha1 != nil }.count)
+    }
+
     @Test("a window with fewer than 60 beats yields no features")
     func refusesShortWindows() {
-        var live = LiveMetrics()
+        var live = Self.batchStride()
         for i in 0..<59 { live.add(tEndMs: Self.origin + Int64(i) * 2000, rrMs: 2000) }   // 59 beats in 0–118 s
         live.add(tEndMs: Self.origin + 120_000, rrMs: 1000)
         #expect(live.closedWindows == 1)
@@ -43,7 +67,7 @@ struct LiveMetricsTests {
 
     @Test("a long silence closes every window it spans, all empty")
     func gapClosesWindows() {
-        var live = LiveMetrics()
+        var live = Self.batchStride()
         for i in 0..<200 { live.add(tEndMs: Self.origin + Int64(i) * 1000, rrMs: 1000 + Double(i % 7)) }
         #expect(live.closedWindows == 2)          // windows ending at 120 s and 180 s
         #expect(live.latest != nil)
@@ -54,12 +78,14 @@ struct LiveMetricsTests {
         #expect(live.windows.count == 3)          // plus 120–240 s, which holds beats 120–199
     }
 
-    @Test("the tachogram keeps the last 5 minutes of raw RR")
-    func tachogramSpan() {
-        var live = LiveMetrics()
+    @Test("RR history keeps the last historySpanMs, and HR mirrors it")
+    func historySpan() {
+        var live = LiveMetrics(historySpanMs: 300_000)
         for i in 0...600 { live.add(tEndMs: Self.origin + Int64(i) * 1000, rrMs: 1000) }
-        #expect(live.tachogram.first?.atMs == Self.origin + 300_000)
-        #expect(live.tachogram.last?.atMs == Self.origin + 600_000)
-        #expect(live.tachogram.count == 301)
+        #expect(live.rrHistory.first?.atMs == Self.origin + 300_000)
+        #expect(live.rrHistory.last?.atMs == Self.origin + 600_000)
+        #expect(live.rrHistory.count == 301)
+        #expect(live.hrHistory.count == 301)
+        #expect(live.hrHistory.allSatisfy { $0.value == 60 })
     }
 }

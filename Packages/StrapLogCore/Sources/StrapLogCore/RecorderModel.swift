@@ -9,6 +9,9 @@ import Observation
 public final class RecorderModel {
     public private(set) var link = LinkStatus.searching
     public private(set) var battery: Int?
+    /// From the strap's Device Information Service; kept across disconnects.
+    public private(set) var firmware: String?
+    public private(set) var serialNumber: String?
     public private(set) var heartRate: Int?
     public private(set) var contact: Bool?
     /// The recording being written, or nil when idle.
@@ -18,10 +21,12 @@ public final class RecorderModel {
     public private(set) var lastHeardAtMs: Int64?
     /// Longest silence between HR notifications in the active recording.
     public private(set) var longestGapMs: Int64 = 0
+    /// Markers of the active recording, oldest first.
+    public private(set) var markers: [RecordingEvent] = []
     /// Latest marker in the active recording, so the UI can confirm a tap.
-    public private(set) var lastMarker: RecordingEvent?
-    public private(set) var markerCount = 0
-    /// HRV windows and tachogram for the active recording.
+    public var lastMarker: RecordingEvent? { markers.last }
+    public var markerCount: Int { markers.count }
+    /// HRV windows and RR history for the active recording.
     public private(set) var live = LiveMetrics()
     /// The running breathing pacer, or nil.
     public private(set) var pacer: BreathingPacer?
@@ -90,8 +95,7 @@ public final class RecorderModel {
             source?.setMotionStreaming(false)
             lastSnapshot = snapshotDirectory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
-            lastMarker = nil
-            markerCount = 0
+            markers = []
             live = LiveMetrics()
             try refreshRecordings()
         }
@@ -100,8 +104,7 @@ public final class RecorderModel {
     /// `a`, `b`, `c`, `end`, or free text.
     public func marker(_ note: String) async {
         await perform {
-            lastMarker = try await session.marker(note)
-            markerCount += 1
+            markers.append(try await session.marker(note))
         }
     }
 
@@ -147,13 +150,18 @@ public final class RecorderModel {
             for (rr, end) in zip(rr1024, BeatTiming.endTimesMs(receivedAtMs: event.atMs, rr1024: rr1024)) {
                 live.add(tEndMs: end, rrMs: BeatTiming.ms(fromRR1024: rr))
             }
-        case .connected(let deviceId, _):
+        case .connected(let deviceId, let firmware):
             link = .connected(deviceId: deviceId)
+            if let firmware { self.firmware = firmware }
         case .disconnected:
             link = .disconnected
             heartRate = nil
         case .battery(let percent):
             battery = percent
+        case .firmware(let version):
+            firmware = version
+        case .serialNumber(let serial):
+            serialNumber = serial
         case .bluetooth(let poweredOn):
             if !poweredOn { link = .bluetoothOff; heartRate = nil }
             else if link == .bluetoothOff { link = .searching }
@@ -177,8 +185,7 @@ public final class RecorderModel {
         for beat in beats { live.add(beat) }
         pacer = nil
         lastHeardAtMs = lastHeard
-        lastMarker = markers.last
-        markerCount = markers.count
+        self.markers = markers
         longestGapMs = 0
     }
 

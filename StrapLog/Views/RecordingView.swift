@@ -28,7 +28,7 @@ struct RecordingView: View {
                                 .accessibilityIdentifier("contact")
                         }
                     }
-                    TachogramChart(points: model.live.tachogram)
+                    TachogramChart(points: model.live.rrHistory)
                 }
                 Section("HRV") {
                     LiveMetricsRows(live: model.live, nowMs: nowMs)

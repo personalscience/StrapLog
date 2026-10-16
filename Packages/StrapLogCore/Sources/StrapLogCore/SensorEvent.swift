@@ -7,6 +7,9 @@ public struct SensorEvent: Sendable, Equatable {
         case connected(deviceId: String, firmware: String?)
         case disconnected(reason: String?)
         case battery(percent: Int)
+        /// Device Information Service strings; they arrive some seconds after `connected`.
+        case firmware(String)
+        case serialNumber(String)
         case bluetooth(poweredOn: Bool)
         /// One accelerometer notification, oldest sample first. Streamed only while recording.
         case motion(samples: [AccSample])
