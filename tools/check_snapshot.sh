@@ -28,6 +28,16 @@ markers=$(q "SELECT COUNT(*) || ' [' || COALESCE(GROUP_CONCAT(note, ','), '') ||
              WHERE recording_id = $rid AND kind = 'marker'")
 check "markers present" "$([[ ${markers%% *} -gt 0 ]] && echo 1 || echo 0)" "$markers"
 
+dup=$(q "SELECT COUNT(*) FROM (SELECT received_at_ms, hr_bpm, contact,
+            (SELECT GROUP_CONCAT(rr_1024) FROM beat b WHERE b.notification_id = n.id) AS rr,
+            LAG(received_at_ms) OVER w AS pa, LAG(hr_bpm) OVER w AS ph, LAG(contact) OVER w AS pc, LAG(id) OVER w AS pid
+          FROM notification n WHERE recording_id = $rid WINDOW w AS (ORDER BY id)) x
+         WHERE received_at_ms - pa <= 100 AND hr_bpm = ph AND contact IS pc
+           AND rr IS (SELECT GROUP_CONCAT(rr_1024) FROM beat WHERE notification_id = pid)")
+# A genuine identical repeat after a BLE stall happens about once per 20 min; doubling is every one.
+nn=$(q "SELECT COUNT(*) FROM notification WHERE recording_id = $rid")
+check "no doubled notifications" "$([[ $((dup * 100)) -le $nn ]] && echo 1 || echo 0)" "$dup of $nn repeat within 100 ms (straplog-a4m)"
+
 two=$(q "SELECT COUNT(*) FROM notification WHERE recording_id = $rid AND n_rr >= 2")
 check ">=1 notification with n_rr=2" "$([[ $two -gt 0 ]] && echo 1 || echo 0)" "$two notifications"
 

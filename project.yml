@@ -47,6 +47,14 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        # tools/stamp_build.sh reads .git, outside any declarable input list.
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+    postBuildScripts:
+      - name: Stamp build
+        script: '"$SRCROOT/tools/stamp_build.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
     info:
       path: StrapLog/Resources/Info.plist
       properties:

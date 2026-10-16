@@ -29,6 +29,7 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     private let streamingDevice = Mutex<String?>(nil)
     private let motionWanted = Mutex(false)
     private let motionTask = Mutex<Task<Void, Never>?>(nil)
+    private let heartFilter = Mutex(DuplicateHeartFilter())
 
     init(clock: any WallClock = SystemClock(), defaults: UserDefaults = .standard) {
         self.clock = clock
@@ -122,6 +123,10 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
 
     private func emit(_ payload: SensorEvent.Payload) {
         let event = SensorEvent(atMs: clock.nowMs(), payload)
+        // The SDK can run two HR observer tasks on one connection (DuplicateHeartFilter explains
+        // why); each calls the observer synchronously, so the current task names the observer.
+        let observer = withUnsafeCurrentTask { $0?.hashValue }
+        guard heartFilter.withLock({ $0.admit(event, observer: observer) }) else { return }
         continuation.withLock { _ = $0?.yield(event) }
     }
 }

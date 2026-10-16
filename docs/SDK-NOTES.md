@@ -34,3 +34,10 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - Settings: `requestStreamSettings(id, feature: .acc)`, then 25 Hz and 8 G if offered, every other setting (resolution) at its max. Not yet confirmed on the strap: check the first device recording's `motion.n` is ≈ 25.
 - Start always calls `stopStreaming(id, type: .acc)` first (errors ignored): a stream left running by a killed process would make the new start fail. Stop cancels the consuming task **and** calls `stopStreaming`, per KnownIssues. `applicationWillTerminate` turns motion off best-effort.
 - The model calls `HeartSource.setMotionStreaming` (on at start/resume, off at Stop); sources without an accelerometer inherit a no-op.
+
+## Duplicate HR notifications (straplog-a4m, 2026-10-15)
+
+- Since P6 every HR notification reached `hrValueReceived` twice (same ms, same RR; recordings 3 and 4 of 2026-10-15 have Σrr ≈ 2× elapsed). Not a double `BleHrClient`: 8.4.0 appends it once for `feature_hr || feature_polar_online_streaming`. `setupDevice` starts `startHrObserver` for every `HR_SERVICE` its service monitor yields, and the monitor yields again when discovery reruns: `uuidNotAllowed` (H10 asks for encryption once PMD is used), `didModifyServices`, or `retryServiceDiscovery`. Two observer tasks then share one `hrStreams`. Likely trigger is the encryption path; not confirmed with device logs.
+- Fix: `PolarHeartSource.emit` passes through `DuplicateHeartFilter` (StrapLogCore). The SDK calls the observer synchronously inside each observer task, so `withUnsafeCurrentTask` names the observer; a repeat is dropped only when another observer delivers an identical HR payload within 100 ms. Payload alone is not enough: recording 2 (one observer) has a real identical pair 1 ms apart after a BLE stall.
+- `startHrStreaming` shares one upstream but yields only rounded `rrsMs`, so it is no substitute for the observer's 1/1024 s RR.
+- `tools/check_snapshot.sh` fails a recording when over 1% of notifications are such repeats.

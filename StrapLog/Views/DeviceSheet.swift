@@ -5,6 +5,7 @@ import SwiftUI
 struct DeviceSheet: View {
     let model: RecorderModel
     @Environment(\.dismiss) private var dismiss
+    private let info = Bundle.main.infoDictionary ?? [:]
 
     var body: some View {
         NavigationStack {
@@ -35,6 +36,11 @@ struct DeviceSheet: View {
                             Text(Formats.exportLocation(snapshot))
                                 .font(.footnote.monospaced())
                         }
+                    }
+                    Section("App") {
+                        LabeledContent("Build", value: Formats.build(info))
+                            .accessibilityIdentifier("appBuild")
+                        LabeledContent("Built", value: Formats.text(info["StrapLogBuiltAt"] as? String))
                     }
                 }
             }
