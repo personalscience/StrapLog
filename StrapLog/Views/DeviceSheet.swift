@@ -1,0 +1,51 @@
+import StrapLogCore
+import SwiftUI
+
+/// Strap and recording diagnostics, off the main screen.
+struct DeviceSheet: View {
+    let model: RecorderModel
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                let nowMs = Int64(context.date.timeIntervalSince1970 * 1000)
+                List {
+                    Section("Polar H10") {
+                        LabeledContent("Link", value: Formats.link(model.link))
+                        LabeledContent("Device ID", value: Formats.deviceId(model.link))
+                            .accessibilityIdentifier("deviceId")
+                        LabeledContent("Firmware", value: Formats.text(model.firmware))
+                        LabeledContent("Serial", value: Formats.text(model.serialNumber))
+                        LabeledContent("Battery", value: Formats.battery(model.battery))
+                        LabeledContent("Contact", value: model.contact.map(Formats.contact) ?? "--")
+                    }
+                    if model.isRecording {
+                        Section("Recording") {
+                            LabeledContent("Beats") {
+                                Text("\(model.beatCount)").accessibilityIdentifier("beatCount")
+                            }
+                            LabeledContent("Since last notification",
+                                           value: model.lastHeardAtMs.map { Formats.gap(ms: nowMs - $0) } ?? "--")
+                            LabeledContent("Longest gap", value: Formats.gap(ms: model.longestGapMs))
+                        }
+                    }
+                    if let snapshot = model.lastSnapshot {
+                        Section("Last export") {
+                            Text("Files → On My iPhone → StrapLog → StrapLog/\(snapshot.lastPathComponent)")
+                                .font(.footnote.monospaced())
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Strap")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                        .accessibilityIdentifier("deviceDone")
+                }
+            }
+        }
+    }
+}

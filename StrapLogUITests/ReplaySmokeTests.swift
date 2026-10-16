@@ -8,9 +8,9 @@ final class ReplaySmokeTests: XCTestCase {
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
         app.launch()
 
-        let link = app.staticTexts["linkStatus"]
-        XCTAssertTrue(link.waitForExistence(timeout: 10))
-        XCTAssertTrue(link.waitForLabel(containing: "REPLAY", timeout: 5))
+        let heart = app.buttons["heartLink"]
+        XCTAssertTrue(heart.waitForExistence(timeout: 10))
+        XCTAssertTrue(heart.waitForLabel(containing: "REPLAY", timeout: 5))
 
         let name = app.textFields["sessionName"]
         name.tap()
@@ -18,7 +18,12 @@ final class ReplaySmokeTests: XCTestCase {
         app.buttons["startButton"].tap()
 
         XCTAssertTrue(app.staticTexts["heartRate"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.segmentedControls["chartMetric"].waitForExistence(timeout: 5))
+        heart.tap()
+        let done = app.buttons["deviceDone"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5), "device sheet did not open")
         XCTAssertTrue(app.scroll(to: app.staticTexts["beatCount"]))
+        done.tap()
         let markerA = app.buttons["marker-a"]
         XCTAssertTrue(app.scroll(to: markerA))
         markerA.tap()
@@ -28,6 +33,9 @@ final class ReplaySmokeTests: XCTestCase {
         let stop = app.buttons["stopButton"]
         XCTAssertTrue(app.scroll(to: stop))
         stop.tap()
+        let confirm = app.buttons["confirmStop"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
 
         let snapshot = app.staticTexts["lastSnapshot"]
         XCTAssertTrue(snapshot.waitForExistence(timeout: 10))
@@ -41,6 +49,9 @@ final class ReplaySmokeTests: XCTestCase {
         app.launch()
         app.buttons["startButton"].tap()
 
+        let toggle = app.buttons["pacerToggle"]
+        XCTAssertTrue(app.scroll(to: toggle))
+        toggle.tap()
         let start = app.buttons["pacerStart"]
         XCTAssertTrue(app.scroll(to: start))
         start.tap()
@@ -69,7 +80,7 @@ final class ReplaySmokeTests: XCTestCase {
 }
 
 private extension XCUIApplication {
-    /// Swipes up until `element` is on screen; the recording List only builds visible rows.
+    /// Swipes up until `element` is on screen.
     func scroll(to element: XCUIElement, maxSwipes: Int = 6) -> Bool {
         for _ in 0..<maxSwipes {
             if element.exists && element.isHittable { return true }

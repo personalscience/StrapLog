@@ -1,0 +1,38 @@
+/// The time range the live chart shows: `span` ending at `nowMs`. Slices a series to that
+/// range and thins it for drawing, so the view only plots what it is handed.
+public struct ChartWindow: Sendable, Equatable {
+    /// Points the chart draws at most: `Downsample.minMax` keeps two per bucket.
+    public static let maxPoints = 400
+
+    public let startMs: Int64
+    public let endMs: Int64
+
+    public init(span: ChartSpan, nowMs: Int64, startedAtMs: Int64) {
+        endMs = nowMs
+        startMs = nowMs - span.lengthMs(elapsedMs: nowMs - startedAtMs)
+    }
+
+    /// The points inside the window (`series` oldest first), at most `maxPoints` of them.
+    public func visible(_ series: [TrendPoint]) -> [TrendPoint] {
+        Downsample.minMax(Array(series[slice(series)]), buckets: Self.maxPoints / 2)
+    }
+
+    /// Markers inside the window.
+    public func visible(_ markers: [RecordingEvent]) -> [RecordingEvent] {
+        markers.filter { $0.atMs >= startMs && $0.atMs <= endMs }
+    }
+
+    func slice(_ series: [TrendPoint]) -> Range<Int> {
+        lowerBound(series, startMs)..<lowerBound(series, endMs + 1)
+    }
+
+    /// First index whose time is at or past `ms` (binary search).
+    private func lowerBound(_ series: [TrendPoint], _ ms: Int64) -> Int {
+        var (lo, hi) = (0, series.count)
+        while lo < hi {
+            let mid = (lo + hi) / 2
+            if series[mid].atMs < ms { lo = mid + 1 } else { hi = mid }
+        }
+        return lo
+    }
+}

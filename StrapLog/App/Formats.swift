@@ -67,11 +67,66 @@ enum Formats {
         fraction.map { String(format: "%.1f %%", $0 * 100) } ?? "--"
     }
 
-    /// Where the latest 2-minute window stands.
-    static func window(endMs: Int64?, hasFeatures: Bool, nowMs: Int64) -> String {
-        guard let endMs else { return "First values after 2 min of beats" }
-        let ago = "\(max(0, nowMs - endMs) / 1000) s ago"
-        return hasFeatures ? "2-min window ending \(ago)" : "Too few beats in the window ending \(ago)"
+    /// Seconds since, switching to minutes past a minute: `12 s ago`, `3 min ago`.
+    static func ago(ms: Int64) -> String {
+        let s = max(0, ms) / 1000
+        return s < 60 ? "\(s) s ago" : "\(s / 60) min ago"
+    }
+
+    /// The line under the hero tiles: latest window's RMSSD and artifacts, and how old α1 is.
+    static func heroSubline(rmssd: Double?, artifactRate: Double?, alpha1AtMs: Int64?, nowMs: Int64) -> String {
+        guard let alpha1AtMs else { return "First α1 after 2 min of beats" }
+        return "RMSSD \(ms(rmssd)) · artifacts \(percent(artifactRate)) · α1 \(ago(ms: nowMs - alpha1AtMs))"
+    }
+
+    /// Toolbar title while recording, e.g. `12:41 · RAVINE`.
+    static func recordingTitle(name: String, elapsedMs: Int64) -> String {
+        name.isEmpty ? elapsed(ms: elapsedMs) : "\(elapsed(ms: elapsedMs)) · \(name)"
+    }
+
+    /// `82 %`, or `--`.
+    static func battery(_ percent: Int?) -> String {
+        percent.map { "\($0) %" } ?? "--"
+    }
+
+    /// The H10's printed ID while connected, or `--`.
+    static func deviceId(_ status: LinkStatus) -> String {
+        if case .connected(let id) = status { id } else { "--" }
+    }
+
+    static func text(_ value: String?) -> String {
+        value ?? "--"
+    }
+
+    // MARK: Chart
+
+    static func span(_ span: ChartSpan) -> String {
+        switch span {
+        case .all: "All"
+        case .hour: "1 h"
+        default: "\(span.rawValue) min"
+        }
+    }
+
+    static func metric(_ metric: ChartMetric) -> String {
+        switch metric {
+        case .heartRate: "HR"
+        case .alpha1: "α1"
+        case .rr: "RR"
+        }
+    }
+
+    /// Shown over the chart until it has two points to draw.
+    static func chartEmpty(_ metric: ChartMetric) -> String {
+        metric == .alpha1 ? "α1 after 2 min of beats" : "Waiting for beats…"
+    }
+
+    static func axis(_ metric: ChartMetric) -> String {
+        switch metric {
+        case .heartRate: "bpm"
+        case .alpha1: "DFA α1"
+        case .rr: "RR ms"
+        }
     }
 
     static func contact(_ contact: Bool) -> String {

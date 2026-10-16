@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// Idle screen: strap status, name field, Start, and past recordings.
+/// Idle screen: live HR to check the strap, name field, Start, and past recordings.
 struct HomeView: View {
     let model: RecorderModel
     @State private var name = ""
@@ -9,7 +9,11 @@ struct HomeView: View {
     var body: some View {
         List {
             Section {
-                LinkStatusRow(model: model)
+                HeartRateTile(heartRate: model.heartRate, contact: model.contact)
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+            }
+            Section {
                 TextField("Session name", text: $name)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()

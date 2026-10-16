@@ -1,64 +1,46 @@
 import StrapLogCore
 import SwiftUI
 
-/// Live screen while recording: HR, tachogram, HRV window, pacer, beat count, gaps, markers, Stop.
+/// Live screen while recording: HR and α1 up top, the trend chart, markers in the thumb zone,
+/// then pacer and Stop. Diagnostics live in the device sheet behind the toolbar heart.
 struct RecordingView: View {
     let model: RecorderModel
+    @State private var showingPacer = false
+    @State private var confirmingStop = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             let nowMs = Int64(context.date.timeIntervalSince1970 * 1000)
-            List {
-                Section {
-                    Text(model.activeRecording?.name ?? "")
-                        .font(.headline)
-                    LinkStatusRow(model: model)
-                }
-                Section {
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(model.heartRate.map(String.init) ?? "--")
-                            .font(.system(size: 72, weight: .bold, design: .rounded).monospacedDigit())
-                            .accessibilityIdentifier("heartRate")
-                        Text("bpm").foregroundStyle(.secondary)
-                        Spacer()
-                        if let contact = model.contact {
-                            Label(Formats.contact(contact), systemImage: contact ? "hand.raised.fill" : "hand.raised.slash")
-                                .font(.caption)
-                                .foregroundStyle(contact ? Color.secondary : Color.orange)
-                                .accessibilityIdentifier("contact")
-                        }
-                    }
-                    TachogramChart(points: model.live.rrHistory)
-                }
-                Section("HRV") {
-                    LiveMetricsRows(live: model.live, nowMs: nowMs)
-                }
-                Section("Paced breathing") {
-                    PacerSection(model: model)
-                }
-                Section {
-                    LabeledContent("Elapsed",
-                                   value: Formats.elapsed(ms: nowMs - (model.activeRecording?.startedAtMs ?? nowMs)))
-                    LabeledContent("Beats", value: "\(model.beatCount)")
-                        .accessibilityIdentifier("beatCount")
-                    LabeledContent("Since last notification",
-                                   value: model.lastHeardAtMs.map { Formats.gap(ms: nowMs - $0) } ?? "--")
-                    LabeledContent("Longest gap", value: Formats.gap(ms: model.longestGapMs))
-                }
-                Section("Markers") {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    MetricsHero(model: model, nowMs: nowMs)
+                    TrendChart(live: model.live, markers: model.markers,
+                               startedAtMs: model.activeRecording?.startedAtMs ?? nowMs, nowMs: nowMs)
                     MarkerBar(model: model, nowMs: nowMs)
-                }
-                Section {
-                    Button(role: .destructive) {
-                        Task { await model.stop() }
-                    } label: {
-                        Label("Stop and export", systemImage: "stop.circle")
-                            .frame(maxWidth: .infinity)
+                    if showingPacer || model.pacer != nil {
+                        PacerSection(model: model)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityIdentifier("stopButton")
+                    HStack {
+                        if model.pacer == nil {
+                            Button(showingPacer ? "Hide pacer" : "Pacer", systemImage: "wind") {
+                                showingPacer.toggle()
+                            }
+                            .buttonStyle(.bordered)
+                            .accessibilityIdentifier("pacerToggle")
+                        }
+                        Spacer()
+                        Button("Stop…", systemImage: "stop.circle", role: .destructive) { confirmingStop = true }
+                            .buttonStyle(.borderedProminent)
+                            .accessibilityIdentifier("stopButton")
+                    }
                 }
+                .padding()
             }
+        }
+        .confirmationDialog("Stop this recording and export it?", isPresented: $confirmingStop,
+                            titleVisibility: .visible) {
+            Button("Stop and export", role: .destructive) { Task { await model.stop() } }
+                .accessibilityIdentifier("confirmStop")
         }
     }
 }

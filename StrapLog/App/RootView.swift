@@ -5,6 +5,7 @@ import SwiftUI
 struct RootView: View {
     let model: RecorderModel
     @State private var showingHelp = false
+    @State private var showingDevice = false
 
     var body: some View {
         NavigationStack {
@@ -15,8 +16,14 @@ struct RootView: View {
                     HomeView(model: model)
                 }
             }
-            .navigationTitle("StrapLog")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    HeartLinkButton(link: model.link) { showingDevice = true }
+                }
+                ToolbarItem(placement: .principal) {
+                    RecordingTitle(recording: model.activeRecording)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Guide", systemImage: "questionmark.circle") { showingHelp = true }
                         .accessibilityIdentifier("helpButton")
@@ -24,6 +31,9 @@ struct RootView: View {
             }
         }
         .sheet(isPresented: $showingHelp) { HelpView(blocks: Guide.blocks) }
+        .sheet(isPresented: $showingDevice) {
+            DeviceSheet(model: model).presentationDetents([.medium, .large])
+        }
         .alert("Something went wrong", isPresented: .init(get: { model.errorMessage != nil },
                                                           set: { if !$0 { model.dismissError() } })) {
             Button("OK", role: .cancel) {}

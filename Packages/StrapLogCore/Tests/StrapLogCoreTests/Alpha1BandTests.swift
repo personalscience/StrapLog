@@ -13,4 +13,14 @@ struct Alpha1BandTests {
         #expect(Alpha1Band(alpha1: 0.5) == .moderate)
         #expect(Alpha1Band(alpha1: 0.49) == .veryHard)
     }
+
+    @Test("bounds tile 0…∞ with no gaps, and each band contains its own lower bound")
+    func bounds() {
+        let bands = Alpha1Band.allCases
+        #expect(bands.last?.lowerBound == 0)
+        #expect(bands.first?.upperBound == .infinity)
+        for (higher, lower) in zip(bands, bands.dropFirst()) { #expect(lower.upperBound == higher.lowerBound) }
+        for band in bands { #expect(Alpha1Band(alpha1: band.lowerBound) == band) }
+        #expect(Alpha1Band(alpha1: -0.1) == .veryHard)
+    }
 }

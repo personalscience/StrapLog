@@ -46,6 +46,12 @@ public struct LiveMetrics: Sendable {
         }
     }
 
+    /// The newest α1 value and when it became known, even if later windows had too few beats.
+    public var lastAlpha1: TrendPoint? {
+        guard let originMs, let w = windows.last(where: { $0.alpha1 != nil }), let a = w.alpha1 else { return nil }
+        return TrendPoint(atMs: originMs + Int64((w.tCenter + analyzer.window.width / 2) * 1000), value: a)
+    }
+
     /// Instantaneous HR (60000 / RR) of every beat in `rrHistory`.
     public var hrHistory: [TrendPoint] {
         rrHistory.map { TrendPoint(atMs: $0.atMs, value: 60_000 / $0.value) }

@@ -10,27 +10,32 @@ struct MarkerBar: View {
     @State private var note = ""
 
     var body: some View {
-        Text(Formats.marker(model.lastMarker, count: model.markerCount, nowMs: nowMs))
-            .font(.callout.monospacedDigit())
-            .foregroundStyle(model.lastMarker == nil ? .secondary : .primary)
-            .accessibilityIdentifier("lastMarker")
-            .sensoryFeedback(.impact, trigger: model.markerCount)
-        HStack {
-            ForEach(Self.quickMarkers, id: \.self) { marker in
-                Button(marker) { Task { await model.marker(marker) } }
+        VStack(alignment: .leading, spacing: 10) {
+            Text(Formats.marker(model.lastMarker, count: model.markerCount, nowMs: nowMs))
+                .font(.callout.monospacedDigit())
+                .foregroundStyle(model.lastMarker == nil ? .secondary : .primary)
+                .accessibilityIdentifier("lastMarker")
+                .sensoryFeedback(.impact, trigger: model.markerCount)
+            HStack {
+                ForEach(Self.quickMarkers, id: \.self) { marker in
+                    Button { Task { await model.marker(marker) } } label: {
+                        Text(marker).font(.title3.bold()).frame(maxWidth: .infinity, minHeight: 44)
+                    }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("marker-\(marker)")
+                }
             }
-        }
-        HStack {
-            TextField("Note", text: $note)
-                .accessibilityIdentifier("markerNote")
-            Button("Add") {
-                let text = note
-                note = ""
-                Task { await model.marker(text) }
+            HStack {
+                TextField("Note", text: $note)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityIdentifier("markerNote")
+                Button("Add") {
+                    let text = note
+                    note = ""
+                    Task { await model.marker(text) }
+                }
+                .disabled(note.trimmingCharacters(in: .whitespaces).isEmpty)
             }
-            .disabled(note.trimmingCharacters(in: .whitespaces).isEmpty)
         }
     }
 }

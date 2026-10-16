@@ -52,12 +52,35 @@ struct FormatsTests {
         #expect(Formats.contact(false) == "No skin contact")
     }
 
-    @Test("window status before, with and without features")
-    func windowStatus() {
-        #expect(Formats.window(endMs: nil, hasFeatures: false, nowMs: 0) == "First values after 2 min of beats")
-        #expect(Formats.window(endMs: 10_000, hasFeatures: true, nowMs: 22_500) == "2-min window ending 12 s ago")
-        #expect(Formats.window(endMs: 10_000, hasFeatures: false, nowMs: 10_000)
-                == "Too few beats in the window ending 0 s ago")
+    @Test("hero subline and freshness")
+    func heroSubline() {
+        #expect(Formats.ago(ms: 12_500) == "12 s ago")
+        #expect(Formats.ago(ms: 185_000) == "3 min ago")
+        #expect(Formats.ago(ms: -1) == "0 s ago")
+        #expect(Formats.heroSubline(rmssd: 8.12, artifactRate: 0.004, alpha1AtMs: nil, nowMs: 0)
+                == "First α1 after 2 min of beats")
+        #expect(Formats.heroSubline(rmssd: 8.12, artifactRate: 0.004, alpha1AtMs: 10_000, nowMs: 22_000)
+                == "RMSSD 8.1 ms · artifacts 0.4 % · α1 12 s ago")
+        #expect(Formats.heroSubline(rmssd: nil, artifactRate: nil, alpha1AtMs: 0, nowMs: 0)
+                == "RMSSD -- · artifacts -- · α1 0 s ago")
+    }
+
+    @Test("toolbar title and device fields")
+    func device() {
+        #expect(Formats.recordingTitle(name: "RAVINE", elapsedMs: 761_000) == "12:41 · RAVINE")
+        #expect(Formats.recordingTitle(name: "", elapsedMs: 5_000) == "0:05")
+        #expect(Formats.battery(82) == "82 %")
+        #expect(Formats.battery(nil) == "--")
+        #expect(Formats.deviceId(.connected(deviceId: "A1B2C3D4")) == "A1B2C3D4")
+        #expect(Formats.deviceId(.searching) == "--")
+        #expect(Formats.text(nil) == "--")
+    }
+
+    @Test("chart span chip and tab labels")
+    func chart() {
+        #expect(ChartSpan.allCases.map(Formats.span) == ["1 min", "2 min", "5 min", "15 min", "30 min", "1 h", "All"])
+        #expect(ChartMetric.allCases.map(Formats.metric) == ["HR", "α1", "RR"])
+        #expect(Formats.axis(.rr) == "RR ms")
     }
 
     @Test("pacer rate and countdown")

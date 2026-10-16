@@ -55,6 +55,20 @@ struct LiveMetricsTests {
         #expect(live.alpha1History.count == live.windows.filter { $0.alpha1 != nil }.count)
     }
 
+    @Test("lastAlpha1 is the newest α1 and outlives windows with too few beats")
+    func lastAlpha1() throws {
+        let fx = try RRFixture.load(RRFixture.names[0])
+        var live = LiveMetrics()
+        #expect(live.lastAlpha1 == nil)
+        let ends = fx.endTimesMs(originMs: Self.origin)
+        for (end, rr) in zip(ends, fx.rr_ms) { live.add(tEndMs: end, rrMs: rr) }
+        #expect(live.lastAlpha1 == live.alpha1History.last)
+        live.add(tEndMs: ends.last! + 600_000, rrMs: 1000)   // ten silent minutes
+        #expect(live.latest == nil)
+        #expect(live.lastAlpha1 != nil)
+        #expect(live.lastAlpha1 == live.alpha1History.last)
+    }
+
     @Test("a window with fewer than 60 beats yields no features")
     func refusesShortWindows() {
         var live = Self.batchStride()

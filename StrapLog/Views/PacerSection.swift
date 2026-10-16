@@ -7,16 +7,22 @@ struct PacerSection: View {
     @State private var rate = BreathingPacer.defaultRate
 
     var body: some View {
-        if let pacer = model.pacer {
-            BreathingPacerView(pacer: pacer)
-            Button("Stop pacer (\(pacer.note))") { Task { await model.stopPacer() } }
-                .accessibilityIdentifier("pacerStop")
-        } else {
-            Stepper(value: $rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
-                Text(Formats.rate(rate)).monospacedDigit()
+        VStack(spacing: 12) {
+            if let pacer = model.pacer {
+                BreathingPacerView(pacer: pacer)
+                Button("Stop pacer (\(pacer.note))") { Task { await model.stopPacer() } }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("pacerStop")
+            } else {
+                Stepper(value: $rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
+                    Text(Formats.rate(rate)).monospacedDigit()
+                }
+                Button("Start pacer") { Task { await model.startPacer(breathsPerMinute: rate) } }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("pacerStart")
             }
-            Button("Start pacer") { Task { await model.startPacer(breathsPerMinute: rate) } }
-                .accessibilityIdentifier("pacerStart")
         }
+        .padding(12)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
     }
 }
