@@ -56,16 +56,53 @@ struct OvernightSessionTests {
         #expect(await session.autoStopDue() == .upright)
     }
 
-    @Test("the wake time is due once reached, and the stop is noted with the reason")
+    func restingLabels(_ id: Int64) throws -> [String?] {
+        try rig.events(id).filter { $0.kind == .marker || $0.kind == .stop }.map { $0.label ?? $0.note }
+    }
+
+    @Test("at the wake time a resting reading begins; the stop is due restingMs later and closes it")
     func wakeTime() async throws {
         let id = try await session.start(.sleep, name: "", plan: OvernightPlan(wakeAtMs: rig.clock.nowMs() + 60_000))
-        rig.clock.advance(byMs: 59_999)
+        try await play(posture(.lying, minutes: 2))
+        #expect(try await session.beginRestingIfDue() != nil)
+        let started = rig.clock.nowMs()
+        #expect(try await session.beginRestingIfDue() == nil, "logged once")
+        rig.clock.advance(byMs: OvernightPlan.restingMs - 1)
         #expect(await session.autoStopDue() == nil)
         rig.clock.advance(byMs: 1)
         #expect(await session.autoStopDue() == .wakeTime)
         try await session.stop(because: .wakeTime)
-        #expect(try rig.events(id).last?.note == "wake_time")
+        #expect(try restingLabels(id) == ["resting_start", "resting_end", "wake_time"])
+        let markers = try rig.events(id).filter { $0.kind == .marker }.map(\.atMs)
+        #expect(markers == [started, started + OvernightPlan.restingMs])
         #expect(await session.autoStopDue() == nil, "idle")
+    }
+
+    @Test("before the wake time nothing is due")
+    func beforeWake() async throws {
+        try await session.start(.sleep, name: "", plan: OvernightPlan(wakeAtMs: rig.clock.nowMs() + 60_000))
+        rig.clock.advance(byMs: 59_999)
+        #expect(try await session.beginRestingIfDue() == nil)
+        #expect(await session.autoStopDue() == nil)
+    }
+
+    @Test("already upright at the wake time: no resting reading, the stop is due at once")
+    func uprightAtWake() async throws {
+        let id = try await session.start(.sleep, name: "", plan: OvernightPlan(wakeAtMs: rig.clock.nowMs() + 60_000))
+        try await play(posture(.lying, minutes: 30) + posture(.upright, minutes: 2))
+        #expect(try await session.beginRestingIfDue() == nil)
+        #expect(await session.autoStopDue() == .wakeTime)
+        try await session.stop(because: .wakeTime)
+        #expect(try restingLabels(id) == ["wake_time"])
+    }
+
+    @Test("a manual Stop during the reading leaves it open-ended")
+    func manualStopDuringResting() async throws {
+        let id = try await session.start(.sleep, name: "", plan: OvernightPlan(wakeAtMs: rig.clock.nowMs()))
+        try await session.beginRestingIfDue()
+        rig.clock.advance(byMs: 60_000)
+        try await session.stop()
+        #expect(try restingLabels(id) == ["resting_start", nil])
     }
 
     @Test("a relaunch mid-night restores the plan from context")
@@ -74,6 +111,22 @@ struct OvernightSessionTests {
         rig.clock.advance(byMs: 3_600_000)
         let relaunched = rig.relaunched()
         try await relaunched.resumeIfOpen()
+        #expect(try await relaunched.beginRestingIfDue() != nil)
+    }
+
+    @Test("a relaunch during the reading keeps its start: no second marker, due on the original schedule")
+    func resumeDuringResting() async throws {
+        let id = try await session.start(.sleep, name: "", plan: OvernightPlan(wakeAtMs: rig.clock.nowMs()))
+        try await session.beginRestingIfDue()
+        rig.clock.advance(byMs: 2 * 60_000)
+        let relaunched = rig.relaunched()
+        try await relaunched.resumeIfOpen()
+        #expect(try await relaunched.beginRestingIfDue() == nil)
+        rig.clock.advance(byMs: OvernightPlan.restingMs - 2 * 60_000 - 1)
+        #expect(await relaunched.autoStopDue() == nil)
+        rig.clock.advance(byMs: 1)
         #expect(await relaunched.autoStopDue() == .wakeTime)
+        try await relaunched.stop(because: .wakeTime)
+        #expect(try restingLabels(id) == ["resting_start", "resting_end", "wake_time"])
     }
 }

@@ -240,19 +240,23 @@ struct RecorderModelTests {
         #expect(model.isRecording)
     }
 
-    @Test("an overnight recording stops itself at the wake time and exports like a manual Stop")
+    @Test("an overnight recording takes a resting reading at the wake time, then stops itself and exports like a manual Stop")
     func autoStop() async throws {
         let wake = clock.nowMs() + 90_000
         await model.start(.sleep, name: "night", plan: OvernightPlan(wakeAtMs: wake))
         #expect(model.overnightPlan?.wakeAtMs == wake)
         await play([.wait(ms: 60_000), hr([1024])])
+        #expect(model.markers.isEmpty)
+        await play([.wait(ms: 30_000), hr([1024])])
         #expect(model.isRecording)
-        await play([.wait(ms: 30_000), hr([1024]), .wait(ms: 1000), hr([1024])])
+        #expect(model.lastMarker?.label == OvernightPlan.restingStartLabel)
+        await play([.wait(ms: OvernightPlan.restingMs), hr([1024]), .wait(ms: 1000), hr([1024])])
         #expect(!model.isRecording)
         #expect(model.overnightPlan == nil)
         #expect(model.errorMessage == nil)
         #expect(try strings("SELECT note FROM event WHERE kind = 'stop'") == ["wake_time"])
-        #expect(model.recordings.map(\.beatCount) == [2], "the event that tripped the stop is kept; later ones are not")
+        #expect(try strings("SELECT label FROM event WHERE kind = 'marker' ORDER BY id") == ["resting_start", "resting_end"])
+        #expect(model.recordings.map(\.beatCount) == [3], "the event that tripped the stop is kept; later ones are not")
         let snapshot = try #require(model.lastSnapshot)
         #expect(FileManager.default.fileExists(atPath: snapshot.path))
     }

@@ -28,6 +28,8 @@ public actor RecordingSession {
     private var plan: OvernightPlan?
     /// Posture of the active overnight recording, rebuilt from scratch after a relaunch.
     private var posture = PostureTracker()
+    /// When the active overnight recording's resting reading began, restored after a relaunch.
+    private var restingStartMs: Int64?
     private let uprightStopMs: Int64
 
     /// The recording being written, or nil when idle.
@@ -102,6 +104,10 @@ public actor RecordingSession {
         let lastMotion = motion?.flush()
         let rec = try database.writer.write { db -> Recording in
             try MotionSecond.save(lastMotion.map { [$0] } ?? [], db: db)
+            if reason == .wakeTime, restingStartMs != nil {
+                var end = RecordingEvent(recordingId: id, atMs: now, kind: .marker, label: OvernightPlan.restingEndLabel)
+                try end.insert(db)
+            }
             let rec = try Self.finish(id, atMs: now, note: reason?.rawValue, db: db)
             if directory != nil {
                 var snap = RecordingEvent(recordingId: id, atMs: now, kind: .snapshot,
@@ -176,11 +182,28 @@ public actor RecordingSession {
         return try snapshot(into: directory)
     }
 
+    /// At the wake time, logs the `resting_start` marker and returns it, unless the body is already
+    /// upright or the reading has begun. Checked after each sensor event, before `autoStopDue`.
+    @discardableResult
+    public func beginRestingIfDue() throws -> RecordingEvent? {
+        guard let id = recordingId, let wake = plan?.wakeAtMs, restingStartMs == nil,
+              posture.posture != .upright else { return nil }
+        let now = clock.nowMs()
+        guard now >= wake else { return nil }
+        restingStartMs = now
+        return try log(.marker, label: OvernightPlan.restingStartLabel, note: nil, recordingId: id, atMs: now)
+    }
+
     /// Why the active overnight recording should stop itself now, or nil. Checked after each
-    /// sensor event, like `snapshotIfDue`, so it needs no timer.
+    /// sensor event, like `snapshotIfDue`, so it needs no timer. From the wake time it waits out
+    /// the resting reading, unless the body was already upright and there is nothing to wait for.
     public func autoStopDue() -> AutoStop? {
         guard recordingId != nil, let plan else { return nil }
-        if let wake = plan.wakeAtMs, clock.nowMs() >= wake { return .wakeTime }
+        let now = clock.nowMs()
+        if let wake = plan.wakeAtMs, now >= wake {
+            if let start = restingStartMs, now - start >= OvernightPlan.restingMs { return .wakeTime }
+            if restingStartMs == nil, posture.posture == .upright { return .wakeTime }
+        }
         if posture.uprightAfterLyingMs >= uprightStopMs { return .upright }
         return nil
     }
@@ -203,7 +226,7 @@ public actor RecordingSession {
         if let recordingId { return recordingId }
         let now = clock.nowMs()
         let staleAfterMs = self.staleAfterMs
-        let resumed = try database.writer.write { db -> (id: Int64, lastSnapshotMs: Int64, rec: Recording)? in
+        let resumed = try database.writer.write { db -> (id: Int64, lastSnapshotMs: Int64, rec: Recording, restingStartMs: Int64?)? in
             guard let open = try Recording.open(db), let id = open.id else { return nil }
             let last = try Self.lastActivityMs(id, db: db) ?? open.startedAtMs
             if now - last > staleAfterMs {
@@ -215,12 +238,16 @@ public actor RecordingSession {
             let lastSnapshot = try Int64.fetchOne(db, sql: """
                 SELECT MAX(at_ms) FROM event WHERE recording_id = ? AND kind = 'snapshot'
                 """, arguments: [id])
-            return (id, lastSnapshot ?? open.startedAtMs, open)
+            let restingStart = try Int64.fetchOne(db, sql: """
+                SELECT MIN(at_ms) FROM event WHERE recording_id = ? AND kind = 'marker' AND label = ?
+                """, arguments: [id, OvernightPlan.restingStartLabel])
+            return (id, lastSnapshot ?? open.startedAtMs, open, restingStart)
         }
         guard let resumed else { return nil }
         let overnight = ActivityPreset.named(resumed.rec.activity).overnight
         attach(resumed.id, lastSnapshotMs: resumed.lastSnapshotMs,
                plan: overnight ? OvernightPlan(contextJSON: resumed.rec.context) : nil)
+        restingStartMs = resumed.restingStartMs
         return resumed.id
     }
 
@@ -315,6 +342,7 @@ public actor RecordingSession {
         motion = MotionReducer(recordingId: id)
         self.plan = plan
         posture = PostureTracker()
+        restingStartMs = nil
     }
 
     private func detach() {
@@ -323,6 +351,7 @@ public actor RecordingSession {
         motion = nil
         plan = nil
         posture = PostureTracker()
+        restingStartMs = nil
     }
 
     /// Sets `ended_at_ms` and logs the `stop` event in the caller's transaction.

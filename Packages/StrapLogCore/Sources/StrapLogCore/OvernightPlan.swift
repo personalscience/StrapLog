@@ -13,6 +13,12 @@ public struct OvernightPlan: Codable, Sendable, Equatable {
     /// Default upright time that ends a night: longer than a trip to the bathroom.
     public static let defaultUprightStopMs: Int64 = 10 * 60_000
 
+    /// The morning resting reading: still lying from the wake time for this long, bracketed by
+    /// `resting_start`/`resting_end` markers, before the recording stops. `hrv-resting` reads it.
+    public static let restingMs: Int64 = 5 * 60_000
+    public static let restingStartLabel = "resting_start"
+    public static let restingEndLabel = "resting_end"
+
     /// A plan to stop at the next occurrence of `time`'s hour and minute (a time picker's value).
     public init(wakeAt time: Date, after: Date = .now, timeZone: TimeZone = .current) {
         var calendar = Calendar(identifier: .gregorian)

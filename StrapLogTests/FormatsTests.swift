@@ -23,7 +23,7 @@ struct FormatsTests {
     func overnightPlan() {
         let pdt = TimeZone(secondsFromGMT: -7 * 3600)!
         #expect(Formats.overnightPlan(OvernightPlan(wakeAtMs: 1_760_621_400_000), timeZone: pdt)
-                == "Stops at 06:30, or after 10 min upright")
+                == "5 min resting at 06:30, then stops; or after 10 min upright")
         #expect(Formats.overnightPlan(OvernightPlan(wakeAtMs: nil)) == "Stops after 10 min upright")
     }
 

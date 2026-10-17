@@ -77,6 +77,9 @@ public final class RecorderModel {
                 lastSnapshot = url
             }
             apply(event)
+            await perform {
+                if let resting = try await session.beginRestingIfDue() { markers.append(resting) }
+            }
             if let reason = await session.autoStopDue() { await finish(because: reason) }
         }
     }

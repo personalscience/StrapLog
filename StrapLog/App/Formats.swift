@@ -65,7 +65,7 @@ enum Formats {
 
     // MARK: Overnight
 
-    /// How an overnight recording will end, e.g. `Stops at 06:30, or after 10 min upright`.
+    /// How an overnight recording will end, e.g. `5 min resting at 06:30, then stops; or after 10 min upright`.
     static func overnightPlan(_ plan: OvernightPlan, uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs,
                               timeZone: TimeZone = .current) -> String {
         let upright = "\(uprightStopMs / 60_000) min upright"
@@ -74,7 +74,8 @@ enum Formats {
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = timeZone
         f.dateFormat = "HH:mm"
-        return "Stops at \(f.string(from: Date(timeIntervalSince1970: Double(wake) / 1000))), or after \(upright)"
+        let wakeTime = f.string(from: Date(timeIntervalSince1970: Double(wake) / 1000))
+        return "\(OvernightPlan.restingMs / 60_000) min resting at \(wakeTime), then stops; or after \(upright)"
     }
 
     // MARK: Live metrics

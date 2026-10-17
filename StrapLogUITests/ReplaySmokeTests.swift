@@ -54,7 +54,7 @@ final class ReplaySmokeTests: XCTestCase {
 
         let plan = app.staticTexts["overnightPlan"]
         XCTAssertTrue(plan.waitForExistence(timeout: 10))
-        XCTAssertTrue(plan.label.hasPrefix("Stops"))
+        XCTAssertTrue(plan.label.lowercased().contains("stops"))
         XCTAssertFalse(app.segmentedControls["chartMetric"].exists, "no chart overnight")
         app.buttons["marker-lights_out"].tap()
         XCTAssertTrue(app.staticTexts["lastMarker"].waitForLabel(containing: "lights_out", timeout: 5))
