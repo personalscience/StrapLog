@@ -2,16 +2,18 @@ import StrapLogCore
 import SwiftUI
 import WidgetKit
 
-/// Lock Screen and StandBy (`.medium`), or the Watch Smart Stack (`.small`).
+/// Lock Screen (`.medium`), StandBy full screen, or the Watch Smart Stack (`.small`).
 struct LiveStatusView: View {
     let status: LiveStatus
     let isStale: Bool
     @Environment(\.activityFamily) private var family
+    @Environment(\.isActivityFullscreen) private var isFullscreen
 
     var body: some View {
         switch family {
         case .small: small
-        default: medium
+        default:
+            if isFullscreen { StandByStatusView(status: status, isStale: isStale) } else { medium }
         }
     }
 

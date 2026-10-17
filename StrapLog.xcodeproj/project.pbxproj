@@ -27,6 +27,7 @@
 		3D097411B8B33F27D8C750F3 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */; };
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
+		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
 		4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */; };
 		52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27C9B67927661DECBD978D3 /* TrendChart.swift */; };
@@ -183,6 +184,7 @@
 		ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerBar.swift; sourceTree = "<group>"; };
 		EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkFromLiveActivityIntent.swift; sourceTree = "<group>"; };
 		F1E316AE5160101E447A64C2 /* HeartLinkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartLinkButton.swift; sourceTree = "<group>"; };
+		F65247064E529D68329C5D0D /* StandByStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandByStatusView.swift; sourceTree = "<group>"; };
 		FB838F79AB96531AB2A91409 /* LiveStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStatusView.swift; sourceTree = "<group>"; };
 		FD2D5442358A337BFA7EBBC6 /* HRVKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HRVKit; path = Packages/HRVKit; sourceTree = SOURCE_ROOT; };
 		FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alpha1Tile.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				2921990E24264C14F324C4DA /* LiveMetricLabel.swift */,
 				FB838F79AB96531AB2A91409 /* LiveStatusView.swift */,
 				0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */,
+				F65247064E529D68329C5D0D /* StandByStatusView.swift */,
 				2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */,
 			);
 			path = StrapLogWidgets;
@@ -693,6 +696,7 @@
 				B74E44AFBF645F8ABA175172 /* LiveStatusView.swift in Sources */,
 				F9999657D1FEAB36BD02E535 /* MarkFromLiveActivityIntent.swift in Sources */,
 				2D35B8EDAD390F74B7F54858 /* RecordingLiveActivity.swift in Sources */,
+				41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */,
 				0B9A7EA7B4FE42E702EB8589 /* StopFromLiveActivityIntent.swift in Sources */,
 				B72877446400D2803528FE01 /* StrapLogWidgetsBundle.swift in Sources */,
 			);

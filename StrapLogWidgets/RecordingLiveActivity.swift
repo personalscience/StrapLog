@@ -2,8 +2,8 @@ import StrapLogCore
 import SwiftUI
 import WidgetKit
 
-/// The open recording's Live Activity. The Lock Screen view is also what StandBy shows full
-/// screen; the `.small` family is the Watch Smart Stack.
+/// The open recording's Live Activity. StandBy shows `minimal` until tapped, then the Lock
+/// Screen view full screen (its own layout); the `.small` family is the Watch Smart Stack.
 struct RecordingLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: LiveRecordingAttributes.self) { context in
