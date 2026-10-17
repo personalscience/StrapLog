@@ -8,21 +8,22 @@ import UIKit
 @MainActor
 final class AppDelegate: NSObject, UIApplicationDelegate {
     /// Created in `init` so the Polar central manager (with its restore identifier) exists
-    /// before `didFinishLaunching` returns, as CoreBluetooth restoration requires.
-    let dependencies: Result<AppDependencies, Error>
-    private var launcher: Launcher?
+    /// before `didFinishLaunching` returns, as CoreBluetooth restoration requires. Fails only
+    /// for a bad `-replay` fixture; a database that cannot open yet is the launcher's to retry.
+    let launcher: Result<Launcher, Error>
+    private let source: (any HeartSource)?
 
     override init() {
-        dependencies = Result { try AppDependencies() }
+        let dependencies = Result { try AppDependencies() }
+        launcher = dependencies.map { Launcher(source: $0.source, openModel: $0.openModel) }
+        source = try? dependencies.get().source
         super.init()
     }
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        if case .success(let deps) = dependencies {
-            let launcher = Launcher(model: deps.model, source: deps.source)
+        if case .success(let launcher) = launcher {
             launcher.start()
-            self.launcher = launcher
             // Shortcuts and Siri run their intents through the same launcher.
             AppDependencyManager.shared.add(dependency: launcher)
             StrapLogShortcuts.updateAppShortcutParameters()
@@ -30,9 +31,14 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         return true
     }
 
+    /// First unlock after a reboot: a restoration launch before it could not open the database.
+    func applicationProtectedDataDidBecomeAvailable(_ application: UIApplication) {
+        if case .success(let launcher) = launcher { launcher.start() }
+    }
+
     /// Best effort: a force-quit from the switcher of a suspended app never gets here, and the
     /// strap ends PMD streams when the link drops anyway; a later start clears a leftover stream.
     func applicationWillTerminate(_ application: UIApplication) {
-        if case .success(let deps) = dependencies { deps.source.setMotionStreaming(false) }
+        source?.setMotionStreaming(false)
     }
 }

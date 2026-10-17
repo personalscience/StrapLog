@@ -18,7 +18,7 @@ struct AddMarkerIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let outcome = await launcher.whenLaunched { [text] in await $0.markIfRecording(text) }
+        let outcome = try await launcher.whenLaunched { [text] in await $0.markIfRecording(text) }
         return .result(dialog: try outcome.dialog { _ in "Marked \(text)." })
     }
 }

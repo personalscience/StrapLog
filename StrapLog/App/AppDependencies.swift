@@ -2,13 +2,15 @@ import Foundation
 import StrapLogCore
 
 /// Composition root: picks the database location, the heart source and the export folder.
+/// The source is built at once (CoreBluetooth restoration needs its central manager before
+/// `didFinishLaunching` returns); the database only opens when `openModel` is called, which
+/// can fail before first unlock after a reboot and is retried by `Launcher`.
 @MainActor
 struct AppDependencies {
-    let model: RecorderModel
     let source: any HeartSource
+    let openModel: @MainActor () throws -> RecorderModel
 
     init(options: LaunchOptions = LaunchOptions()) throws {
-        let fm = FileManager.default
         let dbURL: URL
         // Documents/StrapLog is what Files shows under On My iPhone → StrapLog.
         let local = URL.documentsDirectory.appending(path: "StrapLog")
@@ -19,7 +21,7 @@ struct AppDependencies {
             let suite = "StrapLog.fresh"
             UserDefaults.standard.removePersistentDomain(forName: suite)
             defaults = UserDefaults(suiteName: suite) ?? .standard
-            dbURL = fm.temporaryDirectory.appending(path: "StrapLog-\(UUID().uuidString)/live.sqlite")
+            dbURL = FileManager.default.temporaryDirectory.appending(path: "StrapLog-\(UUID().uuidString)/live.sqlite")
             exports = ExportFolder(local: local)
         } else {
             dbURL = URL.applicationSupportDirectory.appending(path: "StrapLog/live.sqlite")
@@ -30,8 +32,10 @@ struct AppDependencies {
         }
         let info = Bundle.main.infoDictionary ?? [:]
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
-        model = RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                              defaults: defaults, display: LiveActivityDisplay())
+        openModel = { [defaults] in
+            RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
+                          defaults: defaults, display: LiveActivityDisplay())
+        }
 
         if let fixture = options.replayFixture {
             guard let url = Bundle.main.url(forResource: fixture, withExtension: "json") else {

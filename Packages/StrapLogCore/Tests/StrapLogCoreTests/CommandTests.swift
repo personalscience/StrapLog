@@ -53,7 +53,7 @@ struct CommandTests {
         defer { try? FileManager.default.removeItem(at: dir) }
         let id = try await RecordingSession(database: database, clock: clock).start(.sleep, name: "night", plan: wake)
         let launcher = Launcher(model: model, source: FakeHeartSource(clock: clock, script: []))
-        let outcome = await launcher.whenLaunched { await $0.startUnlessRecording(.sleep, plan: wake) }
+        let outcome = try await launcher.whenLaunched { await $0.startUnlessRecording(.sleep, plan: wake) }
         guard case .alreadyRecording(let rec) = outcome else { Issue.record("got \(outcome)"); return }
         #expect(rec.id == id)
     }

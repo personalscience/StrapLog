@@ -10,7 +10,7 @@ struct StopRecordingIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let outcome = await launcher.whenLaunched { await $0.stopIfRecording() }
+        let outcome = try await launcher.whenLaunched { await $0.stopIfRecording() }
         return .result(dialog: try outcome.dialog { "Stopped \($0.name) and exported it." })
     }
 }

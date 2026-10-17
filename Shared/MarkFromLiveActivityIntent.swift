@@ -19,7 +19,7 @@ struct MarkFromLiveActivityIntent: LiveActivityIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        _ = await launcher.whenLaunched { [label] in await $0.markIfRecording(label) }
+        _ = try await launcher.whenLaunched { [label] in await $0.markIfRecording(label) }
         return .result()
     }
 }

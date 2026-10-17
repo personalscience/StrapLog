@@ -31,7 +31,11 @@ data shows it. Read before touching `AppDelegate`, `Launcher` or `PolarHeartSour
   (`relaunch`, then `connect`). The gap is bracketed by `relaunch`/`connect` in `coverage`.
 - **Reboot.** Restoration does not survive a reboot either. Opening the app after the reboot
   resumes the recording if it went silent less than 6 h ago (`defaultStaleAfterMs`); otherwise it
-  is closed at its last activity with a `stop` noted `stale`.
+  is closed at its last activity with a `stop` noted `stale`. iOS can still start the process
+  before first unlock (seen 2026-10-17; the trigger is unconfirmed: restoration, prewarming or a
+  Live Activity intent). Data protection keeps `live.sqlite` unreadable then, so `Launcher` keeps
+  the open error and tries again on `applicationProtectedDataDidBecomeAvailable` and on every
+  foreground (`straplog-80h.17`). No beats are recorded before first unlock.
 - **Bluetooth turned off.** Logged as `ble_off` (and usually `disconnect`); turning it on logs
   `ble_on`, and the SDK's automatic reconnection logs `connect`.
 - **Out of range.** `disconnect` with the SDK's reason; `connect` when the strap returns. The
