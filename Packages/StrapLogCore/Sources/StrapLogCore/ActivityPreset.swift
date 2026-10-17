@@ -33,6 +33,11 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable, Encod
         all.first { $0.id == id } ?? other
     }
 
+    /// This preset with another marker bar (`MarkerPresets`).
+    public func with(markers: [String]) -> ActivityPreset {
+        ActivityPreset(id: id, title: title, systemImage: systemImage, markers: markers, pacer: pacer, overnight: overnight)
+    }
+
     /// The name a recording gets when none is typed: `<id> <local date>`, e.g. `sleep 2026-10-16`.
     public func defaultName(atMs: Int64, tzOffsetS: Int) -> String {
         let f = DateFormatter()

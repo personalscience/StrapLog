@@ -7,11 +7,13 @@ public enum ExportMeta {
     public static let schemaDoc = "https://github.com/personalscience/StrapLog/blob/main/docs/SCHEMA.md"
     public static let timeBasis = "*_ms are Unix epoch ms UTC; local time = UTC + recording.tz_offset_s"
 
-    public static func rows(for recording: Recording, appVersion: String, exportedAtMs: Int64) throws -> [String: String] {
+    /// `preset` is the recording's preset as the user has it, edited marker bar included.
+    public static func rows(for recording: Recording, preset: ActivityPreset, appVersion: String,
+                            exportedAtMs: Int64) throws -> [String: String] {
         [
             "app_version": appVersion,
             "exported_at_ms": String(exportedAtMs),
-            "preset": try json(ActivityPreset.named(recording.activity)),
+            "preset": try json(preset),
             "event_kinds": try json(EventKind.allCases.map(\.rawValue)),
             "time_basis": timeBasis,
             "schema_doc": schemaDoc,

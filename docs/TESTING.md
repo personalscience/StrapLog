@@ -25,7 +25,7 @@
 
 - Launch arguments (`LaunchOptions`): `-replay resting` plays `Tests/fixtures/resting.json` (bundled as an app resource) through `ReplayHeartSource`; `-speed 20` speeds it up; `-freshDatabase` uses an empty temp DB. Set them in the scheme's Run → Arguments for manual simulator runs.
 - `RecorderModel` (the view model) lives in StrapLogCore and is tested on macOS with `FakeHeartSource`; the app target holds only `LaunchOptions`, `Formats`, the SwiftUI views and `PolarHeartSource`.
-- `StrapLogUITests/ReplaySmokeTests` drives Start → marker → Stop at 20× and checks the export label.
+- `StrapLogUITests/ReplaySmokeTests` drives Start → marker → Stop at 20× and checks the export label; `testNoteSheetAndMarkerEditor` covers the `+` note sheet, recent notes and the long-press marker editor (`-freshDatabase` also starts with unedited marker bars).
 - Replayed data has compressed receive times, so `check_snapshot.sh` fails its Σrr check on it by design.
 
 ## Checking a device export

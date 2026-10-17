@@ -24,8 +24,10 @@
 		3DB941E679FD31F5BC03D15A /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD7D4D9836E36102750E387 /* Alpha1Band+Color.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
+		4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */; };
 		52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27C9B67927661DECBD978D3 /* TrendChart.swift */; };
 		562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */; };
+		5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */; };
 		6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */; };
 		709EDC933723275730834E4A /* Guide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B913F13B0F39F7BBCC9175EB /* Guide.swift */; };
 		711056491FBEE5CD529700DA /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050424C851AC49404C44C6E2 /* HelpView.swift */; };
@@ -84,6 +86,7 @@
 		2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarHeartSource.swift; sourceTree = "<group>"; };
 		327C9813B86B8D8E490020D2 /* AppPhase+ScenePhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPhase+ScenePhase.swift"; sourceTree = "<group>"; };
 		3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogShortcuts.swift; sourceTree = "<group>"; };
+		3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerPresetEditor.swift; sourceTree = "<group>"; };
 		3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkStatus+Heart.swift"; sourceTree = "<group>"; };
 		4053711F9AE1E85F78BE1168 /* RecordingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingRow.swift; sourceTree = "<group>"; };
 		407BC12CED71B5822CEB173A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +110,7 @@
 		9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandOutcome+Dialog.swift"; sourceTree = "<group>"; };
 		A46081A1E699BACE9992A77C /* StrapLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StrapLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerNoteSheet.swift; sourceTree = "<group>"; };
 		B74EEB125A8732BB27725217 /* resting.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = resting.json; sourceTree = "<group>"; };
 		B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityQuery.swift; sourceTree = "<group>"; };
 		B913F13B0F39F7BBCC9175EB /* Guide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guide.swift; sourceTree = "<group>"; };
@@ -207,6 +211,8 @@
 				418A17ED855F2E814D5B2EB8 /* HomeView.swift */,
 				3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */,
 				ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */,
+				B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */,
+				3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */,
 				795ABEAC013BD867F90236B6 /* MetricsHero.swift */,
 				0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */,
 				8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */,
@@ -489,6 +495,8 @@
 				0318E0502E07C55D48AF768C /* LaunchOptions.swift in Sources */,
 				6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */,
 				F3B2104627C475AAB7781FE2 /* MarkerBar.swift in Sources */,
+				5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */,
+				4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */,
 				9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */,
 				CD4E98F08B4ADE5EF5C5E694 /* OvernightView.swift in Sources */,
 				89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */,

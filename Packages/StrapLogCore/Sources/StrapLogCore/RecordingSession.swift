@@ -33,6 +33,8 @@ public actor RecordingSession {
     private let uprightStopMs: Int64
     /// Written into each export's `meta` and `index.json`.
     private let appVersion: String
+    /// The user's marker bars, so each export's `preset` carries the vocabulary in use.
+    private var markerPresets: MarkerPresets
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
@@ -50,9 +52,10 @@ public actor RecordingSession {
     public init(database: StrapLogDatabase, clock: any WallClock = SystemClock(),
                 staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs,
                 uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs,
-                appVersion: String = "dev") {
+                appVersion: String = "dev", markerPresets: MarkerPresets = MarkerPresets()) {
         self.database = database
         self.appVersion = appVersion
+        self.markerPresets = markerPresets
         self.clock = clock
         self.staleAfterMs = staleAfterMs
         self.uprightStopMs = uprightStopMs
@@ -255,6 +258,11 @@ public actor RecordingSession {
         return resumed.id
     }
 
+    /// Takes the user's edited marker bars for exports from now on.
+    public func use(_ markerPresets: MarkerPresets) {
+        self.markerPresets = markerPresets
+    }
+
     // MARK: Sensor events
 
     public func ingest(_ event: SensorEvent) throws {
@@ -345,7 +353,8 @@ public actor RecordingSession {
     private func export(_ rec: Recording, id: Int64, into directory: URL) throws -> URL {
         let url = directory.appendingPathComponent(Snapshot.fileName(for: rec))
         try Snapshot.write(database, recordingId: id, to: url,
-                           meta: ExportMeta.rows(for: rec, appVersion: appVersion, exportedAtMs: clock.nowMs()))
+                           meta: ExportMeta.rows(for: rec, preset: markerPresets.preset(rec.activity), appVersion: appVersion,
+                                                 exportedAtMs: clock.nowMs()))
         try reindex(directory)
         return url
     }

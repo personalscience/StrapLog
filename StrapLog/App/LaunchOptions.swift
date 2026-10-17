@@ -4,7 +4,7 @@ import Foundation
 ///
 ///     -replay <fixture>   play Tests/fixtures/<fixture>.json instead of connecting to the H10
 ///     -speed <x>          replay speed multiplier (default 1)
-///     -freshDatabase      use an empty database in the temp directory (UI tests)
+///     -freshDatabase      use an empty database in the temp directory and unedited marker bars (UI tests)
 struct LaunchOptions: Equatable {
     var replayFixture: String?
     var replaySpeed: Double = 1

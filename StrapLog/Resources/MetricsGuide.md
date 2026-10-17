@@ -24,7 +24,9 @@ StrapLog is a personal measurement tool, not a medical device. Use it to compare
 
 ## Markers
 
-Tap **a**, **b**, **c** or **end**, or type a note, to stamp the current moment, for example "lying down," "start stage 3," or "coffee." Markers are saved with the recording, so analysis can split a session into parts (rest vs. exercise, before vs. after). They do not change any measurement.
+Tap **a**, **b**, **c** or **end**, or tap **+** to type a note, to stamp the current moment, for example "lying down," "start stage 3," or "coffee." Notes you have used before are offered again for one-tap reuse. Markers are saved with the recording, so analysis can split a session into parts (rest vs. exercise, before vs. after). They do not change any measurement.
+
+**Long-press the marker row** to edit its buttons: add, rename, delete or reorder them. Each activity keeps its own set (Sleep's *lights out / awake / up* are separate from Other's), the change applies at once, even mid-recording, and **Restore defaults** brings back the original set.
 
 ## The recordings list
 

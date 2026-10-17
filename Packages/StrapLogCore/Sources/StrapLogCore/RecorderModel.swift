@@ -33,28 +33,41 @@ public final class RecorderModel {
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     public private(set) var errorMessage: String?
+    /// The user's marker bars, one per activity.
+    public private(set) var markerPresets: MarkerPresets
+    /// Free-text marker notes offered as one-tap suggestions, most recent first.
+    public private(set) var recentNotes: [String] = []
 
     public var isRecording: Bool { activeRecording != nil }
     /// The active recording's preset: its marker bar and pacer. `other` when idle.
-    public var activePreset: ActivityPreset { ActivityPreset.named(activeRecording?.activity ?? ActivityPreset.other.id) }
+    public var activePreset: ActivityPreset { markerPresets.preset(activeRecording?.activity ?? ActivityPreset.other.id) }
 
     private let session: RecordingSession
     private let database: StrapLogDatabase
     private let exports: ExportFolder
     private let snapshotEveryMs: Int64
+    /// Where `markerPresets` is saved.
+    private let defaults: UserDefaults
     /// The source being consumed; told to stream motion only while recording.
     private var source: (any HeartSource)?
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
+    /// How many `recentNotes` to offer.
+    public static let recentNoteLimit = 8
 
     /// `appVersion` is stamped into every export (`ExportMeta`, `index.json`).
     public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
-                snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs, appVersion: String = "dev") {
+                snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs, appVersion: String = "dev",
+                defaults: UserDefaults = .standard) {
         self.database = database
         self.exports = exports
         self.snapshotEveryMs = snapshotEveryMs
-        self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion)
+        self.defaults = defaults
+        let markerPresets = MarkerPresets.load(from: defaults)
+        self.markerPresets = markerPresets
+        self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
+                                        markerPresets: markerPresets)
     }
 
     /// Call once at launch, before `consume`: reattaches to an unfinished recording.
@@ -62,6 +75,7 @@ public final class RecorderModel {
         await perform {
             if let id = try await session.resumeIfOpen() { try loadActive(id) }
             try refreshRecordings()
+            try refreshRecentNotes()
         }
     }
 
@@ -114,7 +128,23 @@ public final class RecorderModel {
         guard label != nil || text != nil else { return }
         await perform {
             markers.append(try await session.marker(label: label, note: text))
+            if text != nil { try refreshRecentNotes() }
         }
+    }
+
+    /// Replaces `activity`'s marker bar (`MarkerPresets.setMarkers`); takes effect at once,
+    /// in the active recording too.
+    public func setMarkers(_ labels: [String], for activity: ActivityPreset) async {
+        var edited = markerPresets
+        edited.setMarkers(labels, for: activity.id)
+        await save(edited)
+    }
+
+    /// Restores `activity`'s built-in marker bar.
+    public func resetMarkers(for activity: ActivityPreset) async {
+        var edited = markerPresets
+        edited.reset(activity.id)
+        await save(edited)
     }
 
     /// Starts the pacer at `breathsPerMinute` (within `BreathingPacer.rates`), replacing a running one.
@@ -154,6 +184,7 @@ public final class RecorderModel {
                 if lastSnapshot?.standardizedFileURL == url.standardizedFileURL { lastSnapshot = nil }
             }
             try refreshRecordings()
+            try refreshRecentNotes()
         }
     }
 
@@ -260,6 +291,18 @@ public final class RecorderModel {
 
     private func refreshRecordings() throws {
         recordings = try database.writer.read { try RecordingSummary.all($0) }
+    }
+
+    private func refreshRecentNotes() throws {
+        recentNotes = try database.writer.read { try RecordingEvent.recentNotes($0, limit: Self.recentNoteLimit) }
+    }
+
+    private func save(_ edited: MarkerPresets) async {
+        await perform {
+            try edited.save(to: defaults)
+            markerPresets = edited
+            await session.use(edited)
+        }
     }
 
     private func perform(_ body: () async throws -> Void) async {

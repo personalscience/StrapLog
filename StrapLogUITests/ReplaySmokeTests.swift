@@ -66,6 +66,46 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testNoteSheetAndMarkerEditor() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
+        app.buttons["startButton"].tap()
+
+        let add = app.buttons["markerAdd"]
+        XCTAssertTrue(app.scroll(to: add))
+        add.tap()
+        let note = app.textFields["markerNote"]
+        XCTAssertTrue(note.waitForExistence(timeout: 5))
+        note.typeText("felt dizzy")
+        app.buttons["markerNoteAdd"].tap()
+        let lastMarker = app.staticTexts["lastMarker"]
+        XCTAssertTrue(lastMarker.waitForLabel(containing: "felt dizzy", timeout: 5))
+
+        add.tap()
+        let recent = app.buttons["recentNote-felt dizzy"]
+        XCTAssertTrue(recent.waitForExistence(timeout: 5), "a used note is offered again")
+        recent.tap()
+        XCTAssertTrue(lastMarker.waitForLabel(containing: "2 markers", timeout: 5))
+
+        app.buttons["marker-a"].press(forDuration: 1)
+        let edit = app.buttons["Edit markers…"]
+        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        edit.tap()
+        XCTAssertTrue(app.navigationBars["Other markers"].waitForExistence(timeout: 5), "editor did not open")
+        let label = app.textFields["newMarkerLabel"]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        label.tap()
+        label.typeText("squat")
+        app.buttons["saveMarkers"].tap()
+        let squat = app.buttons["marker-squat"]
+        XCTAssertTrue(squat.waitForExistence(timeout: 5), "the edited bar shows at once")
+        squat.tap()
+        XCTAssertTrue(lastMarker.waitForLabel(containing: "squat", timeout: 5))
+    }
+
+    @MainActor
     func testPacerStartsAndStops() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
