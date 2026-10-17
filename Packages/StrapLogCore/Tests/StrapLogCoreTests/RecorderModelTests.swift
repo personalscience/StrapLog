@@ -228,6 +228,12 @@ struct RecorderModelTests {
             #expect(try strings("SELECT COUNT(*) FROM \(table) WHERE recording_id = \(old.id)") == ["0"], "\(table)")
         }
         #expect(try strings("SELECT COUNT(*) FROM beat") == ["1"], "the other recording's beats remain")
+        #expect(try index(in: cloud).recordings.map(\.name) == ["newer", "keep"])
+        #expect(try index(in: dir).recordings.isEmpty)
+    }
+
+    private func index(in directory: URL) throws -> ExportIndex {
+        try JSONDecoder().decode(ExportIndex.self, from: Data(contentsOf: directory.appendingPathComponent(ExportIndex.fileName)))
     }
 
     @Test("the recording being written cannot be deleted")

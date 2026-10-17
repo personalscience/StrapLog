@@ -23,7 +23,9 @@ struct AppDependencies {
                 FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appending(path: "Documents")
             }
         }
-        model = RecorderModel(database: try .live(at: dbURL), exports: exports)
+        let info = Bundle.main.infoDictionary ?? [:]
+        let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
+        model = RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion)
 
         if let fixture = options.replayFixture {
             guard let url = Bundle.main.url(forResource: fixture, withExtension: "json") else {

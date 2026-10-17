@@ -48,7 +48,7 @@ struct SnapshotTests {
         defer { try? FileManager.default.removeItem(at: dir) }
         let (rig, rec, file) = try await recordAndStop(in: dir)
 
-        for table in ["recording", "notification", "beat", "event", "meta"] {
+        for table in ["recording", "notification", "beat", "event"] {
             #expect(try sqlite3(file, "SELECT COUNT(*) FROM \(table)") == String(try rig.count(table)), "\(table)")
         }
         #expect(try sqlite3(file, "PRAGMA journal_mode") == "delete")
@@ -57,7 +57,7 @@ struct SnapshotTests {
         #expect(try sqlite3(file, "SELECT ended_at_ms FROM recording") == String(rec.endedAtMs!))
 
         let exported = try FileManager.default.contentsOfDirectory(atPath: file.deletingLastPathComponent().path)
-        #expect(exported == [file.lastPathComponent])
+        #expect(Set(exported) == [file.lastPathComponent, ExportIndex.fileName])
 
         let copy = try DatabaseQueue(path: file.path)
         #expect(try DBInvariants.violations(copy).isEmpty)
@@ -81,7 +81,28 @@ struct SnapshotTests {
             #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM \(table) WHERE recording_id != \(second.id!)") == "0",
                     "\(table)")
         }
-        #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM meta") == "2")
+        #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM meta") == "8")
+    }
+
+    @Test("the snapshot describes itself in meta; the live database does not")
+    func selfDescribing() async throws {
+        let dir = try scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let rig = try TestRig(database: .live(at: dir.appendingPathComponent("live.sqlite")))
+        try await rig.session.start(.sleep, name: "night")
+        let url = try await rig.session.snapshot(into: dir.appendingPathComponent("export"))
+
+        #expect(try sqlite3(url, "SELECT activity FROM recording") == "sleep")
+        #expect(try sqlite3(url, "SELECT key FROM meta ORDER BY key").split(separator: "\n")
+                == ["app_version", "event_kinds", "exported_at_ms", "format", "preset", "schema_doc",
+                    "schema_version", "time_basis"])
+        #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'app_version'") == "dev")
+        #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'exported_at_ms'") == String(rig.clock.nowMs()))
+        #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'preset'")
+                == #"{"id":"sleep","markers":["lights_out","awake","up"],"overnight":true,"pacer":false,"title":"Sleep"}"#)
+        #expect(try sqlite3(url, "SELECT json_array_length(value) FROM meta WHERE key = 'event_kinds'")
+                == String(EventKind.allCases.count))
+        #expect(try rig.count("meta") == 2)
     }
 
     @Test("periodic snapshot overwrites the same file and logs an event each time")
@@ -101,7 +122,8 @@ struct SnapshotTests {
         #expect(first == second)
         #expect(try sqlite3(second, "SELECT COUNT(*) FROM notification") == "3")
         #expect(try rig.kinds(id) == [.start, .snapshot, .snapshot])
-        #expect(try FileManager.default.contentsOfDirectory(atPath: out.path) == [second.lastPathComponent])
+        #expect(Set(try FileManager.default.contentsOfDirectory(atPath: out.path))
+                == [second.lastPathComponent, ExportIndex.fileName])
     }
 
     @Test("snapshot while idle is refused")

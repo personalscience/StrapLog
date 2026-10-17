@@ -31,6 +31,8 @@ public actor RecordingSession {
     /// When the active overnight recording's resting reading began, restored after a relaunch.
     private var restingStartMs: Int64?
     private let uprightStopMs: Int64
+    /// Written into each export's `meta` and `index.json`.
+    private let appVersion: String
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
@@ -47,8 +49,10 @@ public actor RecordingSession {
 
     public init(database: StrapLogDatabase, clock: any WallClock = SystemClock(),
                 staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs,
-                uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs) {
+                uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs,
+                appVersion: String = "dev") {
         self.database = database
+        self.appVersion = appVersion
         self.clock = clock
         self.staleAfterMs = staleAfterMs
         self.uprightStopMs = uprightStopMs
@@ -95,7 +99,7 @@ public actor RecordingSession {
     }
 
     /// Ends the recording, noting `reason` if it stopped itself. With `directory`, also logs a
-    /// `snapshot` event and writes `Snapshot.fileName(for:)` there, after the stop is committed
+    /// `snapshot` event and exports `Snapshot.fileName(for:)` there, after the stop is committed
     /// so the file includes it.
     @discardableResult
     public func stop(because reason: AutoStop? = nil, snapshotInto directory: URL? = nil) throws -> Recording {
@@ -117,9 +121,7 @@ public actor RecordingSession {
             return rec
         }
         detach()
-        if let directory {
-            try Snapshot.write(database, recordingId: id, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
-        }
+        if let directory { try export(rec, id: id, into: directory) }
         return rec
     }
 
@@ -164,13 +166,15 @@ public actor RecordingSession {
         let id = try requireRecording()
         let rec = try database.writer.read { db in try Recording.fetchOne(db, key: id) }
         guard let rec else { throw RecordingSessionError.notRecording }
-        let name = Snapshot.fileName(for: rec)
         let now = clock.nowMs()
-        try log(.snapshot, note: name, recordingId: id, atMs: now)
+        try log(.snapshot, note: Snapshot.fileName(for: rec), recordingId: id, atMs: now)
         lastSnapshotMs = now
-        let url = directory.appendingPathComponent(name)
-        try Snapshot.write(database, recordingId: id, to: url)
-        return url
+        return try export(rec, id: id, into: directory)
+    }
+
+    /// Rewrites `directory`'s `index.json`, e.g. after a snapshot file was removed from it.
+    public func reindex(_ directory: URL) throws {
+        try ExportIndex.refresh(database, in: directory, appVersion: appVersion, nowMs: clock.nowMs())
     }
 
     /// `snapshot(into:)` if at least `everyMs` has passed since the recording's last snapshot
@@ -335,6 +339,16 @@ public actor RecordingSession {
     }
 
     // MARK: Helpers
+
+    /// Writes the snapshot of `rec`, described by `ExportMeta`, then refreshes the folder's index.
+    @discardableResult
+    private func export(_ rec: Recording, id: Int64, into directory: URL) throws -> URL {
+        let url = directory.appendingPathComponent(Snapshot.fileName(for: rec))
+        try Snapshot.write(database, recordingId: id, to: url,
+                           meta: ExportMeta.rows(for: rec, appVersion: appVersion, exportedAtMs: clock.nowMs()))
+        try reindex(directory)
+        return url
+    }
 
     private func attach(_ id: Int64, lastSnapshotMs: Int64, plan: OvernightPlan?) {
         recordingId = id

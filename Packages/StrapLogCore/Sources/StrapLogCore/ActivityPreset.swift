@@ -2,7 +2,7 @@ import Foundation
 
 /// What a recording is of, and how the app records it. Each preset is a value: adding an
 /// activity means adding one here, not a new screen. Stored as `recording.activity = id`.
-public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable {
+public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable, Encodable {
     /// Stored in `recording.activity`; never rename one that has shipped.
     public let id: String
     public let title: String
@@ -14,6 +14,11 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable {
     public let pacer: Bool
     /// Overnight mode: a dark screen with no chart, posture events, and auto-stop (`OvernightPlan`).
     public let overnight: Bool
+
+    /// What an export says about its preset (`ExportMeta`); the symbol is app chrome only.
+    enum CodingKeys: String, CodingKey {
+        case id, title, markers, pacer, overnight
+    }
 
     public static let sleep = ActivityPreset(id: "sleep", title: "Sleep", systemImage: "bed.double",
                                              markers: ["lights_out", "awake", "up"], pacer: false, overnight: true)

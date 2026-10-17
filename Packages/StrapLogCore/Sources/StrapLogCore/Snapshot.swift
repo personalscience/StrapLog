@@ -11,7 +11,9 @@ import GRDB
 /// the destination folder, so iCloud Drive never uploads it; the swap is file-coordinated so
 /// the iCloud daemon sees one complete write.
 public enum Snapshot {
-    public static func write(_ database: StrapLogDatabase, recordingId: Int64, to url: URL) throws {
+    /// `meta` rows are added to the copy's `meta` table (`ExportMeta`), replacing equal keys.
+    public static func write(_ database: StrapLogDatabase, recordingId: Int64, to url: URL,
+                             meta: [String: String] = [:]) throws {
         let fm = FileManager.default
         try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         let scratch = try fm.url(for: .itemReplacementDirectory, in: .userDomainMask,
@@ -25,39 +27,14 @@ public enum Snapshot {
         let copy = try DatabaseQueue(path: tmp.path)
         try copy.writeWithoutTransaction { db in
             try db.execute(sql: "DELETE FROM recording WHERE id != ?", arguments: [recordingId])
+            for (key, value) in meta {
+                try db.execute(sql: "INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)", arguments: [key, value])
+            }
             try db.execute(sql: "VACUUM")
             try db.execute(sql: "PRAGMA journal_mode = DELETE")
         }
         try copy.close()
-
-        var coordinationError: NSError?
-        var moveError: Error?
-        NSFileCoordinator().coordinate(writingItemAt: url, options: .forReplacing,
-                                       error: &coordinationError) { target in
-            do {
-                if fm.fileExists(atPath: target.path) {
-                    _ = try fm.replaceItemAt(target, withItemAt: tmp)
-                } else {
-                    try fm.moveItem(at: tmp, to: target)
-                }
-            } catch {
-                moveError = error
-            }
-        }
-        if let error = coordinationError ?? moveError { throw error }
-    }
-
-    /// File-coordinated delete, so iCloud Drive removes it everywhere. A missing file is fine.
-    public static func remove(at url: URL) throws {
-        let fm = FileManager.default
-        guard fm.fileExists(atPath: url.path) else { return }
-        var coordinationError: NSError?
-        var removeError: Error?
-        NSFileCoordinator().coordinate(writingItemAt: url, options: .forDeleting,
-                                       error: &coordinationError) { target in
-            do { try fm.removeItem(at: target) } catch { removeError = error }
-        }
-        if let error = coordinationError ?? removeError { throw error }
+        try CoordinatedFile.replace(url, with: tmp)
     }
 
     /// `YYMMDD-HHMM-<name>.sqlite` in the recording's local time; name sanitised for file systems.

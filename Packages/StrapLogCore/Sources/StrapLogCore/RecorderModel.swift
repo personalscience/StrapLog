@@ -48,12 +48,13 @@ public final class RecorderModel {
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
 
+    /// `appVersion` is stamped into every export (`ExportMeta`, `index.json`).
     public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
-                snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs) {
+                snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs, appVersion: String = "dev") {
         self.database = database
         self.exports = exports
         self.snapshotEveryMs = snapshotEveryMs
-        self.session = RecordingSession(database: database, clock: clock)
+        self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion)
     }
 
     /// Call once at launch, before `consume`: reattaches to an unfinished recording.
@@ -140,14 +141,16 @@ public final class RecorderModel {
         }
     }
 
-    /// Deletes a finished recording and its snapshot file from every export folder.
+    /// Deletes a finished recording and its snapshot file from every export folder, and
+    /// drops it from each folder's `index.json`.
     public func delete(_ summary: RecordingSummary) async {
         await perform {
             let rec = try await session.delete(summary.id)
             let name = Snapshot.fileName(for: rec)
             for directory in await exports.all() {
                 let url = directory.appendingPathComponent(name)
-                try Snapshot.remove(at: url)
+                try CoordinatedFile.remove(at: url)
+                try await session.reindex(directory)
                 if lastSnapshot?.standardizedFileURL == url.standardizedFileURL { lastSnapshot = nil }
             }
             try refreshRecordings()
