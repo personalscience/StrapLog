@@ -33,9 +33,12 @@ struct AppDependencies {
         }
         let info = Bundle.main.infoDictionary ?? [:]
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
-        openModel = { [defaults, watch] in
+        // UI tests run with a fresh database; the notification prompt would cover their taps.
+        let displays: [any LiveStatusDisplay] = options.freshDatabase
+            ? [LiveActivityDisplay(), watch] : [LiveActivityDisplay(), watch, LinkAlertNotifier()]
+        openModel = { [defaults] in
             RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, display: LiveStatusFanOut([LiveActivityDisplay(), watch]))
+                          defaults: defaults, display: LiveStatusFanOut(displays))
         }
 
         if let fixture = options.replayFixture {

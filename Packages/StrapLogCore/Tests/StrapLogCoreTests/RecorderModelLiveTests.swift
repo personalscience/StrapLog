@@ -48,6 +48,19 @@ struct RecorderModelLiveTests {
         #expect(relaunched.live.rrHistory == model.live.rrHistory)
     }
 
+    @Test("notifications without beats for 10 s set the beat gap; a beat clears it")
+    func beatGap() async {
+        await model.start(name: "gap")
+        let empty: [FakeHeartSource.Step] = Array(repeating: [.wait(ms: 1000), hr([])], count: 10).flatMap { $0 }
+        await model.consume(FakeHeartSource(clock: clock, script: [.emit(.connected(deviceId: "H10", firmware: nil)), hr([1024])] + empty.dropLast(2)))
+        #expect(model.liveStatus?.beatGap == false, "9 s without beats is not a gap yet")
+        await model.consume(FakeHeartSource(clock: clock, script: [.wait(ms: 1000), hr([])]))
+        #expect(model.liveStatus?.beatGap == true)
+        #expect(model.liveStatus?.linkText == "No beats")
+        await model.consume(FakeHeartSource(clock: clock, script: [.wait(ms: 1000), hr([1024])]))
+        #expect(model.liveStatus?.beatGap == false)
+    }
+
     @Test("Start and Stop reset the live metrics")
     func resets() async {
         await model.start(name: "a")

@@ -19,6 +19,8 @@ public final class RecorderModel {
     public private(set) var beatCount = 0
     /// Receive time of the latest HR notification while recording.
     public private(set) var lastHeardAtMs: Int64?
+    /// Receive time of the latest notification that carried RR intervals while recording.
+    public private(set) var lastBeatAtMs: Int64?
     /// Longest silence between HR notifications in the active recording.
     public private(set) var longestGapMs: Int64 = 0
     /// Markers of the active recording, oldest first.
@@ -50,7 +52,15 @@ public final class RecorderModel {
                           contact: contact, linked: linked, alpha1: live.latest?.alpha1, rmssd: live.latest?.rmssd,
                           battery: battery, markers: activePreset.markers, markerCount: markerCount,
                           lastMarkerLabel: lastMarker?.label, lastMarkerText: lastMarker?.markerText,
-                          lastMarkerAtMs: lastMarker?.atMs)
+                          lastMarkerAtMs: lastMarker?.atMs, beatGap: hasBeatGap)
+    }
+
+    /// Notifications keep arriving but none has carried a beat for `beatGapAfterMs`: the strap
+    /// is linked but not reading. Checked as notifications arrive (there is no timer); a strap
+    /// that goes fully quiet shows as unlinked or stale instead.
+    private var hasBeatGap: Bool {
+        guard let lastBeatAtMs, let lastHeardAtMs else { return false }
+        return lastHeardAtMs - lastBeatAtMs >= Self.beatGapAfterMs
     }
     /// The active recording's preset: its marker bar and pacer. `other` when idle.
     public var activePreset: ActivityPreset { markerPresets.preset(activeRecording?.activity ?? ActivityPreset.other.id) }
@@ -69,6 +79,8 @@ public final class RecorderModel {
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
+    /// How long notifications may arrive without beats before `LiveStatus.beatGap` is set.
+    public static let beatGapAfterMs: Int64 = 10_000
     /// How many `recentNotes` to offer.
     public static let recentNoteLimit = 8
 
@@ -270,6 +282,8 @@ public final class RecorderModel {
             await stopIfRecording()
         case .mark(let text):
             await markIfRecording(text)
+        case .markNext:
+            await markNextIfRecording()
         }
     }
 
@@ -296,6 +310,13 @@ public final class RecorderModel {
         return markerCount > count ? .done(rec) : failure()
     }
 
+    /// Marks `LiveStatus.nextMarker`, for a button that does not know the marker bar.
+    public func markNextIfRecording() async -> CommandOutcome {
+        guard let status = liveStatus else { return .notRecording }
+        guard let label = status.nextMarker else { return .failed("This activity has no markers.") }
+        return await markIfRecording(label)
+    }
+
     private func failure() -> CommandOutcome {
         .failed(errorMessage ?? "Nothing happened.")
     }
@@ -313,6 +334,7 @@ public final class RecorderModel {
             activeRecording = nil
             markers = []
             live = LiveMetrics()
+            lastBeatAtMs = nil
             try refreshRecordings()
             if let id = rec.id { lastFinished = try await database.writer.read { db in try RecordingDetail.load(id, db: db) } }
         }
@@ -336,6 +358,7 @@ public final class RecorderModel {
             guard isRecording else { return }
             if let last = lastHeardAtMs { longestGapMs = max(longestGapMs, event.atMs - last) }
             lastHeardAtMs = event.atMs
+            if !rr1024.isEmpty { lastBeatAtMs = event.atMs }
             beatCount += rr1024.count
             for (rr, end) in zip(rr1024, BeatTiming.endTimesMs(receivedAtMs: event.atMs, rr1024: rr1024)) {
                 live.add(tEndMs: end, rrMs: BeatTiming.ms(fromRR1024: rr))
@@ -375,6 +398,7 @@ public final class RecorderModel {
         for beat in beats { live.add(beat) }
         pacer = nil
         lastHeardAtMs = lastHeard
+        lastBeatAtMs = nil
         self.markers = markers
         longestGapMs = 0
     }

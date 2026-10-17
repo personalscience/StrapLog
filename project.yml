@@ -85,6 +85,8 @@ targets:
         com.apple.developer.icloud-container-identifiers: [iCloud.com.personalscience.straplog]
         com.apple.developer.icloud-services: [CloudDocuments]
         com.apple.developer.ubiquity-container-identifiers: [iCloud.com.personalscience.straplog]
+        # Link alerts (LinkAlertNotifier) may break through a Sleep Focus.
+        com.apple.developer.usernotifications.time-sensitive: true
 
   StrapLogWidgets:
     type: app-extension
@@ -123,6 +125,7 @@ targets:
     sources:
       - path: StrapLogWatch
       - path: Shared/Alpha1Band+Color.swift
+      - path: Shared/LiveMarkedLine.swift
     dependencies:
       - package: StrapLogCore
     settings:

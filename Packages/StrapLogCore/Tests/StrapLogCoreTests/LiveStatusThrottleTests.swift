@@ -4,9 +4,10 @@ import Testing
 @Suite("LiveStatusThrottle")
 struct LiveStatusThrottleTests {
     func status(hr: Int? = 60, linked: Bool = true, contact: Bool? = true, markerCount: Int = 0,
-                startedAtMs: Int64 = 0) -> LiveStatus {
+                startedAtMs: Int64 = 0, beatGap: Bool = false) -> LiveStatus {
         LiveStatus(name: "n", activity: "other", startedAtMs: startedAtMs, heartRate: hr, contact: contact,
-                   linked: linked, alpha1: nil, rmssd: nil, battery: 80, markers: ["a"], markerCount: markerCount)
+                   linked: linked, alpha1: nil, rmssd: nil, battery: 80, markers: ["a"], markerCount: markerCount,
+                   beatGap: beatGap)
     }
 
     /// Admit verdicts of one fresh throttle over `offers` (status, atMs).
@@ -27,11 +28,11 @@ struct LiveStatusThrottleTests {
                 == [true, false, false, true, false])
     }
 
-    @Test("start, stop, link, contact and marker changes go out at once")
+    @Test("start, stop, link, contact, beat-gap and marker changes go out at once")
     func urgent() {
         #expect(verdicts([(status(), 0), (status(linked: false), 1), (status(), 2), (status(contact: false), 3),
                           (status(contact: false, markerCount: 1), 4), (nil, 5), (status(startedAtMs: 6), 6),
-                          (status(startedAtMs: 7), 7)])
-                == Array(repeating: true, count: 8))
+                          (status(startedAtMs: 7), 7), (status(startedAtMs: 7, beatGap: true), 8)])
+                == Array(repeating: true, count: 9))
     }
 }

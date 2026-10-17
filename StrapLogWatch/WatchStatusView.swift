@@ -1,15 +1,21 @@
 import StrapLogCore
 import SwiftUI
 
-/// The recording at a glance, or "Not recording". Re-evaluated every few seconds so a phone
-/// that went quiet shows as stale rather than as an old HR that looks live.
+/// The recording at a glance with its next-marker button, or "Not recording". Re-evaluated
+/// every few seconds so a phone that went quiet shows as stale rather than as an old HR that
+/// looks live.
 struct WatchStatusView: View {
     let phone: PhoneLink
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 5)) { timeline in
             if let status = phone.status {
-                recording(status, isStale: phone.isStale(at: timeline.date))
+                ScrollView {
+                    VStack(spacing: 8) {
+                        recording(status, isStale: phone.isStale(at: timeline.date))
+                        markers(status)
+                    }
+                }
             } else {
                 ContentUnavailableView("Not recording", systemImage: "heart.slash",
                                        description: Text("Start a recording on the iPhone."))
@@ -35,5 +41,27 @@ struct WatchStatusView: View {
                 .foregroundStyle(status.needsAttention(isStale: isStale) ? .orange : .secondary)
         }
         .accessibilityIdentifier("watch.status")
+    }
+
+    /// The big button marks the next label; the rest of the bar follows for a repeat (`awake`).
+    @ViewBuilder
+    private func markers(_ status: LiveStatus) -> some View {
+        if let next = status.nextMarker {
+            Button {
+                Task { await phone.send(.markNext) }
+            } label: {
+                Label("Mark \(LiveStatus.markerTitle(next))", systemImage: "flag.fill")
+                    .frame(maxWidth: .infinity, minHeight: 44)
+            }
+            .tint(.green)
+            .accessibilityIdentifier("watch.markNext")
+        }
+        LiveMarkedLine(status: status)
+        ForEach(status.markers, id: \.self) { label in
+            Button(LiveStatus.markerTitle(label)) {
+                Task { await phone.send(.mark(label)) }
+            }
+            .tint(status.isLastMarker(label) ? .green : nil)
+        }
     }
 }

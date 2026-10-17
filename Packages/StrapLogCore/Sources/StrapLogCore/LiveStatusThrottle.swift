@@ -1,6 +1,6 @@
 /// Decides which `LiveStatus` values reach the display. ActivityKit rate-limits updates, and
 /// HR arrives every second, so routine changes go out at most every `minIntervalMs`; a start,
-/// a stop, a link or contact change, or a new marker goes out at once.
+/// a stop, a link, contact or beat-gap change, or a new marker goes out at once.
 public struct LiveStatusThrottle: Sendable {
     public let minIntervalMs: Int64
     private var shown: LiveStatus?
@@ -27,7 +27,8 @@ public struct LiveStatusThrottle: Sendable {
     private func isUrgent(_ status: LiveStatus?) -> Bool {
         guard let status, let shown else { return true }
         return status.startedAtMs != shown.startedAtMs || status.linked != shown.linked
-            || status.contact != shown.contact || status.markerCount != shown.markerCount
+            || status.contact != shown.contact || status.beatGap != shown.beatGap
+            || status.markerCount != shown.markerCount
             || status.markers != shown.markers
     }
 }

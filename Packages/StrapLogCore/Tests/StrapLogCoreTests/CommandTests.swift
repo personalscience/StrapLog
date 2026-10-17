@@ -69,6 +69,18 @@ struct CommandTests {
         #expect(try await launcher.run(.stop) == .notRecording)
     }
 
+    @Test("markNext steps through the bar the phone holds, and answers idle")
+    func markNext() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        await model.launch()
+        #expect(await model.run(.markNext) == .notRecording)
+        guard case .done(let rec) = await model.startUnlessRecording(.other, plan: wake) else {
+            Issue.record("start did not start"); return
+        }
+        for _ in 0..<5 { #expect(await model.run(.markNext) == .done(rec)) }
+        #expect(model.markers.map(\.label) == ["a", "b", "c", "end", "end"])
+    }
+
     @Test("a command waits for the launch resume, so it sees the open recording")
     func waitsForResume() async throws {
         defer { try? FileManager.default.removeItem(at: dir) }

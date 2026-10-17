@@ -13,7 +13,7 @@ struct RemoteCommandTests {
 
     @Test("every command survives a round trip through a Watch message", arguments: [
         RemoteCommand.start(activity: "sleep"), .start(activity: "run", name: "tempo"), .stop, .mark("awake"),
-        .mark("knee twinge"),
+        .mark("knee twinge"), .markNext,
     ])
     func commandRoundTrip(_ command: RemoteCommand) {
         #expect(WatchPayload.command(in: WatchPayload.message(for: command)) == command)

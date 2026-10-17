@@ -41,3 +41,11 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - Fix: `PolarHeartSource.emit` passes through `DuplicateHeartFilter` (StrapLogCore). The SDK calls the observer synchronously inside each observer task, so `withUnsafeCurrentTask` names the observer; a repeat is dropped only when another observer delivers an identical HR payload within 100 ms. Payload alone is not enough: recording 2 (one observer) has a real identical pair 1 ms apart after a BLE stall.
 - `startHrStreaming` shares one upstream but yields only rounded `rrsMs`, so it is no substitute for the observer's 1/1024 s RR.
 - `tools/check_snapshot.sh` fails a recording when over 1% of notifications are such repeats.
+
+## Watch marker, Action button, link haptics (W2, straplog-9rp.7.2, 2026-10-17)
+
+- Action button: Apple documents Action-button registration only for workout and dive apps (App Intents `StartWorkoutIntent` / dive). StrapLog is neither, so the route is the generic one: the Watch app ships `MarkNextIntent` as an App Shortcut (`StrapLogWatchShortcuts`), and the user sets Settings → Action Button → Shortcut → "Next Marker". Works on Ultra 2, watchOS 27 (verified 2026-10-17).
+- The intent may run with no scene, so `PhoneLink` activates in `StrapLogWatchApp.init` and `send` waits for WCSession activation before `sendMessage`/`transferUserInfo`.
+- `RemoteCommand.markNext` lets the phone choose the label (`LiveStatus.nextMarker`: after the last marker in bar order, the last repeats, a note starts over), so a cold intent needs no status.
+- Haptics: `WKInterfaceDevice.play` works only while the Watch app is on screen. A background buzz therefore comes from the phone: `LinkAlertNotifier` posts a time-sensitive local notification, which iOS mirrors to the Watch while the iPhone is locked. Both use `LinkAlarm` (StrapLogCore): one buzz when beats stop (stale > disconnected > contact lost > beat gap), re-armed when beats return. Needs the Time Sensitive Notifications capability (`-allowProvisioningUpdates` added it to the profile).
+- Beat gap: notifications still arriving but none with RR for `RecorderModel.beatGapAfterMs` (10 s). Checked as notifications arrive (no timer); a strap gone fully quiet shows as disconnected, or stale on the Watch after 60 s.

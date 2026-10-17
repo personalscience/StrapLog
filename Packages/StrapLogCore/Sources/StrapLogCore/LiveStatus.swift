@@ -23,6 +23,8 @@ public struct LiveStatus: Sendable, Codable, Hashable {
     public let lastMarkerLabel: String?
     public let lastMarkerText: String?
     public let lastMarkerAtMs: Int64?
+    /// Notifications arrive without beats (`RecorderModel.beatGapAfterMs`).
+    public let beatGap: Bool
 
     /// After this long without an update the activity is marked stale, so a dead app or link
     /// shows as a warning instead of an old HR that looks live.
@@ -30,7 +32,8 @@ public struct LiveStatus: Sendable, Codable, Hashable {
 
     public init(name: String, activity: String, startedAtMs: Int64, heartRate: Int?, contact: Bool?,
                 linked: Bool, alpha1: Double?, rmssd: Double?, battery: Int?, markers: [String], markerCount: Int,
-                lastMarkerLabel: String? = nil, lastMarkerText: String? = nil, lastMarkerAtMs: Int64? = nil) {
+                lastMarkerLabel: String? = nil, lastMarkerText: String? = nil, lastMarkerAtMs: Int64? = nil,
+                beatGap: Bool = false) {
         self.name = name
         self.activity = activity
         self.startedAtMs = startedAtMs
@@ -45,11 +48,28 @@ public struct LiveStatus: Sendable, Codable, Hashable {
         self.lastMarkerLabel = lastMarkerLabel
         self.lastMarkerText = lastMarkerText
         self.lastMarkerAtMs = lastMarkerAtMs
+        self.beatGap = beatGap
     }
 
     public var alpha1Band: Alpha1Band? { alpha1.map(Alpha1Band.init(alpha1:)) }
     public var startedAt: Date { Date(timeIntervalSince1970: Double(startedAtMs) / 1000) }
     public var lastMarkerAt: Date? { lastMarkerAtMs.map { Date(timeIntervalSince1970: Double($0) / 1000) } }
+
+    /// The marker after the latest one in bar order, so one button steps through a protocol
+    /// (`a`, `b`, `c`, `end`). The first before any marker or after a note; the last repeats.
+    public var nextMarker: String? {
+        guard let last = lastMarkerLabel, let i = markers.firstIndex(of: last) else { return markers.first }
+        return markers[min(i + 1, markers.count - 1)]
+    }
+
+    /// What is wrong with the link, worst first; nil when beats are flowing. `isStale`: no
+    /// status has arrived for `staleAfterMs`.
+    public func problem(isStale: Bool) -> LinkProblem? {
+        if isStale { return .stale }
+        if !linked { return .disconnected }
+        if contact == false { return .contactLost }
+        return beatGap ? .beatGap : nil
+    }
 
     /// Whether `label`'s button made the latest marker, so it can be shown pressed.
     public func isLastMarker(_ label: String) -> Bool { lastMarkerLabel == label }
@@ -64,6 +84,7 @@ public struct LiveStatus: Sendable, Codable, Hashable {
     public var linkText: String {
         guard linked else { return "Reconnecting…" }
         if contact == false { return "No skin contact" }
+        if beatGap { return "No beats" }
         return battery.map { "H10 · \($0) %" } ?? "H10"
     }
 
@@ -80,7 +101,7 @@ public struct LiveStatus: Sendable, Codable, Hashable {
 
     /// Whether the footer is a warning.
     public func needsAttention(isStale: Bool) -> Bool {
-        isStale || !linked || contact == false
+        problem(isStale: isStale) != nil
     }
 
     /// A marker label as a button title: `lights_out` → `lights out`.

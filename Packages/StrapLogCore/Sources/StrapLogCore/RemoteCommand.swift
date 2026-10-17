@@ -8,4 +8,7 @@ public enum RemoteCommand: Sendable, Codable, Hashable {
     case stop
     /// One of the activity's marker labels, or a free-text note.
     case mark(String)
+    /// The activity's next marker (`LiveStatus.nextMarker`), decided by the phone: the Watch's
+    /// Action button has no screen to pick one on.
+    case markNext
 }
