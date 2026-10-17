@@ -40,13 +40,17 @@ final class WatchLink: NSObject, LiveStatusDisplay {
         }
     }
 
-    private func run(_ command: RemoteCommand) async {
-        guard let launcher else { return }
+    /// Runs `command` and answers with the status it leaves, so the Watch sees a start or stop
+    /// land even when the application context lags (or is unchanged, after a stale display).
+    private func run(_ command: RemoteCommand) async -> CommandReply {
+        guard let launcher else { return CommandReply(status: nil, failure: "StrapLog is still launching.") }
         do {
             let outcome = try await launcher.run(command)
             log.info("Watch \(String(describing: command), privacy: .public): \(String(describing: outcome), privacy: .public)")
+            return CommandReply(outcome, status: launcher.model?.liveStatus)
         } catch {
             log.error("Watch command failed: \(error.localizedDescription, privacy: .public)")
+            return CommandReply(status: nil, failure: error.localizedDescription)
         }
     }
 }
@@ -72,6 +76,15 @@ extension WatchLink: WCSessionDelegate {
         receive(message)
     }
 
+    /// A start or stop, which the Watch waits on.
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any],
+                             replyHandler: @escaping ([String: Any]) -> Void) {
+        guard let command = WatchPayload.command(in: message) else { return replyHandler([:]) }
+        // WatchConnectivity calls the handler from any thread; it is not marked Sendable.
+        nonisolated(unsafe) let reply = replyHandler
+        Task { @MainActor in reply(WatchPayload.message(for: await run(command))) }
+    }
+
     /// Commands queued while the phone was unreachable.
     nonisolated func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
         receive(userInfo)
@@ -80,6 +93,6 @@ extension WatchLink: WCSessionDelegate {
     /// Decodes off the main actor: the dictionary is not `Sendable`, the command is.
     private nonisolated func receive(_ payload: [String: Any]) {
         guard let command = WatchPayload.command(in: payload) else { return }
-        Task { @MainActor in await run(command) }
+        Task { @MainActor in _ = await run(command) }
     }
 }

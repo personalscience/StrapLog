@@ -4,14 +4,16 @@ import StrapLogCore
 import WatchConnectivity
 
 /// The Watch's end of WatchConnectivity: the phone's latest `LiveStatus` (nil while it is not
-/// recording), and `RemoteCommand`s sent back. The phone records; the Watch shows, marks, and
-/// buzzes when beats stop (`LinkAlarm`).
+/// recording), and `RemoteCommand`s sent back. The phone records; the Watch shows, marks, starts
+/// and stops it, and buzzes when beats stop (`LinkAlarm`).
 @MainActor
 @Observable
 final class PhoneLink: NSObject {
     private(set) var status: LiveStatus?
     /// When the latest context arrived; nil until the first one.
     private(set) var receivedAt: Date?
+    /// The start or stop sent and not yet landed, or the phone's failure answer to it.
+    private(set) var pending: PendingCommand?
     @ObservationIgnored private var alarm = LinkAlarm()
     @ObservationIgnored private var isActivated = false
     @ObservationIgnored private var activationWaiters: [CheckedContinuation<Void, Never>] = []
@@ -54,6 +56,48 @@ final class PhoneLink: NSObject {
         WristHaptics.sent()
     }
 
+    /// Sends a start or stop and waits for it to land: the phone's reply, or failing that the
+    /// application context once a queued command runs. A sent message wakes the phone app in
+    /// the background, so this works with the iPhone locked in a pocket.
+    func request(_ command: RemoteCommand) async {
+        pending = PendingCommand(command)
+        activate()
+        if !isActivated { await withCheckedContinuation { activationWaiters.append($0) } }
+        let session = WCSession.default
+        let message = WatchPayload.message(for: command)
+        WristHaptics.sent()
+        guard session.isReachable else { return queue(message) }
+        session.sendMessage(message) { [weak self] payload in
+            let reply = WatchPayload.reply(in: payload)
+            Task { @MainActor in self?.receive(reply) }
+        } errorHandler: { [weak self] _ in
+            Task { @MainActor in self?.queue(message) }
+        }
+    }
+
+    /// Clears a failure, or stops waiting for a queued command and withdraws it.
+    func dismissPending() {
+        if pending?.queued == true {
+            for transfer in WCSession.default.outstandingUserInfoTransfers { transfer.cancel() }
+        }
+        pending = nil
+    }
+
+    private func queue(_ message: [String: Any]) {
+        guard pending != nil else { return }
+        WCSession.default.transferUserInfo(message)
+        pending?.queued = true
+    }
+
+    private func receive(_ reply: CommandReply?) {
+        guard let reply else { return }
+        if let failure = reply.failure {
+            pending?.failure = failure
+            WristHaptics.failed()
+        }
+        receive(reply.status)
+    }
+
     private func didActivate() {
         isActivated = true
         for waiter in activationWaiters { waiter.resume() }
@@ -63,6 +107,7 @@ final class PhoneLink: NSObject {
     private func receive(_ status: LiveStatus?) {
         self.status = status
         receivedAt = .now
+        if let pending, pending.failure == nil, pending.isSettled(by: status) { self.pending = nil }
         checkAlarm()
     }
 

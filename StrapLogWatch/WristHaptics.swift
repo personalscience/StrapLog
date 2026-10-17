@@ -9,6 +9,11 @@ enum WristHaptics {
         WKInterfaceDevice.current().play(.click)
     }
 
+    /// The phone could not start or stop.
+    static func failed() {
+        WKInterfaceDevice.current().play(.failure)
+    }
+
     /// Beats stopped: the strongest pattern, twice, so it wakes a sleeper.
     static func alert(_ problem: LinkProblem) {
         WKInterfaceDevice.current().play(.failure)

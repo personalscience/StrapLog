@@ -1,24 +1,42 @@
 import StrapLogCore
 import SwiftUI
 
-/// The recording at a glance with its next-marker button, or "Not recording". Re-evaluated
-/// every few seconds so a phone that went quiet shows as stale rather than as an old HR that
-/// looks live.
+/// The recording at a glance with its marker and stop buttons, a start or stop on its way, or
+/// the start buttons. Re-evaluated every few seconds so a phone that went quiet shows as stale
+/// rather than as an old HR that looks live.
 struct WatchStatusView: View {
     let phone: PhoneLink
+    @State private var confirmingStop = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 5)) { timeline in
-            if let status = phone.status {
+            if let pending = phone.pending {
+                WatchPendingView(pending: pending) { phone.dismissPending() }
+            } else if let status = phone.status {
                 ScrollView {
                     VStack(spacing: 8) {
                         recording(status, isStale: phone.isStale(at: timeline.date))
                         markers(status)
+                        stop
                     }
                 }
             } else {
-                ContentUnavailableView("Not recording", systemImage: "heart.slash",
-                                       description: Text("Start a recording on the iPhone."))
+                WatchStartView(phone: phone)
+            }
+        }
+    }
+
+    /// Confirmed, because a stray tap would end the night.
+    private var stop: some View {
+        Button(role: .destructive) {
+            confirmingStop = true
+        } label: {
+            Label("Stop", systemImage: "stop.fill").frame(maxWidth: .infinity)
+        }
+        .accessibilityIdentifier("watch.stop")
+        .confirmationDialog("Stop recording?", isPresented: $confirmingStop) {
+            Button("Stop Recording", role: .destructive) {
+                Task { await phone.request(.stop) }
             }
         }
     }
