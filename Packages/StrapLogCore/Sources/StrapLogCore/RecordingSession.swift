@@ -163,6 +163,25 @@ public actor RecordingSession {
         }
     }
 
+    /// Saves `edit` to a finished recording. Returns it before and after, so the caller can move
+    /// its snapshot file when the name (and so `Snapshot.fileName`) changed.
+    public func edit(_ id: Int64, _ edit: RecordingEdit) throws -> (before: Recording, after: Recording) {
+        try database.writer.write { db in
+            let before = try Self.finished(id, db: db)
+            let after = edit.applied(to: before)
+            try after.update(db)
+            return (before, after)
+        }
+    }
+
+    /// Writes a finished recording's snapshot into `directory` again (after an edit, or when the
+    /// file is gone) and refreshes that folder's index. Logs no event: the recording is closed.
+    @discardableResult
+    public func reexport(_ id: Int64, into directory: URL) throws -> URL {
+        let rec = try database.writer.read { db in try Self.finished(id, db: db) }
+        return try export(rec, id: id, into: directory)
+    }
+
     /// Periodic mid-recording export: logs a `snapshot` event, then overwrites the file.
     @discardableResult
     public func snapshot(into directory: URL) throws -> URL {
@@ -385,6 +404,12 @@ public actor RecordingSession {
         try rec.update(db)
         var stop = RecordingEvent(recordingId: id, atMs: atMs, kind: .stop, note: note)
         try stop.insert(db)
+        return rec
+    }
+
+    private static func finished(_ id: Int64, db: Database) throws -> Recording {
+        guard let rec = try Recording.fetchOne(db, key: id) else { throw RecordingSessionError.noSuchRecording(id: id) }
+        guard rec.endedAtMs != nil else { throw RecordingSessionError.cannotEditOpen }
         return rec
     }
 

@@ -2,18 +2,31 @@ import Charts
 import StrapLogCore
 import SwiftUI
 
-/// HR, α1 or RR over a pinch-zoomable span ending now, with markers as labelled rules.
-/// Double-tap resets to 5 min; the chip picks a span directly. Tab and span persist per scene.
+/// HR, α1 or RR over a pinch-zoomable span ending at `nowMs`, with markers as labelled rules.
+/// Double-tap resets to `defaultSpan`; the chip picks a span directly. Tab and span persist per
+/// scene, the span under `spanKey` so a past recording's chart keeps its own.
 struct TrendChart: View {
     let live: LiveMetrics
     let markers: [RecordingEvent]
     let startedAtMs: Int64
     let nowMs: Int64
-    var height: CGFloat = 200
+    let height: CGFloat
+    private let defaultSpan: ChartSpan
 
     @SceneStorage("chartMetric") private var metric = ChartMetric.heartRate
-    @SceneStorage("chartSpan") private var span = ChartSpan.default
+    @SceneStorage private var span: ChartSpan
     @GestureState private var pinch = 1.0
+
+    init(live: LiveMetrics, markers: [RecordingEvent], startedAtMs: Int64, nowMs: Int64, height: CGFloat = 200,
+         spanKey: String = "chartSpan", defaultSpan: ChartSpan = .default) {
+        self.live = live
+        self.markers = markers
+        self.startedAtMs = startedAtMs
+        self.nowMs = nowMs
+        self.height = height
+        self.defaultSpan = defaultSpan
+        _span = SceneStorage(wrappedValue: defaultSpan, spanKey)
+    }
 
     /// α1 axis: room for every band's edge plus a little above rest.
     private static let alpha1Top = 1.5
@@ -50,7 +63,7 @@ struct TrendChart: View {
                 .gesture(MagnifyGesture()
                     .updating($pinch) { value, state, _ in state = value.magnification }
                     .onEnded { span = span.zoomed(by: $0.magnification, elapsedMs: elapsedMs) })
-                .onTapGesture(count: 2) { span = .default }
+                .onTapGesture(count: 2) { span = defaultSpan }
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("trendChart")
         }

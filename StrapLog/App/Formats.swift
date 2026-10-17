@@ -55,6 +55,26 @@ enum Formats {
         return elapsed(ms: end - summary.startedAtMs)
     }
 
+    /// A recording's length, or `open` while it has no stop.
+    static func duration(ms: Int64?) -> String {
+        ms.map { elapsed(ms: $0) } ?? "open"
+    }
+
+    /// Wall-clock time in a recording's own time zone, e.g. `23:41:07`.
+    static func clock(atMs: Int64, tzOffsetS: Int) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = TimeZone(secondsFromGMT: tzOffsetS)
+        f.dateFormat = "HH:mm:ss"
+        return f.string(from: Date(timeIntervalSince1970: Double(atMs) / 1000))
+    }
+
+    /// Whole minutes, as hours and minutes from an hour up: `45 min`, `7 h 05 min`.
+    static func minutes(_ minutes: Double) -> String {
+        let m = Int(minutes.rounded())
+        return m < 60 ? "\(m) min" : String(format: "%d h %02d min", m / 60, m % 60)
+    }
+
     /// Where Files shows an export: the iCloud container's Documents is iCloud Drive → StrapLog;
     /// the local fallback is Documents/StrapLog.
     static func exportLocation(_ url: URL) -> String {
@@ -120,6 +140,11 @@ enum Formats {
     /// `82 %`, or `--`.
     static func battery(_ percent: Int?) -> String {
         percent.map { "\($0) %" } ?? "--"
+    }
+
+    /// Strap battery at start and end, e.g. `82 % → 79 %`; one value when unchanged.
+    static func batteryRange(start: Int?, end: Int?) -> String {
+        start == end ? battery(start) : "\(battery(start)) → \(battery(end))"
     }
 
     /// The H10's printed ID while connected, or `--`.

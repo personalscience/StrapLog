@@ -48,6 +48,16 @@ Tap **a**, **b**, **c** or **end**, or tap **+** to type a note, to stamp the cu
 
 Each row shows the name, local start time, duration and beat count. **open** means the recording was never stopped. If the app was killed mid-recording, it reattaches to that recording on the next launch rather than starting a new one.
 
+After **Stop**, a **Last recording** card on Home sums up the session:
+
+- **Duration**, **Mean HR** and **RMSSD** over the whole recording, after artifact removal.
+- **Lowest HR**: the lowest 2-minute average. For a night, this is your sleeping low. It uses a 2-minute average so that one missed beat cannot fake a low.
+- **Artifacts**: the share of beats removed as artifacts.
+- **Coverage**: the share of the recording that had heart data.
+- **Minutes per α1 band**: one minute for each 2-minute window, counted in the band of its α1.
+
+Tap the card or any row to open the recording. There you can see the summary, the chart of the whole session (pinch to zoom) and the markers with their clock times. You can also change the name, activity and notes. Saving renames the export file to match and writes it again. **Share export** sends the file; **Export again** writes it back if it was removed from iCloud Drive. Swipe a row left to delete it.
+
 ---
 
 ## Shortcuts, Siri and the Action button

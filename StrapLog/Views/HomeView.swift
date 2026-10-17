@@ -2,7 +2,8 @@ import StrapLogCore
 import SwiftUI
 
 /// Idle screen: live HR to check the strap, activity picker (with a wake time for overnight
-/// presets), optional name, Start, and past recordings (swipe to delete, after a confirmation).
+/// presets), optional name, Start, the summary of the recording that just stopped, and past
+/// recordings (tap for detail; swipe to delete, after a confirmation).
 struct HomeView: View {
     let model: RecorderModel
     @AppStorage(StartPreferences.activityKey) private var activity = ActivityPreset.other.id
@@ -48,6 +49,17 @@ struct HomeView: View {
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("startButton")
             }
+            if let finished = model.lastFinished {
+                Section("Last recording") {
+                    NavigationLink(value: finished.id) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(finished.recording.name).font(.headline)
+                            SessionSummaryCard(summary: finished.summary)
+                        }
+                    }
+                    .accessibilityIdentifier("lastFinished")
+                }
+            }
             if let snapshot = model.lastSnapshot {
                 Section("Last export") {
                     Text(Formats.exportLocation(snapshot))
@@ -57,10 +69,12 @@ struct HomeView: View {
             }
             Section("Recordings") {
                 ForEach(model.recordings) { summary in
-                    RecordingRow(summary: summary)
-                        .swipeActions {
-                            Button("Delete", systemImage: "trash", role: .destructive) { pendingDelete = summary }
-                        }
+                    NavigationLink(value: summary.id) {
+                        RecordingRow(summary: summary)
+                    }
+                    .swipeActions {
+                        Button("Delete", systemImage: "trash", role: .destructive) { pendingDelete = summary }
+                    }
                 }
             }
         }

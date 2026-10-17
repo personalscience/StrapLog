@@ -19,6 +19,7 @@ struct RootView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: Int64.self) { RecordingDetailView(model: model, id: $0) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HeartLinkButton(link: model.link) { showingDevice = true }

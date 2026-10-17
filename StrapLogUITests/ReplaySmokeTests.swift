@@ -44,6 +44,40 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testSummaryCardDetailAndRename() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
+        let name = app.textFields["sessionName"]
+        name.tap()
+        name.typeText("DETAIL")
+        app.buttons["startButton"].tap()
+        XCTAssertTrue(app.staticTexts["heartRate"].waitForExistence(timeout: 10))
+        sleep(5) // replay compresses receive times, so no α1 window closes; the summary still fills
+        let stop = app.buttons["stopButton"]
+        XCTAssertTrue(app.scroll(to: stop))
+        stop.tap()
+        let confirm = app.buttons["confirmStop"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+
+        let card = app.buttons["lastFinished"]
+        XCTAssertTrue(card.waitForExistence(timeout: 10), "no summary card after Stop")
+        XCTAssertTrue(card.label.contains("DETAIL"))
+        card.tap()
+
+        XCTAssertTrue(app.staticTexts["summaryBeats"].waitForExistence(timeout: 10))
+        let detailName = app.textFields["detailName"]
+        XCTAssertTrue(app.scroll(to: detailName))
+        detailName.tap()
+        detailName.clearAndType("RENAMED")
+        app.buttons["detailSave"].tap()
+        XCTAssertTrue(app.navigationBars["RENAMED"].waitForExistence(timeout: 10), "title did not follow the rename")
+        XCTAssertTrue(app.scroll(to: app.buttons["detailShare"]), "no share link for the re-exported file")
+    }
+
+    @MainActor
     func testSleepRecordsOnADarkScreen() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
@@ -62,7 +96,8 @@ final class ReplaySmokeTests: XCTestCase {
         let confirm = app.buttons["confirmStop"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()
-        XCTAssertTrue(app.staticTexts["lastSnapshot"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["lastFinished"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.scroll(to: app.staticTexts["lastSnapshot"]), "the summary card pushes the export line down")
     }
 
     @MainActor
@@ -178,6 +213,12 @@ private extension XCUIApplication {
 }
 
 private extension XCUIElement {
+    /// Deletes the field's current text, then types `text`; call after tapping the field.
+    func clearAndType(_ text: String) {
+        let current = value as? String ?? ""
+        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + text)
+    }
+
     func waitForLabel(containing text: String, timeout: TimeInterval) -> Bool {
         let p = NSPredicate(format: "label CONTAINS %@", text)
         return XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: p, object: self)], timeout: timeout) == .completed

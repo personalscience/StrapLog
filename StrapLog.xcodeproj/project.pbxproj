@@ -16,12 +16,14 @@
 		14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */; };
 		15B3E218B1E03FE7C5B4C84E /* CommandOutcome+Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */; };
 		19A828ECE45D764939F3FF70 /* FormatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */; };
+		1FFE0F2EFCF98386785F3E58 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A701741B52661050CFADDEF /* RecordingDetailView.swift */; };
 		28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734ED09A3CD0628C06A46818 /* RootView.swift */; };
 		2B57AF76460690ED27E4DEC8 /* StrapLogShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */; };
 		2D35B8EDAD390F74B7F54858 /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */; };
 		325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */; };
 		331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */; };
 		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
+		3AEBB441E085ECAAC94361AA /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3AE856E079C81C21212DCA /* SessionSummaryCard.swift */; };
 		3D097411B8B33F27D8C750F3 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */; };
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
@@ -46,6 +48,7 @@
 		8F87609FC672489A24D76EF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB90CBD1036662A389D1322E /* Assets.xcassets */; };
 		9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795ABEAC013BD867F90236B6 /* MetricsHero.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
+		9D8575B0DC3570B57863BEF4 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581715E43F6B3E193FE3D35 /* Alpha1MinutesBar.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
 		A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */; };
 		A9779F70A7B9DFC9FC05C910 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
@@ -121,7 +124,9 @@
 		0C96A3A10835ACCF36B92D16 /* LiveMarkedLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMarkedLine.swift; sourceTree = "<group>"; };
 		11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParserTests.swift; sourceTree = "<group>"; };
 		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
+		2581715E43F6B3E193FE3D35 /* Alpha1MinutesBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alpha1MinutesBar.swift; sourceTree = "<group>"; };
 		2921990E24264C14F324C4DA /* LiveMetricLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMetricLabel.swift; sourceTree = "<group>"; };
+		2A701741B52661050CFADDEF /* RecordingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingDetailView.swift; sourceTree = "<group>"; };
 		2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWidgetsBundle.swift; sourceTree = "<group>"; };
 		2E1447D79697757325A04B08 /* StartRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingIntent.swift; sourceTree = "<group>"; };
 		2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateTile.swift; sourceTree = "<group>"; };
@@ -173,6 +178,7 @@
 		D27C9B67927661DECBD978D3 /* TrendChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChart.swift; sourceTree = "<group>"; };
 		D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlock.swift; sourceTree = "<group>"; };
 		DB90CBD1036662A389D1322E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EB3AE856E079C81C21212DCA /* SessionSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryCard.swift; sourceTree = "<group>"; };
 		EC07072223907ACD363FA3D1 /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
 		ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerBar.swift; sourceTree = "<group>"; };
 		EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkFromLiveActivityIntent.swift; sourceTree = "<group>"; };
@@ -270,6 +276,7 @@
 		5A6A59CE157D2FE79426EA17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2581715E43F6B3E193FE3D35 /* Alpha1MinutesBar.swift */,
 				FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */,
 				443633C69E6A56647BF4CA19 /* BreathingPacerView.swift */,
 				49EB97DA2322B6EDF91B176A /* DeviceSheet.swift */,
@@ -286,9 +293,11 @@
 				795ABEAC013BD867F90236B6 /* MetricsHero.swift */,
 				0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */,
 				8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */,
+				2A701741B52661050CFADDEF /* RecordingDetailView.swift */,
 				4053711F9AE1E85F78BE1168 /* RecordingRow.swift */,
 				502E73BD38ED8D6288A5981A /* RecordingTitle.swift */,
 				8728059CDA30AD297BCB2BD7 /* RecordingView.swift */,
+				EB3AE856E079C81C21212DCA /* SessionSummaryCard.swift */,
 				D27C9B67927661DECBD978D3 /* TrendChart.swift */,
 			);
 			path = Views;
@@ -618,6 +627,7 @@
 				A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */,
 				F7C67AB1FBCC5293404D8FEE /* AddMarkerIntent.swift in Sources */,
 				F7ADF3BC943D44AC9326AB8B /* Alpha1Band+Color.swift in Sources */,
+				9D8575B0DC3570B57863BEF4 /* Alpha1MinutesBar.swift in Sources */,
 				331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */,
 				BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */,
 				C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */,
@@ -648,10 +658,12 @@
 				CD4E98F08B4ADE5EF5C5E694 /* OvernightView.swift in Sources */,
 				89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */,
 				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
+				1FFE0F2EFCF98386785F3E58 /* RecordingDetailView.swift in Sources */,
 				AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */,
 				D554AF1A13FF72226C9AF200 /* RecordingTitle.swift in Sources */,
 				4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */,
 				28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */,
+				3AEBB441E085ECAAC94361AA /* SessionSummaryCard.swift in Sources */,
 				3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */,
 				E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */,
 				562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */,

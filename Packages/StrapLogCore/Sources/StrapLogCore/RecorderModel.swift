@@ -32,6 +32,8 @@ public final class RecorderModel {
     public private(set) var pacer: BreathingPacer?
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
+    /// The recording that just stopped, for Home's summary card; cleared by the next Start.
+    public private(set) var lastFinished: RecordingDetail?
     public private(set) var errorMessage: String?
     /// The user's marker bars, one per activity.
     public private(set) var markerPresets: MarkerPresets
@@ -126,6 +128,7 @@ public final class RecorderModel {
         await perform {
             let id = try await session.start(activity, name: trimmed, plan: plan)
             source?.setMotionStreaming(true)
+            lastFinished = nil
             try loadActive(id)
             try refreshRecordings()
         }
@@ -210,6 +213,48 @@ public final class RecorderModel {
         }
     }
 
+    /// A recording with its summary, markers and chart series; nil (with `errorMessage` set
+    /// on failure) if it cannot be read. The analysis runs on the database's reader, off the main actor.
+    public func detail(_ id: Int64) async -> RecordingDetail? {
+        var detail: RecordingDetail?
+        await perform { detail = try await database.writer.read { db in try RecordingDetail.load(id, db: db) } }
+        return detail
+    }
+
+    /// Saves `edit` to a finished recording and exports it again: its snapshot file is renamed
+    /// with it (the old name is removed from every export folder) and every index is refreshed.
+    /// Returns the reloaded detail, or nil on failure.
+    public func edit(_ id: Int64, _ edit: RecordingEdit) async -> RecordingDetail? {
+        var saved = false
+        await perform {
+            let (before, after) = try await session.edit(id, edit)
+            let oldName = Snapshot.fileName(for: before)
+            if oldName != Snapshot.fileName(for: after) {
+                for directory in await exports.all() {
+                    try CoordinatedFile.remove(at: directory.appendingPathComponent(oldName))
+                }
+            }
+            try await writeExport(id)
+            try refreshRecordings()
+            saved = true
+        }
+        guard saved else { return nil }
+        let reloaded = await detail(id)
+        if lastFinished?.id == id { lastFinished = reloaded }
+        return reloaded
+    }
+
+    /// Writes a finished recording's snapshot again into the current export folder.
+    public func reexport(_ id: Int64) async {
+        await perform { try await writeExport(id) }
+    }
+
+    /// The recording's snapshot file in the current export folder, if it is there.
+    public func exportURL(for recording: Recording) async -> URL? {
+        let url = await exports.url().appendingPathComponent(Snapshot.fileName(for: recording))
+        return FileManager.default.fileExists(atPath: url.path) ? url : nil
+    }
+
     public func dismissError() {
         errorMessage = nil
     }
@@ -257,8 +302,18 @@ public final class RecorderModel {
             markers = []
             live = LiveMetrics()
             try refreshRecordings()
+            if let id = rec.id { lastFinished = try await database.writer.read { db in try RecordingDetail.load(id, db: db) } }
         }
         publishStatus()
+    }
+
+    /// `reexport` into the current folder, `lastSnapshot` pointing at it, other folders reindexed.
+    private func writeExport(_ id: Int64) async throws {
+        let current = await exports.url()
+        lastSnapshot = try await session.reexport(id, into: current)
+        for directory in await exports.all() where directory.standardizedFileURL != current.standardizedFileURL {
+            try await session.reindex(directory)
+        }
     }
 
     private func apply(_ event: SensorEvent) {

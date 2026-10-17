@@ -36,6 +36,18 @@ struct FormatsTests {
         #expect(Formats.duration(s) == "10:00")
     }
 
+    @Test("summary strings: duration or open, clock in the recording's zone, minutes as h/min")
+    func summaryStrings() {
+        #expect(Formats.duration(ms: 28_812_000) == "8:00:12")
+        #expect(Formats.duration(ms: nil) == "open")
+        #expect(Formats.clock(atMs: 1_760_000_000_000, tzOffsetS: -7 * 3600) == "01:53:20")
+        #expect(Formats.minutes(44.6) == "45 min")
+        #expect(Formats.minutes(425) == "7 h 05 min")
+        #expect(Formats.batteryRange(start: 82, end: 79) == "82 % → 79 %")
+        #expect(Formats.batteryRange(start: 82, end: 82) == "82 %")
+        #expect(Formats.batteryRange(start: nil, end: nil) == "--")
+    }
+
     @Test("open recordings show 'open'")
     func open() {
         let s = RecordingSummary(id: 1, name: "x", startedAtMs: 0, endedAtMs: nil, tzOffsetS: 0, beatCount: 0)
