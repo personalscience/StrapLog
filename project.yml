@@ -11,8 +11,8 @@ settings:
   base:
     DEVELOPMENT_TEAM: 4RZ2RJUXC8
     CODE_SIGN_STYLE: Automatic
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.2.0"
+    CURRENT_PROJECT_VERSION: "2"
     # App target stays in Swift 5 mode (SDK tuple typealiases); packages are Swift 6.
     SWIFT_VERSION: "5.0"
     SWIFT_STRICT_CONCURRENCY: complete
