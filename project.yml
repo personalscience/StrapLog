@@ -12,7 +12,8 @@ settings:
     DEVELOPMENT_TEAM: 4RZ2RJUXC8
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "0.2.0"
-    CURRENT_PROJECT_VERSION: "2"
+    # Placeholder: tools/stamp_build.sh sets CFBundleVersion to the git commit count.
+    CURRENT_PROJECT_VERSION: "1"
     # App target stays in Swift 5 mode (SDK tuple typealiases); packages are Swift 6.
     SWIFT_VERSION: "5.0"
     SWIFT_STRICT_CONCURRENCY: complete
@@ -59,6 +60,8 @@ targets:
       path: StrapLog/Resources/Info.plist
       properties:
         CFBundleDisplayName: StrapLog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSBluetoothAlwaysUsageDescription: StrapLog connects to your Polar H10 chest strap to record heart rate and beat-to-beat intervals.
