@@ -74,7 +74,7 @@ struct MotionSessionTests {
         let rig = try TestRig(database: db)
         let id = try await rig.session.start(name: "overnight")
         let empty = dir.appendingPathComponent("empty.sqlite")
-        try Snapshot.write(db, to: empty)
+        try Snapshot.write(db, recordingId: id, to: empty)
 
         let start = rig.clock.nowMs()
         var g = SystemRandomNumberGenerator()
@@ -85,7 +85,7 @@ struct MotionSessionTests {
         }
         try await db.writer.write { try MotionSecond.save(night, db: $0) }
         let full = dir.appendingPathComponent("full.sqlite")
-        try Snapshot.write(db, to: full)
+        try Snapshot.write(db, recordingId: id, to: full)
 
         func size(_ url: URL) throws -> Int { try FileManager.default.attributesOfItem(atPath: url.path)[.size] as! Int }
         let added = try size(full) - size(empty)

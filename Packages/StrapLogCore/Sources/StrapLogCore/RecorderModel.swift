@@ -133,6 +133,20 @@ public final class RecorderModel {
         }
     }
 
+    /// Deletes a finished recording and its snapshot file from every export folder.
+    public func delete(_ summary: RecordingSummary) async {
+        await perform {
+            let rec = try await session.delete(summary.id)
+            let name = Snapshot.fileName(for: rec)
+            for directory in await exports.all() {
+                let url = directory.appendingPathComponent(name)
+                try Snapshot.remove(at: url)
+                if lastSnapshot?.standardizedFileURL == url.standardizedFileURL { lastSnapshot = nil }
+            }
+            try refreshRecordings()
+        }
+    }
+
     public func dismissError() {
         errorMessage = nil
     }

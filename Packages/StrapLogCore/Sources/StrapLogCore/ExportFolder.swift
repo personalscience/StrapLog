@@ -19,4 +19,11 @@ public actor ExportFolder {
         resolvedCloud = cloud?()
         return resolvedCloud ?? local
     }
+
+    /// Every folder a snapshot may be in: iCloud (if available) and the local fallback,
+    /// since a snapshot lands locally whenever iCloud was unavailable at the time.
+    public func all() -> [URL] {
+        let current = url()
+        return current == local ? [local] : [current, local]
+    }
 }

@@ -102,7 +102,7 @@ public actor RecordingSession {
         lastSnapshotMs = nil
         motion = nil
         if let directory {
-            try Snapshot.write(database, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
+            try Snapshot.write(database, recordingId: id, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
         }
         return rec
     }
@@ -127,6 +127,21 @@ public actor RecordingSession {
         try log(.pacerStop, note: nil, recordingId: id, atMs: clock.nowMs())
     }
 
+    /// Deletes a finished recording and all its rows (foreign keys cascade). Returns it, so the
+    /// caller can remove its snapshot file. The recording being written cannot be deleted.
+    @discardableResult
+    public func delete(_ id: Int64) throws -> Recording {
+        guard id != recordingId else { throw RecordingSessionError.cannotDeleteActive }
+        return try database.writer.write { db in
+            guard let rec = try Recording.fetchOne(db, key: id) else {
+                throw RecordingSessionError.noSuchRecording(id: id)
+            }
+            guard rec.endedAtMs != nil else { throw RecordingSessionError.cannotDeleteActive }
+            try rec.delete(db)
+            return rec
+        }
+    }
+
     /// Periodic mid-recording export: logs a `snapshot` event, then overwrites the file.
     @discardableResult
     public func snapshot(into directory: URL) throws -> URL {
@@ -138,7 +153,7 @@ public actor RecordingSession {
         try log(.snapshot, note: name, recordingId: id, atMs: now)
         lastSnapshotMs = now
         let url = directory.appendingPathComponent(name)
-        try Snapshot.write(database, to: url)
+        try Snapshot.write(database, recordingId: id, to: url)
         return url
     }
 

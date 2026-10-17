@@ -25,4 +25,12 @@ struct ExportFolderTests {
         #expect(await folder.url() == cloud)
         #expect(calls.withLock { $0 } == 2)
     }
+
+    @Test("all() lists iCloud then local, or local alone")
+    func allFolders() async {
+        let cloud = self.cloud
+        #expect(await ExportFolder(local: local).all() == [local])
+        #expect(await ExportFolder(local: local) { nil }.all() == [local])
+        #expect(await ExportFolder(local: local) { cloud }.all() == [cloud, local])
+    }
 }

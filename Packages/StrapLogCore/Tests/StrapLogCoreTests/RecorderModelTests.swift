@@ -182,4 +182,46 @@ struct RecorderModelTests {
         #expect(FileManager.default.fileExists(atPath: url.path))
         #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "snapshot"])
     }
+
+    @Test("delete removes a finished recording's rows and its snapshot from every export folder")
+    func deleteRecording() async throws {
+        let cloud = try scratchDirectory()
+        defer { for d in [dir, cloud] { try? FileManager.default.removeItem(at: d) } }
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir) { cloud }, clock: clock)
+        await model.start(name: "old")
+        await model.consume(FakeHeartSource(clock: clock, script: [hr([1000, 1000])]))
+        await model.marker("a")
+        await model.stop()
+        let snapshot = try #require(model.lastSnapshot)
+        let localCopy = dir.appendingPathComponent(snapshot.lastPathComponent)
+        try FileManager.default.copyItem(at: snapshot, to: localCopy)
+        clock.advance(byMs: 60_000)
+        await model.start(name: "keep")
+        await model.consume(FakeHeartSource(clock: clock, script: [hr([900])]))
+        await model.stop()
+        clock.advance(byMs: 60_000)
+        await model.start(name: "newer")
+        await model.stop()
+
+        let old = try #require(model.recordings.first { $0.name == "old" })
+        await model.delete(old)
+        #expect(model.errorMessage == nil)
+        #expect(model.recordings.map(\.name) == ["newer", "keep"])
+        #expect(!FileManager.default.fileExists(atPath: snapshot.path))
+        #expect(!FileManager.default.fileExists(atPath: localCopy.path))
+        for table in ["notification", "beat", "event"] {
+            #expect(try strings("SELECT COUNT(*) FROM \(table) WHERE recording_id = \(old.id)") == ["0"], "\(table)")
+        }
+        #expect(try strings("SELECT COUNT(*) FROM beat") == ["1"], "the other recording's beats remain")
+    }
+
+    @Test("the recording being written cannot be deleted")
+    func deleteActiveRefused() async throws {
+        await model.start(name: "live")
+        let live = try #require(model.recordings.first)
+        await model.delete(live)
+        #expect(model.errorMessage != nil)
+        #expect(model.recordings.count == 1)
+        #expect(model.isRecording)
+    }
 }

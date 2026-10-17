@@ -63,6 +63,27 @@ struct SnapshotTests {
         #expect(try DBInvariants.violations(copy).isEmpty)
     }
 
+    @Test("a snapshot holds only its own recording, with its original id")
+    func oneRecordingPerFile() async throws {
+        let dir = try scratchDirectory()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let (rig, first, firstFile) = try await recordAndStop(in: dir)
+        rig.clock.advance(byMs: 60_000)
+        try await rig.session.start(name: "second")
+        try await rig.play([.wait(ms: 1000), hr([900, 950, 1000])])
+        let second = try await rig.session.stop(snapshotInto: dir.appendingPathComponent("export"))
+        let secondFile = firstFile.deletingLastPathComponent().appendingPathComponent(Snapshot.fileName(for: second))
+
+        #expect(try sqlite3(firstFile, "SELECT id FROM recording") == String(first.id!))
+        #expect(try sqlite3(secondFile, "SELECT id FROM recording") == String(second.id!))
+        #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM beat") == "3")
+        for table in ["notification", "beat", "event"] {
+            #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM \(table) WHERE recording_id != \(second.id!)") == "0",
+                    "\(table)")
+        }
+        #expect(try sqlite3(secondFile, "SELECT COUNT(*) FROM meta") == "2")
+    }
+
     @Test("periodic snapshot overwrites the same file and logs an event each time")
     func periodicOverwrite() async throws {
         let dir = try scratchDirectory()
