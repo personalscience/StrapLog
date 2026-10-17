@@ -14,7 +14,7 @@ struct SnapshotTests {
             .emit(.connected(deviceId: "H10", firmware: "5.0")),
             .wait(ms: 1000), hr([1000]), .wait(ms: 1000), hr([700, 720]),
         ])
-        try await rig.session.marker("a")
+        try await rig.session.marker(label: "a")
         let out = dir.appendingPathComponent("export")
         let rec = try await rig.session.stop(snapshotInto: out)
         return (rig, rec, out.appendingPathComponent(Snapshot.fileName(for: rec)))

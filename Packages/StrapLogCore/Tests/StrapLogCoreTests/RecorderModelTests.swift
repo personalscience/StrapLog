@@ -57,28 +57,43 @@ struct RecorderModelTests {
         #expect(model.errorMessage == nil)
     }
 
-    @Test("markers are written as marker events")
+    @Test("markers are written as marker events; blank notes are dropped")
     func markers() async throws {
         await model.start(name: "m")
-        for note in ["a", "b", "free text", "end"] { await model.marker(note) }
-        #expect(try strings("SELECT note FROM event WHERE kind = 'marker' ORDER BY id") == ["a", "b", "free text", "end"])
+        await model.marker(label: "a")
+        await model.marker(note: "  free text ")
+        await model.marker(note: "   ")
+        await model.marker(label: "end")
+        #expect(try strings("SELECT COALESCE(label, '-') || '|' || COALESCE(note, '-') FROM event WHERE kind = 'marker' ORDER BY id")
+                == ["a|-", "-|free text", "end|-"])
+    }
+
+    @Test("the active recording's preset drives the marker bar; idle falls back to other")
+    func activePreset() async throws {
+        #expect(model.activePreset == .other)
+        await model.start(.sleep, name: " ")
+        #expect(model.activePreset == .sleep)
+        #expect(model.activeRecording?.name.hasPrefix("sleep ") == true)
+        await model.stop()
+        #expect(model.recordings.map(\.activity) == ["sleep"])
+        #expect(model.activePreset == .other)
     }
 
     @Test("each marker updates lastMarker and markerCount; relaunch restores them, Stop clears them")
     func markerFeedback() async throws {
         await model.start(name: "m")
         #expect(model.lastMarker == nil)
-        await model.marker("a")
+        await model.marker(label: "a")
         clock.advance(byMs: 2000)
-        await model.marker("b")
-        #expect(model.lastMarker?.note == "b")
+        await model.marker(label: "b")
+        #expect(model.lastMarker?.label == "b")
         #expect(model.lastMarker?.atMs == clock.nowMs())
         #expect(model.markerCount == 2)
 
         let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
-        #expect(relaunched.lastMarker?.note == "b")
-        #expect(relaunched.markers.map(\.note) == ["a", "b"])
+        #expect(relaunched.lastMarker?.label == "b")
+        #expect(relaunched.markers.map(\.label) == ["a", "b"])
         #expect(relaunched.markers == model.markers)
 
         await relaunched.stop()
@@ -147,7 +162,7 @@ struct RecorderModelTests {
 
     @Test("errors surface in errorMessage instead of throwing")
     func errorsSurface() async {
-        await model.marker("a")
+        await model.marker(label: "a")
         #expect(model.errorMessage != nil)
         model.dismissError()
         #expect(model.errorMessage == nil)
@@ -190,7 +205,7 @@ struct RecorderModelTests {
         let model = RecorderModel(database: database, exports: ExportFolder(local: dir) { cloud }, clock: clock)
         await model.start(name: "old")
         await model.consume(FakeHeartSource(clock: clock, script: [hr([1000, 1000])]))
-        await model.marker("a")
+        await model.marker(label: "a")
         await model.stop()
         let snapshot = try #require(model.lastSnapshot)
         let localCopy = dir.appendingPathComponent(snapshot.lastPathComponent)

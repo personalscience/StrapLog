@@ -21,7 +21,7 @@ struct RecordingView: View {
                         PacerSection(model: model)
                     }
                     HStack {
-                        if model.pacer == nil {
+                        if model.pacer == nil, model.activePreset.pacer {
                             Button(showingPacer ? "Hide pacer" : "Pacer", systemImage: "wind") {
                                 showingPacer.toggle()
                             }

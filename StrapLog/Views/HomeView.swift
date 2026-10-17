@@ -1,10 +1,11 @@
 import StrapLogCore
 import SwiftUI
 
-/// Idle screen: live HR to check the strap, name field, Start, and past recordings
-/// (swipe to delete, after a confirmation).
+/// Idle screen: live HR to check the strap, activity picker, optional name, Start, and past
+/// recordings (swipe to delete, after a confirmation).
 struct HomeView: View {
     let model: RecorderModel
+    @AppStorage("activity") private var activity = ActivityPreset.other.id
     @State private var name = ""
     @State private var pendingDelete: RecordingSummary?
 
@@ -16,12 +17,19 @@ struct HomeView: View {
                     .listRowBackground(Color.clear)
             }
             Section {
-                TextField("Session name", text: $name)
+                Picker("Activity", selection: $activity) {
+                    ForEach(ActivityPreset.all) { preset in
+                        Label(preset.title, systemImage: preset.systemImage).tag(preset.id)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("activityPicker")
+                TextField("Name (optional)", text: $name)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("sessionName")
                 Button {
-                    Task { await model.start(name: name) }
+                    Task { await model.start(ActivityPreset.named(activity), name: name) }
                 } label: {
                     Label("Start recording", systemImage: "record.circle")
                         .frame(maxWidth: .infinity)

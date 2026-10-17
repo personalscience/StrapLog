@@ -19,7 +19,12 @@ enum Formats {
     static func marker(_ last: RecordingEvent?, count: Int, nowMs: Int64) -> String {
         guard let last else { return "No markers yet" }
         let ago = max(0, nowMs - last.atMs) / 1000
-        return "\(last.note ?? "") · \(ago) s ago · \(count) marker\(count == 1 ? "" : "s")"
+        return "\(last.markerText) · \(ago) s ago · \(count) marker\(count == 1 ? "" : "s")"
+    }
+
+    /// A marker label as a button title: `lights_out` → `lights out`.
+    static func markerButton(_ label: String) -> String {
+        label.replacingOccurrences(of: "_", with: " ")
     }
 
     static func link(_ status: LinkStatus) -> String {
@@ -38,6 +43,11 @@ enum Formats {
         f.timeZone = TimeZone(secondsFromGMT: summary.tzOffsetS)
         f.dateFormat = "MMM d, HH:mm"
         return f.string(from: Date(timeIntervalSince1970: Double(summary.startedAtMs) / 1000))
+    }
+
+    /// The row's second line, e.g. `Sleep · Oct 14, 21:05 · 7:58:12 · 30123 beats`.
+    static func summaryLine(_ summary: RecordingSummary) -> String {
+        "\(ActivityPreset.named(summary.activity).title) · \(started(summary)) · \(duration(summary)) · \(summary.beatCount) beats"
     }
 
     static func duration(_ summary: RecordingSummary) -> String {

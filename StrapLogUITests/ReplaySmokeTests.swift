@@ -12,6 +12,7 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(heart.waitForExistence(timeout: 10))
         XCTAssertTrue(heart.waitForLabel(containing: "REPLAY", timeout: 5))
 
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
         let name = app.textFields["sessionName"]
         name.tap()
         name.typeText("SMOKE")

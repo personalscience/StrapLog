@@ -79,8 +79,18 @@ public enum Schema {
         UPDATE meta SET value = '2' WHERE key = 'schema_version';
         """
 
+    /// Recordings know their activity (`ActivityPreset.id`) and carry free `context` JSON;
+    /// markers get a `label` from the preset's vocabulary, leaving `note` for free text.
+    /// Earlier recordings become `other`, and their markers keep the label in `note`.
+    public static let v3 = """
+        ALTER TABLE recording ADD COLUMN activity TEXT NOT NULL DEFAULT 'other';
+        ALTER TABLE recording ADD COLUMN context TEXT;
+        ALTER TABLE event ADD COLUMN label TEXT;
+        UPDATE meta SET value = '3' WHERE key = 'schema_version';
+        """
+
     /// Migrations in order; `docs/SCHEMA.md` holds one SQL block per entry.
-    public static let migrations = [("v1", v1), ("v2", v2)]
+    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3)]
 
     public static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()

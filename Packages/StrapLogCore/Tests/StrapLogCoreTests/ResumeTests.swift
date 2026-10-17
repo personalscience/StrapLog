@@ -93,7 +93,7 @@ struct ResumeTests {
         let rig = try TestRig()
         let id = try await rig.session.start(name: "x")
         rig.clock.advance(byMs: 3_600_000)
-        try await rig.session.marker("a")
+        try await rig.session.marker(label: "a")
         rig.clock.advance(byMs: RecordingSession.defaultStaleAfterMs)
         #expect(try await rig.relaunched().resumeIfOpen() == id)
     }

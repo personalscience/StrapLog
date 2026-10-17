@@ -47,8 +47,9 @@ public actor RecordingSession {
 
     // MARK: User actions
 
+    /// Starts a recording of `activity`; an empty `name` becomes `activity.defaultName`.
     @discardableResult
-    public func start(name: String) throws -> Int64 {
+    public func start(_ activity: ActivityPreset = .other, name: String) throws -> Int64 {
         guard recordingId == nil else { throw RecordingSessionError.alreadyRecording }
         let now = clock.nowMs()
         let tz = clock.tzOffsetSeconds(atMs: now)
@@ -58,7 +59,8 @@ public actor RecordingSession {
             if let open = try Recording.open(db), let openId = open.id {
                 throw RecordingSessionError.openRecordingExists(id: openId)
             }
-            var rec = Recording(name: name, startedAtMs: now, tzOffsetS: tz)
+            var rec = Recording(name: name.isEmpty ? activity.defaultName(atMs: now, tzOffsetS: tz) : name,
+                                activity: activity.id, startedAtMs: now, tzOffsetS: tz)
             rec.batteryStart = battery
             rec.batteryEnd = battery
             if case .connected(let deviceId, let firmware) = link {
@@ -107,11 +109,11 @@ public actor RecordingSession {
         return rec
     }
 
-    /// `marker` event; `note` is `a`, `b`, `c`, `end`, or free text. Returns the stored row.
+    /// `marker` event with a preset `label`, free-text `note`, or both. Returns the stored row.
     @discardableResult
-    public func marker(_ note: String) throws -> RecordingEvent {
+    public func marker(label: String? = nil, note: String? = nil) throws -> RecordingEvent {
         let id = try requireRecording()
-        return try log(.marker, note: note, recordingId: id, atMs: clock.nowMs())
+        return try log(.marker, label: label, note: note, recordingId: id, atMs: clock.nowMs())
     }
 
     /// Starts a breathing pacer now and logs `pacer_start` noted with its rate.
@@ -308,9 +310,10 @@ public actor RecordingSession {
     }
 
     @discardableResult
-    private func log(_ kind: EventKind, note: String?, recordingId: Int64, atMs: Int64) throws -> RecordingEvent {
+    private func log(_ kind: EventKind, label: String? = nil, note: String?, recordingId: Int64,
+                     atMs: Int64) throws -> RecordingEvent {
         try database.writer.write { db in
-            var e = RecordingEvent(recordingId: recordingId, atMs: atMs, kind: kind, note: note)
+            var e = RecordingEvent(recordingId: recordingId, atMs: atMs, kind: kind, label: label, note: note)
             try e.insert(db)
             return e
         }

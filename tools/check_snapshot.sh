@@ -10,7 +10,7 @@ check() { # name, ok(0/1), detail
   if [[ "$2" == 1 ]]; then echo "PASS  $1  ($3)"; else echo "FAIL  $1  ($3)"; fail=1; fi
 }
 
-echo "recording $rid: $(q "SELECT name || ', ' || ROUND((ended_at_ms - started_at_ms)/60000.0, 1) || ' min' FROM recording WHERE id = $rid")"
+echo "recording $rid: $(q "SELECT name || ' (' || activity || '), ' || ROUND((ended_at_ms - started_at_ms)/60000.0, 1) || ' min' FROM recording WHERE id = $rid")"
 [[ -e "$db-wal" || -e "$db-shm" ]] && check "no sidecars" 0 "found -wal/-shm" || check "no sidecars" 1 "single file"
 
 back=$(q "SELECT COUNT(*) FROM (SELECT received_at_ms - LAG(received_at_ms) OVER (ORDER BY id) AS d
@@ -24,7 +24,7 @@ pct=$(awk -v a="$sum_s" -v b="$span_s" 'BEGIN { printf "%.2f", (b > 0 ? 100 * (a
 ok=$(awk -v p="$pct" 'BEGIN { print (p >= -1 && p <= 1) ? 1 : 0 }')
 check "sum(rr) vs elapsed within 1%" "$ok" "Σrr ${sum_s}s vs span ${span_s}s → ${pct}%"
 
-markers=$(q "SELECT COUNT(*) || ' [' || COALESCE(GROUP_CONCAT(note, ','), '') || ']' FROM event
+markers=$(q "SELECT COUNT(*) || ' [' || COALESCE(GROUP_CONCAT(COALESCE(label || COALESCE(' · ' || note, ''), note), ','), '') || ']' FROM event
              WHERE recording_id = $rid AND kind = 'marker'")
 check "markers present" "$([[ ${markers%% *} -gt 0 ]] && echo 1 || echo 0)" "$markers"
 

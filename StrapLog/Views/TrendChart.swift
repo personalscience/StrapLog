@@ -91,7 +91,7 @@ struct TrendChart: View {
                     .foregroundStyle(.secondary)
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [2, 2]))
                     .annotation(position: .top, alignment: .leading) {
-                        Text(marker.note ?? "").font(.caption2.bold())
+                        Text(marker.markerText).font(.caption2.bold())
                     }
             }
         }

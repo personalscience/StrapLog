@@ -89,16 +89,33 @@ struct RecordingSessionTests {
         #expect(try rig.kinds(id) == [.start, .bleOff, .bleOn])
     }
 
-    @Test("markers are events with their label")
+    @Test("markers are events with a preset label, free-text note, or both")
     func markers() async throws {
         let rig = try TestRig()
-        let id = try await rig.session.start(name: "m")
-        for label in ["a", "b", "c", "end", "felt dizzy"] {
-            rig.clock.advance(byMs: 1000)
-            try await rig.session.marker(label)
-        }
+        let id = try await rig.session.start(.sleep, name: "m")
+        try await rig.session.marker(label: "lights_out")
+        try await rig.session.marker(note: "felt dizzy")
+        try await rig.session.marker(label: "awake", note: "bathroom")
         let markers = try rig.events(id).filter { $0.kind == .marker }
-        #expect(markers.map(\.note) == ["a", "b", "c", "end", "felt dizzy"])
+        #expect(markers.map(\.label) == ["lights_out", nil, "awake"])
+        #expect(markers.map(\.note) == [nil, "felt dizzy", "bathroom"])
+        #expect(markers.map(\.markerText) == ["lights_out", "felt dizzy", "awake · bathroom"])
+    }
+
+    @Test("start stores the activity, and an empty name becomes `<activity> <local date>`")
+    func activity() async throws {
+        // 1_760_000_000_000 is 2025-10-09 08:53 UTC, 01:53 at -7 h.
+        let rig = try TestRig()
+        let id = try await rig.session.start(.sleep, name: "")
+        let rec = try rig.recording(id)
+        #expect(rec?.activity == "sleep")
+        #expect(rec?.name == "sleep 2025-10-09")
+        #expect(rec?.context == nil)
+        try await rig.session.stop()
+
+        let other = try await rig.session.start(name: "RAVINE")
+        #expect(try rig.recording(other)?.activity == "other")
+        #expect(try rig.recording(other)?.name == "RAVINE")
     }
 
     @Test("stop sets ended_at_ms, logs stop, and returns to idle")
@@ -112,7 +129,7 @@ struct RecordingSessionTests {
         #expect(try rig.recording(id)?.endedAtMs == rig.clock.nowMs())
         #expect(await rig.session.recordingId == nil)
         await #expect(throws: RecordingSessionError.notRecording) { try await rig.session.stop() }
-        await #expect(throws: RecordingSessionError.notRecording) { try await rig.session.marker("a") }
+        await #expect(throws: RecordingSessionError.notRecording) { try await rig.session.marker(label: "a") }
     }
 
     @Test("start stores name, UTC start, and tz offset")

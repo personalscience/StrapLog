@@ -40,6 +40,9 @@ struct FormatsTests {
         let e = RecordingEvent(recordingId: 1, atMs: 10_000, kind: .marker, note: "b")
         #expect(Formats.marker(e, count: 1, nowMs: 10_400) == "b · 0 s ago · 1 marker")
         #expect(Formats.marker(e, count: 5, nowMs: 22_000) == "b · 12 s ago · 5 markers")
+        let labelled = RecordingEvent(recordingId: 1, atMs: 10_000, kind: .marker, label: "awake", note: "bathroom")
+        #expect(Formats.marker(labelled, count: 2, nowMs: 10_000) == "awake · bathroom · 0 s ago · 2 markers")
+        #expect(Formats.markerButton("lights_out") == "lights out")
     }
 
     @Test("live metric values, with -- when a window has none")

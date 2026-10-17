@@ -14,15 +14,20 @@ public struct Recording: Codable, Sendable, Equatable, FetchableRecord, MutableP
     public var batteryStart: Int?
     public var batteryEnd: Int?
     public var notes: String?
+    /// `ActivityPreset.id`; `other` for recordings made before activities existed.
+    public var activity: String
+    /// Free JSON object describing the session (pack kg, route, ...); nil when there is none.
+    public var context: String?
 
-    public init(name: String, startedAtMs: Int64, tzOffsetS: Int) {
+    public init(name: String, activity: String = ActivityPreset.other.id, startedAtMs: Int64, tzOffsetS: Int) {
         self.name = name
+        self.activity = activity
         self.startedAtMs = startedAtMs
         self.tzOffsetS = tzOffsetS
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, name, firmware, notes
+        case id, name, firmware, notes, activity, context
         case startedAtMs = "started_at_ms", endedAtMs = "ended_at_ms", tzOffsetS = "tz_offset_s"
         case deviceId = "device_id", batteryStart = "battery_start", batteryEnd = "battery_end"
     }

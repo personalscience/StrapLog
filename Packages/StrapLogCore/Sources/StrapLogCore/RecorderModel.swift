@@ -35,6 +35,8 @@ public final class RecorderModel {
     public private(set) var errorMessage: String?
 
     public var isRecording: Bool { activeRecording != nil }
+    /// The active recording's preset: its marker bar and pacer. `other` when idle.
+    public var activePreset: ActivityPreset { ActivityPreset.named(activeRecording?.activity ?? ActivityPreset.other.id) }
 
     private let session: RecordingSession
     private let database: StrapLogDatabase
@@ -78,10 +80,11 @@ public final class RecorderModel {
         }
     }
 
-    public func start(name: String) async {
+    /// An empty or blank `name` becomes `activity.defaultName`.
+    public func start(_ activity: ActivityPreset = .other, name: String) async {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         await perform {
-            let id = try await session.start(name: trimmed)
+            let id = try await session.start(activity, name: trimmed)
             source?.setMotionStreaming(true)
             try loadActive(id)
             try refreshRecordings()
@@ -102,10 +105,13 @@ public final class RecorderModel {
         }
     }
 
-    /// `a`, `b`, `c`, `end`, or free text.
-    public func marker(_ note: String) async {
+    /// A label from `activePreset.markers`, free text, or both; blank text is dropped.
+    public func marker(label: String? = nil, note: String? = nil) async {
+        let note = note?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let text = note?.isEmpty == false ? note : nil
+        guard label != nil || text != nil else { return }
         await perform {
-            markers.append(try await session.marker(note))
+            markers.append(try await session.marker(label: label, note: text))
         }
     }
 

@@ -1,0 +1,37 @@
+import Foundation
+
+/// What a recording is of, and how the app records it. Each preset is a value: adding an
+/// activity means adding one here, not a new screen. Stored as `recording.activity = id`.
+public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable {
+    /// Stored in `recording.activity`; never rename one that has shipped.
+    public let id: String
+    public let title: String
+    /// SF Symbol for pickers and rows.
+    public let systemImage: String
+    /// One-tap marker labels, in bar order, stored in `event.label`.
+    public let markers: [String]
+    /// Whether the recording screen offers the breathing pacer.
+    public let pacer: Bool
+
+    public static let sleep = ActivityPreset(id: "sleep", title: "Sleep", systemImage: "bed.double",
+                                             markers: ["lights_out", "awake", "up"], pacer: false)
+    public static let other = ActivityPreset(id: "other", title: "Other", systemImage: "waveform.path.ecg",
+                                             markers: ["a", "b", "c", "end"], pacer: true)
+
+    /// Picker order.
+    public static let all = [sleep, other]
+
+    /// The preset stored as `id`; `other` for an id this build does not know.
+    public static func named(_ id: String) -> ActivityPreset {
+        all.first { $0.id == id } ?? other
+    }
+
+    /// The name a recording gets when none is typed: `<id> <local date>`, e.g. `sleep 2026-10-16`.
+    public func defaultName(atMs: Int64, tzOffsetS: Int) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = TimeZone(secondsFromGMT: tzOffsetS)
+        f.dateFormat = "yyyy-MM-dd"
+        return "\(id) \(f.string(from: Date(timeIntervalSince1970: Double(atMs) / 1000)))"
+    }
+}

@@ -1,10 +1,8 @@
 import StrapLogCore
 import SwiftUI
 
-/// One-tap `a` `b` `c` `end` markers plus a free-text marker.
+/// One-tap markers from the recording's preset (`ActivityPreset.markers`) plus a free-text marker.
 struct MarkerBar: View {
-    static let quickMarkers = ["a", "b", "c", "end"]
-
     let model: RecorderModel
     let nowMs: Int64
     @State private var note = ""
@@ -17,9 +15,11 @@ struct MarkerBar: View {
                 .accessibilityIdentifier("lastMarker")
                 .sensoryFeedback(.impact, trigger: model.markerCount)
             HStack {
-                ForEach(Self.quickMarkers, id: \.self) { marker in
-                    Button { Task { await model.marker(marker) } } label: {
-                        Text(marker).font(.title3.bold()).frame(maxWidth: .infinity, minHeight: 44)
+                ForEach(model.activePreset.markers, id: \.self) { marker in
+                    Button { Task { await model.marker(label: marker) } } label: {
+                        Text(Formats.markerButton(marker)).font(.title3.bold())
+                            .lineLimit(1).minimumScaleFactor(0.6)
+                            .frame(maxWidth: .infinity, minHeight: 44)
                     }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("marker-\(marker)")
@@ -32,7 +32,7 @@ struct MarkerBar: View {
                 Button("Add") {
                     let text = note
                     note = ""
-                    Task { await model.marker(text) }
+                    Task { await model.marker(note: text) }
                 }
                 .disabled(note.trimmingCharacters(in: .whitespaces).isEmpty)
             }

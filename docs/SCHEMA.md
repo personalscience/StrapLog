@@ -1,4 +1,4 @@
-# Schema (v2)
+# Schema (v3)
 
 Source of truth: `Schema.migrations` in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. Each `sql` block below is one migration, verbatim and in order; `SchemaTests.docsMatch` fails if they drift.
 
@@ -81,6 +81,17 @@ CREATE TABLE motion(
 UPDATE meta SET value = '2' WHERE key = 'schema_version';
 ```
 
+### v3: activities and typed markers (straplog-9rp.1)
+
+A recording knows what it is: `activity` is an `ActivityPreset.id` (`sleep`, `other`; more presets come later as values, not migrations), and `context` is a free JSON object (pack kg, route, ...), NULL when unset. Markers get `label`, a word from the preset's vocabulary, so skills key off labels instead of parsing text; `note` keeps free text. Rows from v2 become `other`, and their markers keep the label in `note` with `label` NULL, so loaders read `COALESCE(label, note)`.
+
+```sql
+ALTER TABLE recording ADD COLUMN activity TEXT NOT NULL DEFAULT 'other';
+ALTER TABLE recording ADD COLUMN context TEXT;
+ALTER TABLE event ADD COLUMN label TEXT;
+UPDATE meta SET value = '3' WHERE key = 'schema_version';
+```
+
 ## Columns that need explaining
 
 - `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
@@ -89,9 +100,10 @@ UPDATE meta SET value = '2' WHERE key = 'schema_version';
 - `notification.contact`: 1/0, NULL when the sensor does not report skin contact.
 - `recording.ended_at_ms` NULL ⇒ unfinished. A relaunch reattaches to the latest such recording (`relaunch` event) rather than starting a new one; `start` refuses while one exists. If its last event or notification is older than 6 h (`RecordingSession.defaultStaleAfterMs`), the relaunch instead closes it at that last activity with a `stop` noted `stale`.
 - `recording.device_id`/`firmware`: first values seen (`firmware` arrives over DIS a few seconds after connect). The strap's serial number is shown in the app but not stored. `battery_start`: last reading before or at start; `battery_end`: latest reading.
-- `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery foreground background` (`EventKind`). Markers carry the label (`a`, `b`, `c`, `end`, free text) in `note`; `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name; `low_battery` the strap's percent (once per recording, at ≤ 10 %). `foreground`/`background` are scene-phase changes while recording (none during a background-only restoration launch). `snapshot` is written on Stop, every 30 min of recording, and on each move to the background.
+- `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery foreground background` (`EventKind`). Markers carry a preset `label` (`ActivityPreset.markers`: sleep `lights_out awake up`, other `a b c end`), free text in `note`, or both (before v3 the label was in `note`); `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name; `low_battery` the strap's percent (once per recording, at ≤ 10 %). `foreground`/`background` are scene-phase changes while recording (none during a background-only restoration launch). `snapshot` is written on Stop, every 30 min of recording, and on each move to the background.
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
-- `meta`: `format = straplog`, `schema_version = 2`, so loaders can recognise the file.
+- `recording.name`: typed on Home, or `<activity> <local date>` (`ActivityPreset.defaultName`, e.g. `sleep 2026-10-16`) when left blank.
+- `meta`: `format = straplog`, `schema_version = 3`, so loaders can recognise the file.
 - `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the RMS of |a| − 1000 mg over the second: ~0 when still, larger with movement. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop.
 
 ## Files
