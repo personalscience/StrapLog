@@ -32,6 +32,18 @@ Each row shows the name, local start time, duration and beat count. **open** mea
 
 ---
 
+## Shortcuts, Siri and the Action button
+
+StrapLog offers **Start Recording** (pick an activity), **Stop Recording** and **Add Marker** to Shortcuts, Siri ("Start Sleep recording in StrapLog") and the Action button. They work without opening the app. Starting while a recording is open leaves it running. A Sleep start uses the wake time set on the Start screen.
+
+To start a sleep recording automatically at bedtime:
+
+1. Open Shortcuts → Automation → New Automation → Sleep (or Focus → Sleep).
+2. Choose **When Turning On**, then **Run Immediately**.
+3. Add the action **Start Recording** from StrapLog and set Activity to **Sleep**.
+
+Put the strap on before Sleep Focus turns on, so the night's first beats are caught.
+
 ## The measurements
 
 ### RR interval (ms)

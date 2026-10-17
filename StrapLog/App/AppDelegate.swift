@@ -1,3 +1,4 @@
+import AppIntents
 import StrapLogCore
 import UIKit
 
@@ -22,6 +23,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             let launcher = Launcher(model: deps.model, source: deps.source)
             launcher.start()
             self.launcher = launcher
+            // Shortcuts and Siri run their intents through the same launcher.
+            AppDependencyManager.shared.add(dependency: launcher)
+            StrapLogShortcuts.updateAppShortcutParameters()
         }
         return true
     }

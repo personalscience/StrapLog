@@ -5,11 +5,9 @@ import SwiftUI
 /// presets), optional name, Start, and past recordings (swipe to delete, after a confirmation).
 struct HomeView: View {
     let model: RecorderModel
-    @AppStorage("activity") private var activity = ActivityPreset.other.id
-    @AppStorage("stopAtWake") private var stopAtWake = true
-    /// Only its hour and minute matter (`OvernightPlan(wakeAt:)`); stored as reference-date seconds.
-    @AppStorage("wakeAt") private var wakeAt = Calendar.current.date(bySettingHour: 6, minute: 30, second: 0, of: .now)!
-        .timeIntervalSinceReferenceDate
+    @AppStorage(StartPreferences.activityKey) private var activity = ActivityPreset.other.id
+    @AppStorage(StartPreferences.stopAtWakeKey) private var stopAtWake = StartPreferences.defaultStopAtWake
+    @AppStorage(StartPreferences.wakeAtKey) private var wakeAt = StartPreferences.defaultWakeAt
     @State private var name = ""
     @State private var pendingDelete: RecordingSummary?
 
@@ -41,7 +39,7 @@ struct HomeView: View {
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("sessionName")
                 Button {
-                    let plan = stopAtWake ? OvernightPlan(wakeAt: wakeTime.wrappedValue) : OvernightPlan(wakeAtMs: nil)
+                    let plan = StartPreferences.plan(stopAtWake: stopAtWake, wakeAt: wakeAt)
                     Task { await model.start(ActivityPreset.named(activity), name: name, plan: plan) }
                 } label: {
                     Label("Start recording", systemImage: "record.circle")

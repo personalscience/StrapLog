@@ -158,6 +158,35 @@ public final class RecorderModel {
         errorMessage = nil
     }
 
+    // MARK: Commands (Shortcuts and Siri)
+
+    /// Starts `activity` unless a recording is open, which keeps running: a Sleep Focus
+    /// automation firing twice must not end the night.
+    public func startUnlessRecording(_ activity: ActivityPreset, name: String = "",
+                                     plan: OvernightPlan) async -> CommandOutcome {
+        if let rec = activeRecording { return .alreadyRecording(rec) }
+        await start(activity, name: name, plan: plan)
+        return activeRecording.map(CommandOutcome.done) ?? failure()
+    }
+
+    public func stopIfRecording() async -> CommandOutcome {
+        guard let rec = activeRecording else { return .notRecording }
+        await stop()
+        return isRecording ? failure() : .done(rec)
+    }
+
+    /// `text` is a label when it is one of `activePreset.markers`, otherwise a note.
+    public func markIfRecording(_ text: String) async -> CommandOutcome {
+        guard let rec = activeRecording else { return .notRecording }
+        let count = markerCount
+        if activePreset.markers.contains(text) { await marker(label: text) } else { await marker(note: text) }
+        return markerCount > count ? .done(rec) : failure()
+    }
+
+    private func failure() -> CommandOutcome {
+        .failed(errorMessage ?? "Nothing happened.")
+    }
+
     // MARK: Private
 
     /// Stops and exports the recording, by the user (`reason` nil) or by itself.

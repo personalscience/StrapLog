@@ -6,6 +6,7 @@
 public final class Launcher {
     private let model: RecorderModel
     private let source: any HeartSource
+    private var launch: Task<Void, Never>?
     private var task: Task<Void, Never>?
 
     public init(model: RecorderModel, source: any HeartSource) {
@@ -17,11 +18,21 @@ public final class Launcher {
     @discardableResult
     public func start() -> Task<Void, Never> {
         if let task { return task }
+        let launch = Task { [model] in await model.launch() }
         let task = Task { [model, source] in
-            await model.launch()
+            await launch.value
             await model.consume(source)
         }
+        self.launch = launch
         self.task = task
         return task
+    }
+
+    /// Runs `command` once the open recording (if any) is resumed, so a Shortcut that launches
+    /// the app sees it rather than starting a second one. Starts the job if needed.
+    public func whenLaunched<T>(_ command: (RecorderModel) async -> T) async -> T {
+        start()
+        await launch?.value
+        return await command(model)
     }
 }

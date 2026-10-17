@@ -13,18 +13,23 @@
 		0FD5003A51D92056A70D53FE /* MetricsGuide.md in Resources */ = {isa = PBXBuildFile; fileRef = C7C6B6A0E743EA7FA32FB364 /* MetricsGuide.md */; };
 		0FE605CE1A1C52CC052D21FF /* AppPhase+ScenePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327C9813B86B8D8E490020D2 /* AppPhase+ScenePhase.swift */; };
 		14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */; };
+		15B3E218B1E03FE7C5B4C84E /* CommandOutcome+Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */; };
 		19A828ECE45D764939F3FF70 /* FormatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */; };
 		28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734ED09A3CD0628C06A46818 /* RootView.swift */; };
+		2B57AF76460690ED27E4DEC8 /* StrapLogShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */; };
 		325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */; };
 		331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */; };
+		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3DB941E679FD31F5BC03D15A /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD7D4D9836E36102750E387 /* Alpha1Band+Color.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
 		52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27C9B67927661DECBD978D3 /* TrendChart.swift */; };
+		562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */; };
 		6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */; };
 		709EDC933723275730834E4A /* Guide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B913F13B0F39F7BBCC9175EB /* Guide.swift */; };
 		711056491FBEE5CD529700DA /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050424C851AC49404C44C6E2 /* HelpView.swift */; };
+		85A8485034546E661872BACF /* CommandFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEACA2C4C97342C4AFD11AF /* CommandFailed.swift */; };
 		86599D179E37F6A55ABEC786 /* GuideBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52224F2DD8A002A51A709411 /* GuideBlockView.swift */; };
 		89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */; };
 		8D4E7B1777739736BD2722CE /* HeartLinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E316AE5160101E447A64C2 /* HeartLinkButton.swift */; };
@@ -32,6 +37,7 @@
 		9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795ABEAC013BD867F90236B6 /* MetricsHero.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
+		A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */; };
 		AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4053711F9AE1E85F78BE1168 /* RecordingRow.swift */; };
 		B9B1249E21A08D152131C631 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
 		BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */; };
@@ -46,6 +52,8 @@
 		D861014B8606CDFBA67FC8A5 /* PolarBleSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1F50A2DF14FC2E71594AF61A /* PolarBleSdk */; };
 		DD8783E42E52D1F91C193199 /* DeviceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EB97DA2322B6EDF91B176A /* DeviceSheet.swift */; };
 		F3B2104627C475AAB7781FE2 /* MarkerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */; };
+		F720E0AC5198364F304E3023 /* ActivityEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F69DE0832B00DD6F9BDEBE5 /* ActivityEntity.swift */; };
+		F7C67AB1FBCC5293404D8FEE /* AddMarkerIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D54421499ED5501162C196 /* AddMarkerIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,35 +79,43 @@
 		0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvernightView.swift; sourceTree = "<group>"; };
 		11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParserTests.swift; sourceTree = "<group>"; };
 		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
+		2E1447D79697757325A04B08 /* StartRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingIntent.swift; sourceTree = "<group>"; };
 		2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateTile.swift; sourceTree = "<group>"; };
 		2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarHeartSource.swift; sourceTree = "<group>"; };
 		327C9813B86B8D8E490020D2 /* AppPhase+ScenePhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPhase+ScenePhase.swift"; sourceTree = "<group>"; };
+		3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogShortcuts.swift; sourceTree = "<group>"; };
 		3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkStatus+Heart.swift"; sourceTree = "<group>"; };
 		4053711F9AE1E85F78BE1168 /* RecordingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingRow.swift; sourceTree = "<group>"; };
 		407BC12CED71B5822CEB173A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		418A17ED855F2E814D5B2EB8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		443633C69E6A56647BF4CA19 /* BreathingPacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPacerView.swift; sourceTree = "<group>"; };
 		49EB97DA2322B6EDF91B176A /* DeviceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSheet.swift; sourceTree = "<group>"; };
+		4F69DE0832B00DD6F9BDEBE5 /* ActivityEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEntity.swift; sourceTree = "<group>"; };
 		502E73BD38ED8D6288A5981A /* RecordingTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTitle.swift; sourceTree = "<group>"; };
 		5148B9B491E178AD1383E09D /* StrapLog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLog.entitlements; sourceTree = "<group>"; };
 		52224F2DD8A002A51A709411 /* GuideBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlockView.swift; sourceTree = "<group>"; };
 		54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySmokeTests.swift; sourceTree = "<group>"; };
+		58D54421499ED5501162C196 /* AddMarkerIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkerIntent.swift; sourceTree = "<group>"; };
 		598364997011C1C2FF07B2C7 /* GuideParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParser.swift; sourceTree = "<group>"; };
 		5D2EC470939C5D773CF85278 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopRecordingIntent.swift; sourceTree = "<group>"; };
 		734ED09A3CD0628C06A46818 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		795ABEAC013BD867F90236B6 /* MetricsHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsHero.swift; sourceTree = "<group>"; };
 		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8728059CDA30AD297BCB2BD7 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerSection.swift; sourceTree = "<group>"; };
+		9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandOutcome+Dialog.swift"; sourceTree = "<group>"; };
 		A46081A1E699BACE9992A77C /* StrapLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StrapLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B74EEB125A8732BB27725217 /* resting.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = resting.json; sourceTree = "<group>"; };
+		B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityQuery.swift; sourceTree = "<group>"; };
 		B913F13B0F39F7BBCC9175EB /* Guide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guide.swift; sourceTree = "<group>"; };
 		BA2EE715B9CE35D456E62655 /* StrapLogCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StrapLogCore; path = Packages/StrapLogCore; sourceTree = SOURCE_ROOT; };
 		C16AEFFB732918F52EACD94D /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogApp.swift; sourceTree = "<group>"; };
 		C7C6B6A0E743EA7FA32FB364 /* MetricsGuide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = MetricsGuide.md; sourceTree = "<group>"; };
 		CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatsTests.swift; sourceTree = "<group>"; };
+		CDEACA2C4C97342C4AFD11AF /* CommandFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandFailed.swift; sourceTree = "<group>"; };
 		CFD7D4D9836E36102750E387 /* Alpha1Band+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alpha1Band+Color.swift"; sourceTree = "<group>"; };
 		D27C9B67927661DECBD978D3 /* TrendChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChart.swift; sourceTree = "<group>"; };
 		D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlock.swift; sourceTree = "<group>"; };
@@ -202,6 +218,21 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		5FC908C1B5E8F0B0F7364D71 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				4F69DE0832B00DD6F9BDEBE5 /* ActivityEntity.swift */,
+				B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */,
+				58D54421499ED5501162C196 /* AddMarkerIntent.swift */,
+				CDEACA2C4C97342C4AFD11AF /* CommandFailed.swift */,
+				9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */,
+				2E1447D79697757325A04B08 /* StartRecordingIntent.swift */,
+				6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */,
+				3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		6851314174183A63BB54F385 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +294,7 @@
 			children = (
 				0457F6A3BD1D57BA776452ED /* App */,
 				DCFFD2E3724DDEA54504419C /* Help */,
+				5FC908C1B5E8F0B0F7364D71 /* Intents */,
 				465547A91DD766A92C361558 /* Polar */,
 				22056BA17F1412DDD534701E /* Resources */,
 				5A6A59CE157D2FE79426EA17 /* Views */,
@@ -433,12 +465,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F720E0AC5198364F304E3023 /* ActivityEntity.swift in Sources */,
+				A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */,
+				F7C67AB1FBCC5293404D8FEE /* AddMarkerIntent.swift in Sources */,
 				3DB941E679FD31F5BC03D15A /* Alpha1Band+Color.swift in Sources */,
 				331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */,
 				BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */,
 				C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */,
 				0FE605CE1A1C52CC052D21FF /* AppPhase+ScenePhase.swift in Sources */,
 				C1F5B4B6A92742994C932620 /* BreathingPacerView.swift in Sources */,
+				85A8485034546E661872BACF /* CommandFailed.swift in Sources */,
+				15B3E218B1E03FE7C5B4C84E /* CommandOutcome+Dialog.swift in Sources */,
 				DD8783E42E52D1F91C193199 /* DeviceSheet.swift in Sources */,
 				CD9A10BCDE886C58D252C497 /* Formats.swift in Sources */,
 				709EDC933723275730834E4A /* Guide.swift in Sources */,
@@ -460,7 +497,10 @@
 				D554AF1A13FF72226C9AF200 /* RecordingTitle.swift in Sources */,
 				4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */,
 				28ADB19CFD43AD1159EDE333 /* RootView.swift in Sources */,
+				3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */,
+				562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */,
 				99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */,
+				2B57AF76460690ED27E4DEC8 /* StrapLogShortcuts.swift in Sources */,
 				52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
