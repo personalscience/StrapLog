@@ -9,6 +9,7 @@ import StrapLogCore
 struct AppDependencies {
     let source: any HeartSource
     let openModel: @MainActor () throws -> RecorderModel
+    let watch = WatchLink()
 
     init(options: LaunchOptions = LaunchOptions()) throws {
         let dbURL: URL
@@ -32,9 +33,9 @@ struct AppDependencies {
         }
         let info = Bundle.main.infoDictionary ?? [:]
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
-        openModel = { [defaults] in
+        openModel = { [defaults, watch] in
             RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, display: LiveActivityDisplay())
+                          defaults: defaults, display: LiveStatusFanOut([LiveActivityDisplay(), watch]))
         }
 
         if let fixture = options.replayFixture {

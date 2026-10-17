@@ -259,7 +259,19 @@ public final class RecorderModel {
         errorMessage = nil
     }
 
-    // MARK: Commands (Shortcuts and Siri)
+    // MARK: Commands (Shortcuts, Siri, Live Activity, Watch)
+
+    /// Runs `command`. An overnight start stops at the wake time set on the Start screen.
+    public func run(_ command: RemoteCommand) async -> CommandOutcome {
+        switch command {
+        case .start(let activity, let name):
+            await startUnlessRecording(.named(activity), name: name, plan: StartPreferences.plan(from: defaults))
+        case .stop:
+            await stopIfRecording()
+        case .mark(let text):
+            await markIfRecording(text)
+        }
+    }
 
     /// Starts `activity` unless a recording is open, which keeps running: a Sleep Focus
     /// automation firing twice must not end the night.

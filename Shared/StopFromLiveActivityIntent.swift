@@ -11,7 +11,7 @@ struct StopFromLiveActivityIntent: LiveActivityIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
-        _ = try await launcher.whenLaunched { await $0.stopIfRecording() }
+        _ = try await launcher.run(.stop)
         return .result()
     }
 }

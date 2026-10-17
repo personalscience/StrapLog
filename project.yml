@@ -44,6 +44,7 @@ targets:
       - package: StrapLogCore
       - package: PolarBleSdk
       - target: StrapLogWidgets
+      - target: StrapLogWatch
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.straplog
@@ -114,6 +115,36 @@ targets:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 
+  # Remote display and controller; the phone stays the only recorder (WatchConnectivity).
+  StrapLogWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: StrapLogWatch
+      - path: Shared/Alpha1Band+Color.swift
+    dependencies:
+      - package: StrapLogCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.straplog.watchkitapp
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+    # A companion Watch app must carry the phone app's version and build.
+    postBuildScripts:
+      - name: Stamp build
+        script: '"$SRCROOT/tools/stamp_build.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+    info:
+      path: StrapLogWatch/Info.plist
+      properties:
+        CFBundleDisplayName: StrapLog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.personalscience.straplog
+
   StrapLogTests:
     type: bundle.unit-test
     platform: iOS
@@ -146,3 +177,8 @@ schemes:
       targets:
         - StrapLogTests
         - StrapLogUITests
+  # Builds and runs the Watch app on its own, e.g. to register a new Watch for signing.
+  StrapLogWatch:
+    build:
+      targets:
+        StrapLogWatch: all

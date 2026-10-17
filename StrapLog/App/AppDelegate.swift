@@ -12,11 +12,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// for a bad `-replay` fixture; a database that cannot open yet is the launcher's to retry.
     let launcher: Result<Launcher, Error>
     private let source: (any HeartSource)?
+    private let watch: WatchLink?
 
     override init() {
         let dependencies = Result { try AppDependencies() }
         launcher = dependencies.map { Launcher(source: $0.source, openModel: $0.openModel) }
         source = try? dependencies.get().source
+        watch = try? dependencies.get().watch
         super.init()
     }
 
@@ -24,6 +26,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         if case .success(let launcher) = launcher {
             launcher.start()
+            watch?.activate(running: launcher)
             // Shortcuts and Siri run their intents through the same launcher.
             AppDependencyManager.shared.add(dependency: launcher)
             StrapLogShortcuts.updateAppShortcutParameters()

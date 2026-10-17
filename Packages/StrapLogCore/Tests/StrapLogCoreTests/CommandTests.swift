@@ -48,6 +48,27 @@ struct CommandTests {
         #expect(try kinds(rec.id!) == ["start", "marker", "marker", "stop", "snapshot"])
     }
 
+    @Test("RemoteCommand dispatch: start uses the saved wake time, then mark and stop")
+    func remoteDispatch() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let defaults = try #require(UserDefaults(suiteName: "CommandTests.\(UUID())"))
+        defaults.set(false, forKey: StartPreferences.stopAtWakeKey)
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        let launcher = Launcher(model: model, source: FakeHeartSource(clock: clock, script: []))
+
+        guard case .done(let rec) = try await launcher.run(.start(activity: "sleep", name: "nap")) else {
+            Issue.record("start did not start"); return
+        }
+        #expect(rec.activity == "sleep")
+        #expect(rec.name == "nap")
+        #expect(OvernightPlan(contextJSON: rec.context) == OvernightPlan(wakeAtMs: nil), "stop-at-wake is off")
+        #expect(try await launcher.run(.start(activity: "run")) == .alreadyRecording(rec))
+        #expect(try await launcher.run(.mark("awake")) == .done(rec))
+        #expect(model.markers.map(\.label) == ["awake"])
+        #expect(try await launcher.run(.stop) == .done(rec))
+        #expect(try await launcher.run(.stop) == .notRecording)
+    }
+
     @Test("a command waits for the launch resume, so it sees the open recording")
     func waitsForResume() async throws {
         defer { try? FileManager.default.removeItem(at: dir) }

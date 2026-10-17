@@ -62,4 +62,10 @@ public final class Launcher {
         await launch?.value
         return await command(model)
     }
+
+    /// Runs a remote command once launched: the one path for Shortcuts, Siri, the Live Activity
+    /// and the Watch.
+    public func run(_ command: RemoteCommand) async throws -> CommandOutcome {
+        try await whenLaunched { await $0.run(command) }
+    }
 }

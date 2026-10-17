@@ -24,9 +24,7 @@ struct StartRecordingIntent: LiveActivityIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let preset = ActivityPreset.named(activity.id)
-        let plan = StartPreferences.plan(from: .standard)
-        let outcome = try await launcher.whenLaunched { await $0.startUnlessRecording(preset, name: name ?? "", plan: plan) }
+        let outcome = try await launcher.run(.start(activity: activity.id, name: name ?? ""))
         return .result(dialog: try outcome.dialog { "Recording \($0.name)." })
     }
 }

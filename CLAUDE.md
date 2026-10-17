@@ -20,6 +20,7 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 | Algorithms (RR cleaning, RMSSD, DFA α1) | `Packages/HRVKit` | constants mirror `~/dev/skills/h10-session/.../analyze_h10.py` |
 | Domain, GRDB schema, `RecordingSession` | `Packages/StrapLogCore` | `docs/SCHEMA.md` before touching migrations |
 | App: Polar adapter, SwiftUI, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
+| Watch app (remote display/controller over WatchConnectivity) | `StrapLogWatch/`, `StrapLog/Watch/` | wire format is `WatchPayload` in Core; the phone stays the only recorder |
 | Python reader + `straplog` CLI | `tools/py` | the HRV skills depend on it; keep `straplog.db`'s API stable |
 | Tests and fixtures | `*Tests/`, `Tests/fixtures/` | `docs/TESTING.md` |
 | Xcode project | `project.yml` | never hand-edit `StrapLog.xcodeproj` |
@@ -47,3 +48,4 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 - 2026-10-14: `git rm` of a directory's last file deletes the directory; XcodeGen then fails on the missing source path.
 - 2026-10-15: Recording work starts in `AppDelegate.didFinishLaunching` via `Launcher`, not a view `.task`: Bluetooth restoration launches have no scene. Periodic snapshots ride on HR notifications (`snapshotIfDue`), no timer.
 - 2026-10-15: The live HRV skills are the vault copies (`~/Documents/Notes/.claude/skills/`), not `~/dev/skills/*` (stale Sep-12 package snapshots). StrapLog support is the `straplog` package in `tools/py` (since 2026-10-16; the old `_hrv_shared/straplog_db.py` copies are gone), declared per script via `[tool.uv.sources]` absolute path; HRV Logger parity tests stay in `_hrv_shared/tests/`. `h10` skill routes by activity. The vault is not under git: back up before editing.
+- 2026-10-17: A new Watch needs registering before a sideloaded Watch app installs (Watch app's Install silently reverts otherwise): watchOS platform component in Xcode, Developer Mode on the Watch, pair in Devices and Simulators, then `xcodebuild -scheme StrapLogWatch -destination 'id=<watch udid>' -allowProvisioningUpdates -allowProvisioningDeviceRegistration build`.
