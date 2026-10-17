@@ -24,6 +24,11 @@ public actor RecordingSession {
     private var lastSnapshotMs: Int64?
     /// Per-second accelerometer reduction for the active recording.
     private var motion: MotionReducer?
+    /// The active recording's auto-stop plan; nil unless its preset is `overnight`.
+    private var plan: OvernightPlan?
+    /// Posture of the active overnight recording, rebuilt from scratch after a relaunch.
+    private var posture = PostureTracker()
+    private let uprightStopMs: Int64
 
     /// The recording being written, or nil when idle.
     public private(set) var recordingId: Int64?
@@ -39,17 +44,22 @@ public actor RecordingSession {
     public static let lowBatteryPercent = 10
 
     public init(database: StrapLogDatabase, clock: any WallClock = SystemClock(),
-                staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs) {
+                staleAfterMs: Int64 = RecordingSession.defaultStaleAfterMs,
+                uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs) {
         self.database = database
         self.clock = clock
         self.staleAfterMs = staleAfterMs
+        self.uprightStopMs = uprightStopMs
     }
 
     // MARK: User actions
 
     /// Starts a recording of `activity`; an empty `name` becomes `activity.defaultName`.
+    /// An `overnight` activity keeps `plan` (default: no wake time) in `recording.context`.
     @discardableResult
-    public func start(_ activity: ActivityPreset = .other, name: String) throws -> Int64 {
+    public func start(_ activity: ActivityPreset = .other, name: String,
+                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil)) throws -> Int64 {
+        let plan = activity.overnight ? plan : nil
         guard recordingId == nil else { throw RecordingSessionError.alreadyRecording }
         let now = clock.nowMs()
         let tz = clock.tzOffsetSeconds(atMs: now)
@@ -61,6 +71,7 @@ public actor RecordingSession {
             }
             var rec = Recording(name: name.isEmpty ? activity.defaultName(atMs: now, tzOffsetS: tz) : name,
                                 activity: activity.id, startedAtMs: now, tzOffsetS: tz)
+            rec.context = plan?.contextJSON
             rec.batteryStart = battery
             rec.batteryEnd = battery
             if case .connected(let deviceId, let firmware) = link {
@@ -77,22 +88,21 @@ public actor RecordingSession {
             }
             return id
         }
-        recordingId = id
-        lastSnapshotMs = now
-        motion = MotionReducer(recordingId: id)
+        attach(id, lastSnapshotMs: now, plan: plan)
         return id
     }
 
-    /// Ends the recording. With `directory`, also logs a `snapshot` event and writes
-    /// `Snapshot.fileName(for:)` there, after the stop is committed so the file includes it.
+    /// Ends the recording, noting `reason` if it stopped itself. With `directory`, also logs a
+    /// `snapshot` event and writes `Snapshot.fileName(for:)` there, after the stop is committed
+    /// so the file includes it.
     @discardableResult
-    public func stop(snapshotInto directory: URL? = nil) throws -> Recording {
+    public func stop(because reason: AutoStop? = nil, snapshotInto directory: URL? = nil) throws -> Recording {
         let id = try requireRecording()
         let now = clock.nowMs()
         let lastMotion = motion?.flush()
         let rec = try database.writer.write { db -> Recording in
             try MotionSecond.save(lastMotion.map { [$0] } ?? [], db: db)
-            let rec = try Self.finish(id, atMs: now, note: nil, db: db)
+            let rec = try Self.finish(id, atMs: now, note: reason?.rawValue, db: db)
             if directory != nil {
                 var snap = RecordingEvent(recordingId: id, atMs: now, kind: .snapshot,
                                           note: Snapshot.fileName(for: rec))
@@ -100,9 +110,7 @@ public actor RecordingSession {
             }
             return rec
         }
-        recordingId = nil
-        lastSnapshotMs = nil
-        motion = nil
+        detach()
         if let directory {
             try Snapshot.write(database, recordingId: id, to: directory.appendingPathComponent(Snapshot.fileName(for: rec)))
         }
@@ -168,6 +176,15 @@ public actor RecordingSession {
         return try snapshot(into: directory)
     }
 
+    /// Why the active overnight recording should stop itself now, or nil. Checked after each
+    /// sensor event, like `snapshotIfDue`, so it needs no timer.
+    public func autoStopDue() -> AutoStop? {
+        guard recordingId != nil, let plan else { return nil }
+        if let wake = plan.wakeAtMs, clock.nowMs() >= wake { return .wakeTime }
+        if posture.uprightAfterLyingMs >= uprightStopMs { return .upright }
+        return nil
+    }
+
     /// Records a foreground/background transition; logged only while recording and only on change.
     public func appPhase(_ newPhase: AppPhase) throws {
         guard newPhase != phase else { return }
@@ -186,7 +203,7 @@ public actor RecordingSession {
         if let recordingId { return recordingId }
         let now = clock.nowMs()
         let staleAfterMs = self.staleAfterMs
-        let resumed = try database.writer.write { db -> (id: Int64, lastSnapshotMs: Int64)? in
+        let resumed = try database.writer.write { db -> (id: Int64, lastSnapshotMs: Int64, rec: Recording)? in
             guard let open = try Recording.open(db), let id = open.id else { return nil }
             let last = try Self.lastActivityMs(id, db: db) ?? open.startedAtMs
             if now - last > staleAfterMs {
@@ -198,12 +215,13 @@ public actor RecordingSession {
             let lastSnapshot = try Int64.fetchOne(db, sql: """
                 SELECT MAX(at_ms) FROM event WHERE recording_id = ? AND kind = 'snapshot'
                 """, arguments: [id])
-            return (id, lastSnapshot ?? open.startedAtMs)
+            return (id, lastSnapshot ?? open.startedAtMs, open)
         }
-        recordingId = resumed?.id
-        lastSnapshotMs = resumed?.lastSnapshotMs
-        motion = resumed.map { MotionReducer(recordingId: $0.id) }
-        return resumed?.id
+        guard let resumed else { return nil }
+        let overnight = ActivityPreset.named(resumed.rec.activity).overnight
+        attach(resumed.id, lastSnapshotMs: resumed.lastSnapshotMs,
+               plan: overnight ? OvernightPlan(contextJSON: resumed.rec.context) : nil)
+        return resumed.id
     }
 
     // MARK: Sensor events
@@ -276,12 +294,36 @@ public actor RecordingSession {
             try log(poweredOn ? .bleOn : .bleOff, note: nil, recordingId: id, atMs: event.atMs)
 
         case .motion(let samples):
-            guard let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples), !seconds.isEmpty else { return }
-            try database.writer.write { db in try MotionSecond.save(seconds, db: db) }
+            guard let id = recordingId, let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples),
+                  !seconds.isEmpty else { return }
+            let changes = plan == nil ? [] : posture.add(seconds)
+            try database.writer.write { db in
+                try MotionSecond.save(seconds, db: db)
+                for change in changes {
+                    var e = RecordingEvent(recordingId: id, atMs: change.atMs, kind: .posture, note: change.posture.rawValue)
+                    try e.insert(db)
+                }
+            }
         }
     }
 
     // MARK: Helpers
+
+    private func attach(_ id: Int64, lastSnapshotMs: Int64, plan: OvernightPlan?) {
+        recordingId = id
+        self.lastSnapshotMs = lastSnapshotMs
+        motion = MotionReducer(recordingId: id)
+        self.plan = plan
+        posture = PostureTracker()
+    }
+
+    private func detach() {
+        recordingId = nil
+        lastSnapshotMs = nil
+        motion = nil
+        plan = nil
+        posture = PostureTracker()
+    }
 
     /// Sets `ended_at_ms` and logs the `stop` event in the caller's transaction.
     @discardableResult

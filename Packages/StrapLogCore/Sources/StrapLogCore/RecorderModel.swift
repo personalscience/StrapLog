@@ -77,14 +77,16 @@ public final class RecorderModel {
                 lastSnapshot = url
             }
             apply(event)
+            if let reason = await session.autoStopDue() { await finish(because: reason) }
         }
     }
 
-    /// An empty or blank `name` becomes `activity.defaultName`.
-    public func start(_ activity: ActivityPreset = .other, name: String) async {
+    /// An empty or blank `name` becomes `activity.defaultName`. `plan` applies to `overnight` activities.
+    public func start(_ activity: ActivityPreset = .other, name: String,
+                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil)) async {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         await perform {
-            let id = try await session.start(activity, name: trimmed)
+            let id = try await session.start(activity, name: trimmed, plan: plan)
             source?.setMotionStreaming(true)
             try loadActive(id)
             try refreshRecordings()
@@ -92,17 +94,13 @@ public final class RecorderModel {
     }
 
     public func stop() async {
-        await stopPacer()
-        await perform {
-            let directory = await exports.url()
-            let rec = try await session.stop(snapshotInto: directory)
-            source?.setMotionStreaming(false)
-            lastSnapshot = directory.appendingPathComponent(Snapshot.fileName(for: rec))
-            activeRecording = nil
-            markers = []
-            live = LiveMetrics()
-            try refreshRecordings()
-        }
+        await finish(because: nil)
+    }
+
+    /// The active recording's plan, nil unless it is overnight.
+    public var overnightPlan: OvernightPlan? {
+        guard let rec = activeRecording, activePreset.overnight else { return nil }
+        return OvernightPlan(contextJSON: rec.context)
     }
 
     /// A label from `activePreset.markers`, free text, or both; blank text is dropped.
@@ -158,6 +156,21 @@ public final class RecorderModel {
     }
 
     // MARK: Private
+
+    /// Stops and exports the recording, by the user (`reason` nil) or by itself.
+    private func finish(because reason: AutoStop?) async {
+        await stopPacer()
+        await perform {
+            let directory = await exports.url()
+            let rec = try await session.stop(because: reason, snapshotInto: directory)
+            source?.setMotionStreaming(false)
+            lastSnapshot = directory.appendingPathComponent(Snapshot.fileName(for: rec))
+            activeRecording = nil
+            markers = []
+            live = LiveMetrics()
+            try refreshRecordings()
+        }
+    }
 
     private func apply(_ event: SensorEvent) {
         switch event.payload {

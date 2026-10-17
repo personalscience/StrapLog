@@ -63,6 +63,20 @@ enum Formats {
             : "Files → On My iPhone → StrapLog → StrapLog/\(url.lastPathComponent)"
     }
 
+    // MARK: Overnight
+
+    /// How an overnight recording will end, e.g. `Stops at 06:30, or after 10 min upright`.
+    static func overnightPlan(_ plan: OvernightPlan, uprightStopMs: Int64 = OvernightPlan.defaultUprightStopMs,
+                              timeZone: TimeZone = .current) -> String {
+        let upright = "\(uprightStopMs / 60_000) min upright"
+        guard let wake = plan.wakeAtMs else { return "Stops after \(upright)" }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = timeZone
+        f.dateFormat = "HH:mm"
+        return "Stops at \(f.string(from: Date(timeIntervalSince1970: Double(wake) / 1000))), or after \(upright)"
+    }
+
     // MARK: Live metrics
 
     /// Two decimals (α1, LnRMSSD), or `--`.

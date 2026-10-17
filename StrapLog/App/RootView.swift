@@ -10,7 +10,9 @@ struct RootView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if model.isRecording {
+                if model.isRecording, model.activePreset.overnight {
+                    OvernightView(model: model)
+                } else if model.isRecording {
                     RecordingView(model: model)
                 } else {
                     HomeView(model: model)

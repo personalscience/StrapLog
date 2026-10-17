@@ -12,11 +12,13 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable {
     public let markers: [String]
     /// Whether the recording screen offers the breathing pacer.
     public let pacer: Bool
+    /// Overnight mode: a dark screen with no chart, posture events, and auto-stop (`OvernightPlan`).
+    public let overnight: Bool
 
     public static let sleep = ActivityPreset(id: "sleep", title: "Sleep", systemImage: "bed.double",
-                                             markers: ["lights_out", "awake", "up"], pacer: false)
+                                             markers: ["lights_out", "awake", "up"], pacer: false, overnight: true)
     public static let other = ActivityPreset(id: "other", title: "Other", systemImage: "waveform.path.ecg",
-                                             markers: ["a", "b", "c", "end"], pacer: true)
+                                             markers: ["a", "b", "c", "end"], pacer: true, overnight: false)
 
     /// Picker order.
     public static let all = [sleep, other]

@@ -8,4 +8,6 @@ public enum EventKind: String, Codable, Sendable, CaseIterable {
     case pacerStop = "pacer_stop"
     case lowBattery = "low_battery"
     case foreground, background
+    /// Overnight only: a confirmed `Posture` change, noted `upright` or `lying`.
+    case posture
 }

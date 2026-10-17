@@ -19,6 +19,14 @@ struct FormatsTests {
         #expect(Formats.gap(ms: 12_340) == "12.3 s")
     }
 
+    @Test("overnight plan line: wake time in local time, then the upright rule")
+    func overnightPlan() {
+        let pdt = TimeZone(secondsFromGMT: -7 * 3600)!
+        #expect(Formats.overnightPlan(OvernightPlan(wakeAtMs: 1_760_621_400_000), timeZone: pdt)
+                == "Stops at 06:30, or after 10 min upright")
+        #expect(Formats.overnightPlan(OvernightPlan(wakeAtMs: nil)) == "Stops after 10 min upright")
+    }
+
     @Test("start time uses the recording's own time zone")
     func started() {
         // 2025-10-09T08:53:20Z at UTC−7 → Oct 9, 01:53

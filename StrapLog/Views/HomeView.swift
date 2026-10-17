@@ -1,11 +1,15 @@
 import StrapLogCore
 import SwiftUI
 
-/// Idle screen: live HR to check the strap, activity picker, optional name, Start, and past
-/// recordings (swipe to delete, after a confirmation).
+/// Idle screen: live HR to check the strap, activity picker (with a wake time for overnight
+/// presets), optional name, Start, and past recordings (swipe to delete, after a confirmation).
 struct HomeView: View {
     let model: RecorderModel
     @AppStorage("activity") private var activity = ActivityPreset.other.id
+    @AppStorage("stopAtWake") private var stopAtWake = true
+    /// Only its hour and minute matter (`OvernightPlan(wakeAt:)`); stored as reference-date seconds.
+    @AppStorage("wakeAt") private var wakeAt = Calendar.current.date(bySettingHour: 6, minute: 30, second: 0, of: .now)!
+        .timeIntervalSinceReferenceDate
     @State private var name = ""
     @State private var pendingDelete: RecordingSummary?
 
@@ -24,12 +28,21 @@ struct HomeView: View {
                 }
                 .pickerStyle(.segmented)
                 .accessibilityIdentifier("activityPicker")
+                if ActivityPreset.named(activity).overnight {
+                    Toggle("Stop at wake time", isOn: $stopAtWake)
+                        .accessibilityIdentifier("stopAtWake")
+                    if stopAtWake {
+                        DatePicker("Wake at", selection: wakeTime, displayedComponents: .hourAndMinute)
+                            .accessibilityIdentifier("wakeAt")
+                    }
+                }
                 TextField("Name (optional)", text: $name)
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
                     .accessibilityIdentifier("sessionName")
                 Button {
-                    Task { await model.start(ActivityPreset.named(activity), name: name) }
+                    let plan = stopAtWake ? OvernightPlan(wakeAt: wakeTime.wrappedValue) : OvernightPlan(wakeAtMs: nil)
+                    Task { await model.start(ActivityPreset.named(activity), name: name, plan: plan) }
                 } label: {
                     Label("Start recording", systemImage: "record.circle")
                         .frame(maxWidth: .infinity)
@@ -62,5 +75,10 @@ struct HomeView: View {
         } message: { _ in
             Text("Removes its beats from this iPhone and its export from iCloud Drive. This cannot be undone.")
         }
+    }
+
+    private var wakeTime: Binding<Date> {
+        Binding(get: { Date(timeIntervalSinceReferenceDate: wakeAt) },
+                set: { wakeAt = $0.timeIntervalSinceReferenceDate })
     }
 }

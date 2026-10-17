@@ -44,10 +44,33 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testSleepRecordsOnADarkScreen() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+        app.segmentedControls["activityPicker"].buttons["Sleep"].tap()
+        XCTAssertTrue(app.switches["stopAtWake"].waitForExistence(timeout: 5))
+        app.buttons["startButton"].tap()
+
+        let plan = app.staticTexts["overnightPlan"]
+        XCTAssertTrue(plan.waitForExistence(timeout: 10))
+        XCTAssertTrue(plan.label.hasPrefix("Stops"))
+        XCTAssertFalse(app.segmentedControls["chartMetric"].exists, "no chart overnight")
+        app.buttons["marker-lights_out"].tap()
+        XCTAssertTrue(app.staticTexts["lastMarker"].waitForLabel(containing: "lights_out", timeout: 5))
+        app.buttons["stopButton"].tap()
+        let confirm = app.buttons["confirmStop"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5))
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["lastSnapshot"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor
     func testPacerStartsAndStops() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
         app.launch()
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
         app.buttons["startButton"].tap()
 
         let toggle = app.buttons["pacerToggle"]
