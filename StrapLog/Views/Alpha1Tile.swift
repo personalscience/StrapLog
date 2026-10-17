@@ -8,13 +8,7 @@ struct Alpha1Tile: View {
     var body: some View {
         let band = alpha1.map(Alpha1Band.init(alpha1:))
         VStack(alignment: .leading, spacing: 2) {
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(Formats.decimal(alpha1))
-                    .font(.system(size: 64, weight: .bold, design: .rounded).monospacedDigit())
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text("α1").foregroundStyle(.secondary)
-            }
+            HeroNumber(value: Formats.decimal(alpha1), unit: "α1")
             Text(band?.label ?? "waiting")
                 .font(.caption.bold())
                 .foregroundStyle(band?.color ?? .secondary)

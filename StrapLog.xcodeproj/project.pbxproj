@@ -20,6 +20,7 @@
 		325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */; };
 		331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */; };
 		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
+		3D097411B8B33F27D8C750F3 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */; };
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3DB941E679FD31F5BC03D15A /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD7D4D9836E36102750E387 /* Alpha1Band+Color.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
@@ -107,6 +108,7 @@
 		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8728059CDA30AD297BCB2BD7 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerSection.swift; sourceTree = "<group>"; };
+		8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNumber.swift; sourceTree = "<group>"; };
 		9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandOutcome+Dialog.swift"; sourceTree = "<group>"; };
 		A46081A1E699BACE9992A77C /* StrapLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = StrapLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -208,6 +210,7 @@
 				F1E316AE5160101E447A64C2 /* HeartLinkButton.swift */,
 				2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */,
 				050424C851AC49404C44C6E2 /* HelpView.swift */,
+				8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */,
 				418A17ED855F2E814D5B2EB8 /* HomeView.swift */,
 				3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */,
 				ED7FEBEFD13C5D457A39BB81 /* MarkerBar.swift */,
@@ -491,6 +494,7 @@
 				8D4E7B1777739736BD2722CE /* HeartLinkButton.swift in Sources */,
 				3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */,
 				711056491FBEE5CD529700DA /* HelpView.swift in Sources */,
+				3D097411B8B33F27D8C750F3 /* HeroNumber.swift in Sources */,
 				3D900950CD4C010403970238 /* HomeView.swift in Sources */,
 				0318E0502E07C55D48AF768C /* LaunchOptions.swift in Sources */,
 				6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */,

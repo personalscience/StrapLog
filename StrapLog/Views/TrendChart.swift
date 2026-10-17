@@ -9,6 +9,7 @@ struct TrendChart: View {
     let markers: [RecordingEvent]
     let startedAtMs: Int64
     let nowMs: Int64
+    var height: CGFloat = 200
 
     @SceneStorage("chartMetric") private var metric = ChartMetric.heartRate
     @SceneStorage("chartSpan") private var span = ChartSpan.default
@@ -44,7 +45,7 @@ struct TrendChart: View {
                 .accessibilityIdentifier("chartSpan")
             }
             chart(points: points, window: window)
-                .frame(height: 200)
+                .frame(height: height)
                 .contentShape(Rectangle())
                 .gesture(MagnifyGesture()
                     .updating($pinch) { value, state, _ in state = value.magnification }

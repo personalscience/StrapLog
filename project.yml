@@ -63,7 +63,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
-        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         NSBluetoothAlwaysUsageDescription: StrapLog connects to your Polar H10 chest strap to record heart rate and beat-to-beat intervals.
         UIBackgroundModes: [bluetooth-central]
         UIFileSharingEnabled: true

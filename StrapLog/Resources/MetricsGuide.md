@@ -8,9 +8,27 @@ StrapLog is a personal measurement tool, not a medical device. Use it to compare
 
 ## The recording screen
 
-**Heart rate (bpm).** The strap's own beats-per-minute reading, sent about once a second. It is smoothed by the strap, so it lags sudden changes by a few seconds.
+**The heart (top left)** shows the strap's link: red and glowing when connected, grey and pulsing while searching, orange and broken when disconnected or Bluetooth is off. Tap it for the **device sheet** (see below). The title shows elapsed time and the recording's name; **?** opens this guide.
 
-**Elapsed.** Time since you tapped Start.
+**Heart rate (bpm), left tile.** The strap's own beats-per-minute reading, sent about once a second. It is smoothed by the strap, so it lags sudden changes by a few seconds. A warning appears under it when the strap loses skin contact.
+
+**DFA α1, right tile.** The latest α1, refreshed every **20 seconds**. The whole tile takes the colour of its intensity band (see *DFA α1* below), so a glance tells you whether you are under or over the 0.75 line.
+
+**The line beneath** shows the latest window's RMSSD, its artifact %, and how long ago α1 was computed. If that age keeps growing, too few clean beats are arriving for a window.
+
+**The chart.** Pick **HR**, **α1** or **RR** (the tachogram). The chart always ends at now. **Pinch** to zoom out (1, 2, 5, 15, 30, 60 min, whole recording) or in; **double-tap** to return to 5 minutes; or tap the span chip to pick one. The α1 view shades the bands and draws the 0.75 and 0.50 lines. Markers appear as labelled dashed lines on every view. The app remembers your last view and span.
+
+**Stop…** asks before it stops the recording and writes the export. **Pacer** opens the breathing pacer for activities that use it.
+
+In landscape, the numbers sit on the left and the chart fills the right.
+
+## The device sheet
+
+**Device ID, firmware, serial, battery.** The H10's printed ID and what it reports about itself. Replace the CR2025 battery when it reads below about 20 %. A weak battery is the most common cause of dropouts.
+
+**Link.** "Searching," "H10 *id*," "Disconnected — reconnecting," or "Bluetooth is off." StrapLog keeps the recording open through disconnects and picks up again when the strap comes back.
+
+**Skin contact.** The H10 reports whether its electrodes touch skin. Poor contact produces noisy or missing beats. Wet the electrodes and tighten the strap.
 
 **Beats.** How many individual heartbeats (RR intervals) have been saved. At rest this grows by roughly your heart rate each minute. If it stalls while the heart-rate number keeps updating, the strap is not sending beat data; check its contact.
 
@@ -18,9 +36,7 @@ StrapLog is a personal measurement tool, not a medical device. Use it to compare
 
 **Longest gap.** The longest silence in this recording. Beats that happen during a gap are lost: the strap does not store them. A few gaps of 2–3 s in an overnight recording are normal. Gaps of 30 s or more mean a stretch of missing data, so check the analysis for windows that were skipped.
 
-**Strap status and battery.** "Searching," "H10 *id*," "Disconnected — reconnecting," or "Bluetooth is off." StrapLog keeps the recording open through disconnects and picks up again when the strap comes back. Replace the CR2025 battery when it reads below about 20 %. A weak battery is the most common cause of dropouts.
-
-**Skin contact.** The H10 reports whether its electrodes touch skin. Poor contact produces noisy or missing beats. Wet the electrodes and tighten the strap.
+**Last export.** Where the most recent export file was written.
 
 ## Markers
 
@@ -75,7 +91,7 @@ Occasional ectopic beats are common and usually harmless, but they inflate HRV. 
 
 ### Analysis windows
 
-The HRV measures are computed over a **2-minute window** that moves forward every **60 seconds**. Each window is cleaned on its own. A window needs at least **60 beats**, both before and after cleaning, or it is skipped (shown as "--"). So:
+The HRV measures are computed over a **2-minute window** that moves forward every **60 seconds** in the analysis (the on-screen α1 tile steps every **20 seconds** over the same 2-minute window, so it reacts sooner but still describes the last 2 minutes). Each window is cleaned on its own. A window needs at least **60 beats**, both before and after cleaning, or it is skipped (shown as "--"). So:
 
 - The first value appears about 2 minutes after you start.
 - Every value describes the *previous* 2 minutes, not this instant. After a change in effort or posture, wait 2–3 minutes before reading the new level.

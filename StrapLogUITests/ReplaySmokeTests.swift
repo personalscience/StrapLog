@@ -129,6 +129,29 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testLandscapeKeepsNumbersChartAndMarkers() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
+        app.buttons["startButton"].tap()
+        XCTAssertTrue(app.staticTexts["heartRate"].waitForExistence(timeout: 10))
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let heartRate = app.staticTexts["heartRate"]
+        let chart = app.otherElements["trendChart"]
+        XCTAssertTrue(chart.waitForExistence(timeout: 5))
+        sleep(1) // let the rotation settle before comparing frames
+        let shot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        shot.lifetime = .keepAlways // the landscape layout is checked by eye too
+        add(shot)
+        XCTAssertTrue(heartRate.isHittable && chart.isHittable, "numbers and chart share the first screen")
+        XCTAssertLessThan(heartRate.frame.maxX, chart.frame.minX, "numbers sit left of the chart")
+        XCTAssertTrue(app.scroll(to: app.buttons["marker-a"]))
+    }
+
+    @MainActor
     func testGuideOpensAndCloses() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]

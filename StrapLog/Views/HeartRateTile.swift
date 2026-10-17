@@ -7,14 +7,7 @@ struct HeartRateTile: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(heartRate.map(String.init) ?? "--")
-                    .font(.system(size: 64, weight: .bold, design: .rounded).monospacedDigit())
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                    .accessibilityIdentifier("heartRate")
-                Text("bpm").foregroundStyle(.secondary)
-            }
+            HeroNumber(value: heartRate.map(String.init) ?? "--", unit: "bpm", identifier: "heartRate")
             if contact == false {
                 Label(Formats.contact(false), systemImage: "hand.raised.slash")
                     .font(.caption)
