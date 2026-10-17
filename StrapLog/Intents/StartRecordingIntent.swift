@@ -4,7 +4,9 @@ import StrapLogCore
 /// Starts a recording without opening the app, e.g. from a "Sleep Focus on" automation.
 /// An overnight activity uses the wake time set on the Start screen. A recording already
 /// open keeps running.
-struct StartRecordingIntent: AppIntent {
+/// It is a `LiveActivityIntent` so that a start from the background (a Focus automation) may also start
+/// the Live Activity, which ActivityKit otherwise allows only from the foreground.
+struct StartRecordingIntent: LiveActivityIntent {
     static let title: LocalizedStringResource = "Start Recording"
     static let description = IntentDescription("Starts a StrapLog recording of an activity. Sleep stops at the wake time set in the app.")
 

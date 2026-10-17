@@ -24,7 +24,7 @@ enum Formats {
 
     /// A marker label as a button title: `lights_out` → `lights out`.
     static func markerButton(_ label: String) -> String {
-        label.replacingOccurrences(of: "_", with: " ")
+        LiveStatus.markerTitle(label)
     }
 
     static func link(_ status: LinkStatus) -> String {

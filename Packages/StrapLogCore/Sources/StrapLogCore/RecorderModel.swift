@@ -39,6 +39,17 @@ public final class RecorderModel {
     public private(set) var recentNotes: [String] = []
 
     public var isRecording: Bool { activeRecording != nil }
+
+    /// What the Live Activity shows, or nil when idle.
+    public var liveStatus: LiveStatus? {
+        guard let rec = activeRecording else { return nil }
+        let linked = if case .connected = link { true } else { false }
+        return LiveStatus(name: rec.name, activity: rec.activity, startedAtMs: rec.startedAtMs, heartRate: heartRate,
+                          contact: contact, linked: linked, alpha1: live.latest?.alpha1, rmssd: live.latest?.rmssd,
+                          battery: battery, markers: activePreset.markers, markerCount: markerCount,
+                          lastMarkerLabel: lastMarker?.label, lastMarkerText: lastMarker?.markerText,
+                          lastMarkerAtMs: lastMarker?.atMs)
+    }
     /// The active recording's preset: its marker bar and pacer. `other` when idle.
     public var activePreset: ActivityPreset { markerPresets.preset(activeRecording?.activity ?? ActivityPreset.other.id) }
 
@@ -46,6 +57,9 @@ public final class RecorderModel {
     private let database: StrapLogDatabase
     private let exports: ExportFolder
     private let snapshotEveryMs: Int64
+    private let clock: any WallClock
+    private let display: (any LiveStatusDisplay)?
+    private var throttle: LiveStatusThrottle
     /// Where `markerPresets` is saved.
     private let defaults: UserDefaults
     /// The source being consumed; told to stream motion only while recording.
@@ -59,8 +73,12 @@ public final class RecorderModel {
     /// `appVersion` is stamped into every export (`ExportMeta`, `index.json`).
     public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
                 snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs, appVersion: String = "dev",
-                defaults: UserDefaults = .standard) {
+                defaults: UserDefaults = .standard, display: (any LiveStatusDisplay)? = nil,
+                throttle: LiveStatusThrottle = LiveStatusThrottle()) {
         self.database = database
+        self.clock = clock
+        self.display = display
+        self.throttle = throttle
         self.exports = exports
         self.snapshotEveryMs = snapshotEveryMs
         self.defaults = defaults
@@ -77,6 +95,7 @@ public final class RecorderModel {
             try refreshRecordings()
             try refreshRecentNotes()
         }
+        publishStatus()
     }
 
     /// Feeds `source` into the session until it finishes. Runs for the app's lifetime.
@@ -96,6 +115,7 @@ public final class RecorderModel {
                 if let resting = try await session.beginRestingIfDue() { markers.append(resting) }
             }
             if let reason = await session.autoStopDue() { await finish(because: reason) }
+            publishStatus()
         }
     }
 
@@ -109,6 +129,7 @@ public final class RecorderModel {
             try loadActive(id)
             try refreshRecordings()
         }
+        publishStatus()
     }
 
     public func stop() async {
@@ -130,6 +151,7 @@ public final class RecorderModel {
             markers.append(try await session.marker(label: label, note: text))
             if text != nil { try refreshRecentNotes() }
         }
+        publishStatus()
     }
 
     /// Replaces `activity`'s marker bar (`MarkerPresets.setMarkers`); takes effect at once,
@@ -236,6 +258,7 @@ public final class RecorderModel {
             live = LiveMetrics()
             try refreshRecordings()
         }
+        publishStatus()
     }
 
     private func apply(_ event: SensorEvent) {
@@ -303,6 +326,13 @@ public final class RecorderModel {
             markerPresets = edited
             await session.use(edited)
         }
+        publishStatus()
+    }
+
+    private func publishStatus() {
+        guard let display else { return }
+        let status = liveStatus
+        if throttle.admit(status, atMs: clock.nowMs()) { display.show(status) }
     }
 
     private func perform(_ body: () async throws -> Void) async {
