@@ -27,6 +27,7 @@ tools/check_listing.py                              # docs/APPSTORE.md lengths +
 | Python reader + `straplog` CLI | `tools/py` | the HRV skills depend on it; keep `straplog.db`'s API stable |
 | Tests and fixtures | `*Tests/`, `Tests/fixtures/` | `docs/TESTING.md` |
 | Xcode project | `project.yml` | never hand-edit `StrapLog.xcodeproj` |
+| App Store Watch screenshots (as uploaded) | `design/screenshots/watch/` | captured on a real Watch, not reproducible; iPhone ones regenerate via `tools/screenshots.sh` |
 
 ## Rules that the tree does not tell you
 
