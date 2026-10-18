@@ -36,9 +36,12 @@ final class StrapScanner: NSObject {
 }
 
 extension StrapScanner: CBCentralManagerDelegate {
-    // The manager runs on the main queue (`queue: nil`).
+    // The manager runs on the main queue (`queue: nil`). It is not Sendable, so the closure uses
+    // the stored one rather than the parameter.
     nonisolated func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        MainActor.assumeIsolated { scanIfReady(central) }
+        MainActor.assumeIsolated {
+            if let central = self.central { scanIfReady(central) }
+        }
     }
 
     nonisolated func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,

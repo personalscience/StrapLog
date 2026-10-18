@@ -20,6 +20,28 @@ struct ChartWindowTests {
         #expect(ChartWindow(span: .all, nowMs: now, startedAtMs: Self.start).startMs == Self.start)
     }
 
+    @Test("x-axis ticks fall on whole minutes, at most maxAxisTicks of them")
+    func axisStride() {
+        func stride(minutes: Int64) -> Int {
+            ChartWindow(span: .all, nowMs: Self.start + minutes * 60_000, startedAtMs: Self.start).axisStrideMinutes
+        }
+        #expect(stride(minutes: 0) == 1)  // .all shows at least a minute
+        #expect(stride(minutes: 3) == 1)
+        #expect(stride(minutes: 5) == 2)
+        #expect(stride(minutes: 15) == 5)
+        #expect(stride(minutes: 60) == 15)
+        #expect(stride(minutes: 9 * 60 + 40) == 180)
+        #expect(stride(minutes: 100 * 60) == 720)
+    }
+
+    @Test("labels too near the right edge do not fit")
+    func labelFits() {
+        let w = ChartWindow(span: .all, nowMs: 100_000, startedAtMs: 0)
+        #expect(w.labelFits(atMs: 0))
+        #expect(w.labelFits(atMs: 85_000))
+        #expect(!w.labelFits(atMs: 90_000))
+    }
+
     @Test("keeps only points inside the window, both ends inclusive")
     func slice() {
         let pts = (0..<100).map { TrendPoint(atMs: Int64($0) * 1000, value: Double($0)) }

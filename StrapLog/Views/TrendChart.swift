@@ -104,12 +104,22 @@ struct TrendChart: View {
                 RuleMark(x: .value("Marker", Date(timeIntervalSince1970: Double(marker.atMs) / 1000)))
                     .foregroundStyle(.secondary)
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [2, 2]))
-                    .annotation(position: .top, alignment: .leading) {
+                    .annotation(position: .top, alignment: window.labelFits(atMs: marker.atMs) ? .leading : .trailing) {
                         Text(marker.markerText).font(.caption2.bold())
                     }
             }
         }
         .chartXScale(domain: start...end)
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .minute, count: window.axisStrideMinutes)) { value in
+                AxisGridLine()
+                AxisTick()
+                if let date = value.as(Date.self),
+                   window.labelFits(atMs: Int64(date.timeIntervalSince1970 * 1000)) {
+                    AxisValueLabel(format: .dateTime.hour().minute())
+                }
+            }
+        }
         .chartYScale(domain: metric == .alpha1
                      ? .automatic(includesZero: true)
                      : .automatic(includesZero: false))
