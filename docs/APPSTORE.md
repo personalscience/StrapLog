@@ -6,19 +6,19 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 
 ## App information
 
-| Field | Value |
-|---|---|
-| Seller | Ensembio, Inc (team 4RZ2RJUXC8) |
-| Bundle ID | com.personalscience.straplog |
-| SKU | ENS-STRAPLOG-001 |
-| Primary category | Health & Fitness |
-| Secondary category | Sports |
-| Price | Paid, USD 0.99 tier |
-| Content rights | No third-party content |
-| Age rating | 9+ (calculated; driven by Health or Wellness Topics = Yes, all else None/No; no override, not Made for Kids) |
-| Export compliance | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask |
-| Support URL | https://personalscience.com/docs/straplog/ |
-| Privacy policy URL | https://personalscience.com/docs/straplog/privacy/ |
+| Field              | Value                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Seller             | Ensembio, Inc (team 4RZ2RJUXC8)                                                                              |
+| Bundle ID          | com.personalscience.straplog                                                                                 |
+| SKU                | ENS-STRAPLOG-001                                                                                             |
+| Primary category   | Health & Fitness                                                                                             |
+| Secondary category | Sports                                                                                                       |
+| Price              | Paid, USD 0.99 tier                                                                                          |
+| Content rights     | No third-party content                                                                                       |
+| Age rating         | 9+ (calculated; driven by Health or Wellness Topics = Yes, all else None/No; no override, not Made for Kids) |
+| Export compliance  | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask                                |
+| Support URL        | https://personalscience.com/docs/straplog/                                                                   |
+| Privacy policy URL | https://personalscience.com/docs/straplog/privacy/                                                           |
 
 ## Version 1.0 text
 
