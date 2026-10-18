@@ -10,6 +10,7 @@
 		0318E0502E07C55D48AF768C /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16AEFFB732918F52EACD94D /* LaunchOptions.swift */; };
 		05F53F86E453098B33096EC6 /* GuideParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598364997011C1C2FF07B2C7 /* GuideParser.swift */; };
 		07041807847556BCC199857A /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221BBDEA94E79A819D853DF /* AcknowledgementsView.swift */; };
+		0920575A6FA05BA45AE0997F /* XCUIElement+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */; };
 		09790EE3841FC10F5B218AC9 /* Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = E7B8219DAE56CD77848AE9A1 /* Guide.md */; };
 		0AB6EF16A1337E4AC86C3301 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		0B9A7EA7B4FE42E702EB8589 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
@@ -38,6 +39,7 @@
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF077986A9081AE0F646C2F1 /* StrapScanner.swift */; };
+		488E950BB6061D01D1A5E1EF /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
 		4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */; };
 		52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27C9B67927661DECBD978D3 /* TrendChart.swift */; };
@@ -81,6 +83,7 @@
 		9D8575B0DC3570B57863BEF4 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581715E43F6B3E193FE3D35 /* Alpha1MinutesBar.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
 		A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */; };
+		A8687EC1206F44C5EC203D8A /* XCUIApplication+Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2813D0DFBBDCA2918F1C146 /* XCUIApplication+Scroll.swift */; };
 		A94871E53FB0F3F01CA7AF68 /* RecordingComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */; };
 		A9779F70A7B9DFC9FC05C910 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
 		AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4053711F9AE1E85F78BE1168 /* RecordingRow.swift */; };
@@ -252,6 +255,7 @@
 		5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeart.swift; sourceTree = "<group>"; };
 		60EADFB81C6A3756F6E1EBA9 /* AcknowledgementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementTests.swift; sourceTree = "<group>"; };
 		6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopRecordingIntent.swift; sourceTree = "<group>"; };
+		70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIElement+Helpers.swift"; sourceTree = "<group>"; };
 		71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingComplication.swift; sourceTree = "<group>"; };
 		734ED09A3CD0628C06A46818 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		772CF86972B76494B36BE609 /* WristHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristHaptics.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 		AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatusView.swift; sourceTree = "<group>"; };
 		AEC895AFF529382BCBEFAB00 /* StrapLogWatchWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWatchWidgetsBundle.swift; sourceTree = "<group>"; };
 		B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerNoteSheet.swift; sourceTree = "<group>"; };
+		B2813D0DFBBDCA2918F1C146 /* XCUIApplication+Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIApplication+Scroll.swift"; sourceTree = "<group>"; };
 		B74EEB125A8732BB27725217 /* resting.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = resting.json; sourceTree = "<group>"; };
 		B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityQuery.swift; sourceTree = "<group>"; };
 		B913F13B0F39F7BBCC9175EB /* Guide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Guide.swift; sourceTree = "<group>"; };
@@ -296,6 +301,7 @@
 		DA2003C809D989DFEF440A25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB90CBD1036662A389D1322E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DF077986A9081AE0F646C2F1 /* StrapScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapScanner.swift; sourceTree = "<group>"; };
+		DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeartView.swift; sourceTree = "<group>"; };
 		E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWatchShortcuts.swift; sourceTree = "<group>"; };
 		E7B8219DAE56CD77848AE9A1 /* Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Guide.md; sourceTree = "<group>"; };
@@ -495,7 +501,10 @@
 		7A572399302A7275825E5E13 /* StrapLogUITests */ = {
 			isa = PBXGroup;
 			children = (
+				DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */,
 				54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */,
+				B2813D0DFBBDCA2918F1C146 /* XCUIApplication+Scroll.swift */,
+				70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */,
 			);
 			path = StrapLogUITests;
 			sourceTree = "<group>";
@@ -1065,7 +1074,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				488E950BB6061D01D1A5E1EF /* AppStoreScreenshots.swift in Sources */,
 				14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */,
+				A8687EC1206F44C5EC203D8A /* XCUIApplication+Scroll.swift in Sources */,
+				0920575A6FA05BA45AE0997F /* XCUIElement+Helpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

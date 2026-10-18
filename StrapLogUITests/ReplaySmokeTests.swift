@@ -212,27 +212,3 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(app.buttons["startButton"].waitForExistence(timeout: 5))
     }
 }
-
-private extension XCUIApplication {
-    /// Swipes up until `element` is on screen.
-    func scroll(to element: XCUIElement, maxSwipes: Int = 6) -> Bool {
-        for _ in 0..<maxSwipes {
-            if element.exists && element.isHittable { return true }
-            swipeUp()
-        }
-        return element.exists && element.isHittable
-    }
-}
-
-private extension XCUIElement {
-    /// Deletes the field's current text, then types `text`; call after tapping the field.
-    func clearAndType(_ text: String) {
-        let current = value as? String ?? ""
-        typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + text)
-    }
-
-    func waitForLabel(containing text: String, timeout: TimeInterval) -> Bool {
-        let p = NSPredicate(format: "label CONTAINS %@", text)
-        return XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: p, object: self)], timeout: timeout) == .completed
-    }
-}

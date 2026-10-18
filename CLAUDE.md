@@ -12,6 +12,8 @@ xcodegen generate                                   # after any project.yml or f
 xcodebuild test -scheme StrapLog -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/dd
 xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build
 tools/release.sh [--upload]                         # App Store archive + export (clean tree; build = commit count)
+tools/screenshots.sh                                # 6.9" App Store PNGs → build/screenshots/ (~4 min real-time replay)
+tools/check_listing.py                              # docs/APPSTORE.md lengths + no-Polar-marks rule
 ```
 
 ## Map

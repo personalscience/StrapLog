@@ -1,0 +1,110 @@
+# App Store listing
+
+Source of truth for what goes into App Store Connect (bead `straplog-kzk.6`). Paste fields as-is; `tools/check_listing.py` checks the length limits and the Polar-mark rule.
+
+Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibility line of the description. Never in name, subtitle, keywords, promotional text or screenshots.
+
+## App information
+
+| Field | Value |
+|---|---|
+| Seller | Ensembio, Inc (team 4RZ2RJUXC8) |
+| Bundle ID | com.personalscience.straplog |
+| SKU | STRAPLOG-1 |
+| Primary category | Health & Fitness |
+| Secondary category | Sports |
+| Price | Paid, USD 0.99 tier |
+| Content rights | No third-party content |
+| Age rating | 4+ (all questionnaire answers None/No) |
+| Export compliance | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask |
+| Support URL | _TBD_ |
+| Privacy policy URL | _TBD_ |
+
+## Version 1.0 text
+
+<!-- listing:name -->
+StrapLog: HRV Recorder
+<!-- /listing -->
+
+<!-- listing:subtitle -->
+Beat-by-beat HRV, DFA alpha 1
+<!-- /listing -->
+
+<!-- listing:keywords -->
+hrv,rmssd,dfa,alpha1,rr interval,heart rate variability,chest strap,sleep,zones,breathing,threshold
+<!-- /listing -->
+
+<!-- listing:promo -->
+Record every heartbeat from your chest strap: live HRV and DFA alpha 1, overnight sleep recordings, markers from your Watch, and files you own.
+<!-- /listing -->
+
+<!-- listing:description -->
+StrapLog records every heartbeat from a chest-strap heart-rate sensor and keeps it safe on your iPhone. It shows heart rate and heart-rate variability live, saves each recording as a file you own, and lets you mark moments as they happen.
+
+StrapLog requires a Polar H10-compatible heart-rate sensor. Watches and wrist sensors do not connect.
+
+BEAT BY BEAT
+• Every RR interval the strap measures, stored as it arrives, so even a crash or a dead battery loses almost nothing.
+• Live heart rate, RMSSD and DFA alpha 1, with artifact percentage so you know how clean the data is.
+• Charts of HR, alpha 1 and RR that you can pinch from one minute to the whole session.
+
+SLEEP AND MORNING READINGS
+• Overnight recordings that stop themselves at your wake time, after a 5-minute resting reading if you are still lying down.
+• The strap's motion sensor tells lying from upright, so the recording ends when you get up.
+
+TRAINING ZONES
+• DFA alpha 1 refreshed every 20 seconds and coloured by intensity band, for finding your aerobic and anaerobic thresholds on a walk, ride or treadmill.
+• A breathing pacer for slow-breathing practice.
+
+MARKERS
+• Tap to stamp "lights out", "start stage 3" or "coffee" into the recording, from the app, the Lock Screen, the Dynamic Island, your Apple Watch or Siri.
+
+APPLE WATCH
+• See heart rate and alpha 1 on your wrist, add markers, and start or stop the recording on your iPhone. Complications for the watch face.
+
+YOUR DATA, YOUR FILES
+• Each recording is a single SQLite file in iCloud Drive or On My iPhone. Open it in Python, R or any SQLite tool.
+• No account, no server, no analytics. Nothing leaves your devices unless you share it.
+
+StrapLog is a personal measurement tool, not a medical device. It does not diagnose, treat or prevent any condition.
+<!-- /listing -->
+
+## What's New (1.0)
+
+First release.
+
+## App Privacy (nutrition label)
+
+**Data Not Collected.** StrapLog has no server, account, analytics or third-party SDK that transmits data. Recordings stay on the device and in the user's own iCloud Drive; Apple does not count user-controlled iCloud storage as collection. The Polar BLE SDK talks only to the strap over Bluetooth.
+
+## App Review
+
+**Sign-in required:** No.
+
+**Notes:**
+
+> StrapLog records beat-to-beat (RR) intervals from a Bluetooth chest-strap heart-rate sensor (Polar H10-compatible). It cannot show live data without a strap, so a demo video of a full session is attached: [VIDEO URL].
+>
+> Without a strap, the app opens to Home with a grey searching heart. You can still start and stop a recording, open the in-app Guide (? button), browse settings and see the strap sheet.
+>
+> Background mode bluetooth-central: an overnight sleep recording runs for 7–9 hours with the phone locked. The app must keep receiving the strap's heart-rate and RR notifications in the background, or the night's data is lost. It uses no location or audio background modes.
+>
+> Time-sensitive notifications: during a daytime recording, if the strap disconnects, loses skin contact or sends no beats for 10 seconds, one link alert tells the user to check the strap. Sleep recordings never send these alerts.
+>
+> The app is not a medical device and makes no diagnostic claims. All data stays on the device or in the user's iCloud Drive; there is no server or account.
+
+**Demo video:** screen recording on a real device with the strap on: connect, start an Other recording, markers, Live Activity on the Lock Screen, Watch app, stop, summary, Files → iCloud Drive → StrapLog. Upload as an unlisted video and paste the link above.
+
+## Privacy policy (draft for the URL)
+
+> **StrapLog Privacy Policy**
+>
+> StrapLog, published by Ensembio, Inc, does not collect, store or transmit any personal data to us or to anyone else.
+>
+> Heart-rate, RR-interval and motion data from your chest strap are recorded on your iPhone. Each recording is saved as a file in your iCloud Drive (if enabled) or on your iPhone. You decide whether to share these files.
+>
+> StrapLog has no account, no server, no advertising and no analytics. It uses Bluetooth only to connect to your heart-rate sensor.
+>
+> Deleting a recording in the app deletes its file. Deleting the app deletes its on-device database; files in iCloud Drive remain until you delete them.
+>
+> Questions: [SUPPORT EMAIL]
