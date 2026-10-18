@@ -17,8 +17,8 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 | Content rights | No third-party content |
 | Age rating | 4+ (all questionnaire answers None/No) |
 | Export compliance | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask |
-| Support URL | _TBD_ |
-| Privacy policy URL | _TBD_ |
+| Support URL | https://personalscience.com/docs/straplog/ |
+| Privacy policy URL | https://personalscience.com/docs/straplog/privacy/ |
 
 ## Version 1.0 text
 
@@ -95,16 +95,6 @@ First release.
 
 **Demo video:** screen recording on a real device with the strap on: connect, start an Other recording, markers, Live Activity on the Lock Screen, Watch app, stop, summary, Files → iCloud Drive → StrapLog. Upload as an unlisted video and paste the link above.
 
-## Privacy policy (draft for the URL)
+## Support and privacy pages
 
-> **StrapLog Privacy Policy**
->
-> StrapLog, published by Ensembio, Inc, does not collect, store or transmit any personal data to us or to anyone else.
->
-> Heart-rate, RR-interval and motion data from your chest strap are recorded on your iPhone. Each recording is saved as a file in your iCloud Drive (if enabled) or on your iPhone. You decide whether to share these files.
->
-> StrapLog has no account, no server, no advertising and no analytics. It uses Bluetooth only to connect to your heart-rate sensor.
->
-> Deleting a recording in the app deletes its file. Deleting the app deletes its on-device database; files in iCloud Drive remain until you delete them.
->
-> Questions: [SUPPORT EMAIL]
+Sources in `site/straplog/` (support page, `privacy/`); `tools/publish_site.sh` syncs them to the `personalscience-docs` bucket behind personalscience.com. Contact: support@personalscience.com.
