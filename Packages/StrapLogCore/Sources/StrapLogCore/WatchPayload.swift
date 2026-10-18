@@ -3,8 +3,8 @@ import Foundation
 /// The WatchConnectivity wire format, both ways. Payloads are property-list dictionaries, so
 /// each value travels as JSON `Data` under one key: the phone's application context carries
 /// `LiveStatus` (absent while idle), a Watch message carries one `RemoteCommand`, and the
-/// phone answers a start or stop with a `CommandReply`. A start or stop also goes as
-/// complication user info, which wakes a Watch app whose complication is on the face.
+/// phone answers a start or stop with a `CommandReply`. A start, a stop and an hourly
+/// check-in (`FacePushPolicy`) also go as complication user info, which wakes a Watch app whose complication is on the face.
 public enum WatchPayload {
     static let statusKey = "status"
     static let commandKey = "command"

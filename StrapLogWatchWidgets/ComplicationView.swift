@@ -2,28 +2,38 @@ import StrapLogCore
 import SwiftUI
 import WidgetKit
 
-/// Recording: a heart with the last HR, the elapsed time, and the link warning if any, in
-/// orange. Idle: the app's waveform, dimmed.
+/// Recording: a heart with the last HR while it is recent, the elapsed time, and the link
+/// warning if any, in orange. No word from the phone for long: when it last heard, dimmed.
+/// Idle: the app's waveform, dimmed.
 struct ComplicationView: View {
-    let snapshot: ComplicationSnapshot?
+    let face: ComplicationFace
+    let problem: LinkProblem?
+    /// When the shown heart rate arrived.
+    let heardAt: Date?
     @Environment(\.widgetFamily) private var family
 
     var body: some View {
-        if let status = snapshot?.status {
-            recording(status, warning: snapshot?.problem != nil)
-        } else {
-            idle
+        switch face {
+        case .idle: dimmed(symbol: "waveform.path.ecg", label: "Idle", line: Text("Not recording"))
+        case let .recording(status, heartRate): recording(status, heartRate: heartRate, warning: problem != nil)
+        case let .noWord(since):
+            dimmed(symbol: "waveform.badge.exclamationmark", label: "No word",
+                   line: Text("No word since ") + Text(since, style: .time))
         }
     }
 
     @ViewBuilder
-    private func recording(_ status: LiveStatus, warning: Bool) -> some View {
+    private func recording(_ status: LiveStatus, heartRate: Int?, warning: Bool) -> some View {
         let tint: Color = warning ? .orange : .red
         switch family {
         case .accessoryCircular:
             VStack(spacing: 0) {
-                Image(systemName: warning ? "exclamationmark.triangle.fill" : "heart.fill").foregroundStyle(tint)
-                Text(status.heartRateText).font(.system(.title3, design: .rounded).monospacedDigit())
+                Image(systemName: warning ? "exclamationmark.triangle.fill" : "heart.fill")
+                    .font(heartRate == nil ? .title2 : nil)
+                    .foregroundStyle(tint)
+                if let heartRate {
+                    Text("\(heartRate)").font(.system(.title3, design: .rounded).monospacedDigit())
+                }
             }
             .widgetAccentable()
         case .accessoryCorner:
@@ -39,34 +49,39 @@ struct ComplicationView: View {
                 Text(status.startedAt, style: .timer).font(.headline.monospacedDigit())
                 if warning {
                     Text(status.linkText).foregroundStyle(.orange)
-                } else if let receivedAt = snapshot?.receivedAt {
-                    Text("♥ \(status.heartRateText) at ") + Text(receivedAt, style: .time)
+                } else if let heartRate, let heardAt {
+                    Text("♥ \(heartRate) at ") + Text(heardAt, style: .time)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
-            Text("♥ \(status.heartRateText) · ") + Text(status.startedAt, style: .timer)
+            if let heartRate {
+                Text("♥ \(heartRate) · ") + Text(status.startedAt, style: .timer)
+            } else {
+                Text("♥ ") + Text(status.startedAt, style: .timer)
+            }
         }
     }
 
+    /// `symbol` dimmed, for idle and for no word: `label` in the corner, `line` under the name.
     @ViewBuilder
-    private var idle: some View {
+    private func dimmed(symbol: String, label: String, line: Text) -> some View {
         switch family {
         case .accessoryCircular:
-            Image(systemName: "waveform.path.ecg").font(.title2).foregroundStyle(.secondary)
+            Image(systemName: symbol).font(.title2).foregroundStyle(.secondary)
         case .accessoryCorner:
-            Image(systemName: "waveform.path.ecg")
+            Image(systemName: symbol)
                 .font(.title2)
                 .foregroundStyle(.secondary)
-                .widgetLabel("Idle")
+                .widgetLabel(label)
         case .accessoryRectangular:
             VStack(alignment: .leading) {
-                Label("StrapLog", systemImage: "waveform.path.ecg")
-                Text("Not recording").foregroundStyle(.secondary)
+                Label("StrapLog", systemImage: symbol)
+                line.foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
-            Text("StrapLog idle")
+            Text("StrapLog · ") + line
         }
     }
 }

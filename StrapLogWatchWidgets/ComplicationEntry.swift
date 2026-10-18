@@ -5,4 +5,6 @@ import WidgetKit
 struct ComplicationEntry: TimelineEntry {
     let date: Date
     let snapshot: ComplicationSnapshot?
+
+    var face: ComplicationFace { snapshot?.face(at: date) ?? .idle }
 }

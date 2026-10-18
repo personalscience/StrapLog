@@ -1,8 +1,9 @@
 import StrapLogCore
 import WidgetKit
 
-/// A single entry from `ComplicationStore`; the elapsed time ticks on its own, and only the
-/// Watch app's reloads change the rest.
+/// The `ComplicationStore` snapshot now and again at each `faceChanges(after:)`, so a face the
+/// Watch app stops reloading drops the heart rate, then the recording. The elapsed time ticks
+/// on its own.
 struct ComplicationProvider: TimelineProvider {
     func placeholder(in context: Context) -> ComplicationEntry {
         ComplicationEntry(date: .now, snapshot: nil)
@@ -13,7 +14,10 @@ struct ComplicationProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ComplicationEntry>) -> Void) {
-        completion(Timeline(entries: [ComplicationEntry(date: .now, snapshot: ComplicationStore.shared.load())],
-                            policy: .never))
+        let snapshot = ComplicationStore.shared.load()
+        let now = Date.now
+        let dates = [now] + (snapshot?.faceChanges(after: now) ?? [])
+        let entries = dates.map { ComplicationEntry(date: $0, snapshot: snapshot) }
+        completion(Timeline(entries: entries, policy: .never))
     }
 }

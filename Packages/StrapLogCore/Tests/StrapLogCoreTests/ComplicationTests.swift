@@ -33,6 +33,38 @@ struct ComplicationTests {
                 "idle stays idle without reloads")
     }
 
+    @Test("the heart rate shows for 20 minutes, the recording for 90, then the face says when it last heard")
+    func faceExpires() {
+        let shown = snapshot(status(heartRate: 92), atMs: 0)
+        let at = { (minutes: Double) in shown.receivedAt.addingTimeInterval(minutes * 60) }
+        #expect(shown.face(at: at(0)) == .recording(status(heartRate: 92), heartRate: 92))
+        #expect(shown.face(at: at(19.9)) == .recording(status(heartRate: 92), heartRate: 92))
+        #expect(shown.face(at: at(20)) == .recording(status(heartRate: 92), heartRate: nil))
+        #expect(shown.face(at: at(89.9)) == .recording(status(heartRate: 92), heartRate: nil))
+        #expect(shown.face(at: at(90)) == .noWord(since: shown.receivedAt))
+        #expect(shown.faceChanges(after: at(0)) == [at(20), at(90)])
+        #expect(shown.faceChanges(after: at(30)) == [at(90)])
+        #expect(shown.faceChanges(after: at(90)).isEmpty)
+        #expect(snapshot(nil).face(at: .distantFuture) == .idle, "idle never expires")
+        #expect(snapshot(nil).faceChanges(after: .distantPast).isEmpty)
+    }
+
+    @Test("the phone pushes starts, stops, and an hourly check-in while recording")
+    func facePushes() {
+        var policy = FacePushPolicy()
+        let hour = FacePushPolicy.checkInMs
+        let statuses: [(LiveStatus?, Int64)] = [
+            (nil, 0),                               // the first status always goes
+            (nil, 2 * hour),                        // idle needs no check-in
+            (status(), 2 * hour),                   // start
+            (status(), 3 * hour - 1),
+            (status(), 3 * hour),                   // check-in
+            (status(startedAtMs: 9), 3 * hour + 1), // a new recording
+            (nil, 3 * hour + 2),                    // stop
+        ]
+        #expect(statuses.map { policy.shouldPush($0, nowMs: $1) } == [true, false, true, false, true, true, true])
+    }
+
     @Test("complication info carries the status, or marks idle")
     func payload() {
         let recording = WatchPayload.complicationInfo(for: status())

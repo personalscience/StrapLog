@@ -13,9 +13,7 @@ final class WatchLink: NSObject, LiveStatusDisplay {
     private var launcher: Launcher?
     /// The newest status, kept until the session can take it.
     private var pending: LiveStatus??
-    /// The recording (its `startedAtMs`, nil for idle) the Watch face last heard about; unset
-    /// at launch, so the first status always goes.
-    private var faceRecording: Int64??
+    private var facePush = FacePushPolicy()
 
     /// Call once at launch: a message can be what launched the app in the background.
     func activate(running launcher: Launcher) {
@@ -44,13 +42,13 @@ final class WatchLink: NSObject, LiveStatusDisplay {
         }
     }
 
-    /// Starts and stops also go as complication user info, which wakes the Watch app at once
-    /// to flip its complication; the daily budget (about 50) is too small for every status.
+    /// Starts, stops and hourly check-ins (`FacePushPolicy`) also go as complication user info,
+    /// which wakes the Watch app at once to update its complication.
     private func pushToFace(_ status: LiveStatus?) {
         let session = WCSession.default
-        guard session.isComplicationEnabled, faceRecording != .some(status?.startedAtMs) else { return }
+        let nowMs = Int64(Date.now.timeIntervalSince1970 * 1000)
+        guard session.isComplicationEnabled, facePush.shouldPush(status, nowMs: nowMs) else { return }
         session.transferCurrentComplicationUserInfo(WatchPayload.complicationInfo(for: status))
-        faceRecording = .some(status?.startedAtMs)
     }
 
     /// Runs `command` and answers with the status it leaves, so the Watch sees a start or stop
