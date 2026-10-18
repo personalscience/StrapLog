@@ -1,6 +1,7 @@
 import Foundation
 
 /// Launch arguments that switch the app off the real strap, for the simulator and UI tests.
+/// Debug builds only: a Release build ignores them and always records from the strap.
 ///
 ///     -replay <fixture>   play Tests/fixtures/<fixture>.json instead of connecting to the H10
 ///     -speed <x>          replay speed multiplier (default 1)
@@ -11,6 +12,7 @@ struct LaunchOptions: Equatable {
     var freshDatabase = false
 
     init(arguments: [String] = ProcessInfo.processInfo.arguments) {
+        #if DEBUG
         var it = arguments.makeIterator()
         while let arg = it.next() {
             switch arg {
@@ -20,5 +22,6 @@ struct LaunchOptions: Equatable {
             default: continue
             }
         }
+        #endif
     }
 }

@@ -11,6 +11,7 @@ xcodegen generate                                   # after any project.yml or f
 (cd tools/py && uv run pytest)                      # straplog Python package + CLI
 xcodebuild test -scheme StrapLog -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/dd
 xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build
+tools/release.sh [--upload]                         # App Store archive + export (clean tree; build = commit count)
 ```
 
 ## Map
@@ -50,3 +51,4 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 - 2026-10-15: The live HRV skills are the vault copies (`~/Documents/Notes/.claude/skills/`), not `~/dev/skills/*` (stale Sep-12 package snapshots). StrapLog support is the `straplog` package in `tools/py` (since 2026-10-16; the old `_hrv_shared/straplog_db.py` copies are gone), declared per script via `[tool.uv.sources]` absolute path; HRV Logger parity tests stay in `_hrv_shared/tests/`. `h10` skill routes by activity. The vault is not under git: back up before editing.
 - 2026-10-17: A new Watch needs registering before a sideloaded Watch app installs (Watch app's Install silently reverts otherwise): watchOS platform component in Xcode, Developer Mode on the Watch, pair in Devices and Simulators, then `xcodebuild -scheme StrapLogWatch -destination 'id=<watch udid>' -allowProvisioningUpdates -allowProvisioningDeviceRegistration build`.
 - 2026-10-18: Reinstalling wipes `live.sqlite`; `SnapshotImport` (run on each foreground) brings snapshots back. A file imports only the recording named by its `Snapshot.fileName`, because the legacy v2 export `261016-0805-STRENGTH_261016.sqlite` holds 9 recordings, 7 of them deleted since.
+- 2026-10-18: App Store signing uses Ensembio's cloud-managed "Distribution Managed" cert (no private key in the keychain); `-allowProvisioningUpdates` makes the App Store profiles. `-exportArchive` needs the system PATH: Homebrew rsync 3.x rejects the `-E` Xcode's openrsync passes ("Copy failed").

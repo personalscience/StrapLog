@@ -54,6 +54,10 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         # tools/stamp_build.sh reads .git, outside any declarable input list.
         ENABLE_USER_SCRIPT_SANDBOXING: NO
+      configs:
+        # Release ignores -replay (LaunchOptions), so the fixture would be dead weight.
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: resting.json
     postBuildScripts:
       - name: Stamp build
         script: '"$SRCROOT/tools/stamp_build.sh"'
