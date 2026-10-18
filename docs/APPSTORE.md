@@ -10,12 +10,12 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 |---|---|
 | Seller | Ensembio, Inc (team 4RZ2RJUXC8) |
 | Bundle ID | com.personalscience.straplog |
-| SKU | STRAPLOG-1 |
+| SKU | ENS-STRAPLOG-001 |
 | Primary category | Health & Fitness |
 | Secondary category | Sports |
 | Price | Paid, USD 0.99 tier |
 | Content rights | No third-party content |
-| Age rating | 4+ (all questionnaire answers None/No) |
+| Age rating | 9+ (calculated; driven by Health or Wellness Topics = Yes, all else None/No; no override, not Made for Kids) |
 | Export compliance | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask |
 | Support URL | https://personalscience.com/docs/straplog/ |
 | Privacy policy URL | https://personalscience.com/docs/straplog/privacy/ |
@@ -23,15 +23,15 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 ## Version 1.0 text
 
 <!-- listing:name -->
-StrapLog: HRV Recorder
+StrapLog HRV
 <!-- /listing -->
 
 <!-- listing:subtitle -->
-Beat-by-beat HRV, DFA alpha 1
+Beat-by-beat chest strap data
 <!-- /listing -->
 
 <!-- listing:keywords -->
-hrv,rmssd,dfa,alpha1,rr interval,heart rate variability,chest strap,sleep,zones,breathing,threshold
+rmssd,dfa,alpha1,rr interval,heart rate variability,sleep,zones,breathing,threshold,recovery,aerobic
 <!-- /listing -->
 
 <!-- listing:promo -->
