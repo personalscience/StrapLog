@@ -83,7 +83,7 @@ First release.
 
 **Notes:**
 
-> StrapLog records beat-to-beat (RR) intervals from a Bluetooth chest-strap heart-rate sensor (Polar H10-compatible). It cannot show live data without a strap, so a demo video of a full session is attached: [VIDEO URL].
+> StrapLog records beat-to-beat (RR) intervals from a Bluetooth chest-strap heart-rate sensor (Polar H10-compatible). It cannot show live data without a strap, so a demo video of a full session is here: https://youtu.be/6EbFDyPiAMs (unlisted).
 >
 > Without a strap, the app opens to Home with a grey searching heart. You can still start and stop a recording, open the in-app Guide (? button), browse settings and see the strap sheet.
 >
@@ -93,7 +93,7 @@ First release.
 >
 > The app is not a medical device and makes no diagnostic claims. All data stays on the device or in the user's iCloud Drive; there is no server or account.
 
-**Demo video:** screen recording on a real device with the strap on: connect, start an Other recording, markers, Live Activity on the Lock Screen, Watch app, stop, summary, Files → iCloud Drive → StrapLog. Upload as an unlisted video and paste the link above.
+**Demo video:** screen recording on a real device with the strap on: connect, start an Other recording, markers, Live Activity on the Lock Screen, Watch app, stop, summary, Files → iCloud Drive → StrapLog. Uploaded 2026-10-18 as an unlisted YouTube Short (screen recording plus a camera clip of the Watch).
 
 ## Support and privacy pages
 
