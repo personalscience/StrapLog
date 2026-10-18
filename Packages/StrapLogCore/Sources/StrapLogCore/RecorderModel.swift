@@ -47,12 +47,12 @@ public final class RecorderModel {
     /// What the Live Activity shows, or nil when idle.
     public var liveStatus: LiveStatus? {
         guard let rec = activeRecording else { return nil }
-        let linked = if case .connected = link { true } else { false }
+        let strapId: String? = if case .connected(let deviceId) = link { deviceId } else { nil }
         return LiveStatus(name: rec.name, activity: rec.activity, startedAtMs: rec.startedAtMs, heartRate: heartRate,
-                          contact: contact, linked: linked, alpha1: live.latest?.alpha1, rmssd: live.latest?.rmssd,
+                          contact: contact, linked: strapId != nil, alpha1: live.latest?.alpha1, rmssd: live.latest?.rmssd,
                           battery: battery, markers: activePreset.markers, markerCount: markerCount,
                           lastMarkerLabel: lastMarker?.label, lastMarkerText: lastMarker?.markerText,
-                          lastMarkerAtMs: lastMarker?.atMs, beatGap: hasBeatGap)
+                          lastMarkerAtMs: lastMarker?.atMs, beatGap: hasBeatGap, strapId: strapId)
     }
 
     /// Notifications keep arriving but none has carried a beat for `beatGapAfterMs`: the strap

@@ -14,6 +14,10 @@ final class PhoneLink: NSObject {
     private(set) var receivedAt: Date?
     /// The start or stop sent and not yet landed, or the phone's failure answer to it.
     private(set) var pending: PendingCommand?
+    /// Whether the phone is in reach now (`WCSession.isReachable`).
+    private(set) var isReachable = false
+    /// Called when the status, reachability or staleness may have changed (`StrapHeart`).
+    @ObservationIgnored var onChange: (() -> Void)?
     @ObservationIgnored private var alarm = LinkAlarm()
     @ObservationIgnored private let face = ComplicationFeed()
     @ObservationIgnored private var isActivated = false
@@ -31,6 +35,7 @@ final class PhoneLink: NSObject {
             while !Task.isCancelled {
                 try? await Task.sleep(for: Self.staleCheckInterval)
                 self?.checkAlarm()
+                self?.onChange?()
             }
         }
     }
@@ -121,6 +126,12 @@ final class PhoneLink: NSObject {
         face.show(status, receivedAt: .now)
         if let pending, pending.failure == nil, pending.isSettled(by: status) { self.pending = nil }
         checkAlarm()
+        onChange?()
+    }
+
+    private func receive(isReachable: Bool) {
+        self.isReachable = isReachable
+        onChange?()
     }
 
     private func checkAlarm() {
@@ -135,7 +146,9 @@ extension PhoneLink: WCSessionDelegate {
         let context = session.receivedApplicationContext
         let status = context.isEmpty ? nil : WatchPayload.status(in: context)
         let hasContext = !context.isEmpty
+        let isReachable = session.isReachable
         Task { @MainActor in
+            receive(isReachable: isReachable)
             if hasContext { receive(status) }
             didActivate()
         }
@@ -144,6 +157,11 @@ extension PhoneLink: WCSessionDelegate {
     nonisolated func session(_ session: WCSession, didReceiveApplicationContext context: [String: Any]) {
         let status = WatchPayload.status(in: context)
         Task { @MainActor in receive(status) }
+    }
+
+    nonisolated func sessionReachabilityDidChange(_ session: WCSession) {
+        let isReachable = session.isReachable
+        Task { @MainActor in receive(isReachable: isReachable) }
     }
 
     /// A start or stop sent for the complication (`WatchPayload.complicationInfo`).

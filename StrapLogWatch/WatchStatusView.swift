@@ -3,25 +3,28 @@ import SwiftUI
 
 /// The recording at a glance with its marker and stop buttons, a start or stop on its way, or
 /// the start buttons. Re-evaluated every few seconds so a phone that went quiet shows as stale
-/// rather than as an old HR that looks live.
+/// rather than as an old HR that looks live. While the phone is gone, HR comes from the
+/// strap's broadcasts (`StrapHeart`), labelled as such.
 struct WatchStatusView: View {
     let phone: PhoneLink
+    let heart: StrapHeart
     @State private var confirmingStop = false
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 5)) { timeline in
+            let strap = heart.source == .strap ? heart.shownReading(at: timeline.date) : nil
             if let pending = phone.pending {
                 WatchPendingView(pending: pending) { phone.dismissPending() }
             } else if let status = phone.status {
                 ScrollView {
                     VStack(spacing: 8) {
-                        recording(status, isStale: phone.isStale(at: timeline.date))
+                        recording(status, isStale: phone.isStale(at: timeline.date), strap: strap)
                         markers(status)
                         stop
                     }
                 }
             } else {
-                WatchStartView(phone: phone)
+                WatchStartView(phone: phone, showsStrap: heart.source == .strap, strap: strap)
             }
         }
     }
@@ -41,14 +44,18 @@ struct WatchStatusView: View {
         }
     }
 
-    private func recording(_ status: LiveStatus, isStale: Bool) -> some View {
+    /// `strap` is the strap's reading while it stands in for the phone's HR.
+    private func recording(_ status: LiveStatus, isStale: Bool, strap: StrapBroadcast?) -> some View {
         VStack(spacing: 4) {
             Text(status.startedAt, style: .timer)
                 .font(.headline.monospacedDigit())
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Image(systemName: "heart.fill").foregroundStyle(.red)
-                Text(status.heartRateText)
+                Text(heart.source == .strap ? strap?.heartRateText ?? "--" : status.heartRateText)
                     .font(.system(size: 56, weight: .semibold, design: .rounded).monospacedDigit())
+            }
+            if heart.source == .strap {
+                Text(StrapBroadcast.caption(for: strap)).font(.footnote).foregroundStyle(.secondary)
             }
             HStack(spacing: 6) {
                 Circle().fill(status.alpha1Band?.color ?? .secondary).frame(width: 10, height: 10)

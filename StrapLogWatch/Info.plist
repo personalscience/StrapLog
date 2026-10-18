@@ -20,6 +20,8 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>StrapLog reads your Polar H10's broadcast heart rate when your iPhone is out of reach.</string>
 	<key>WKApplication</key>
 	<true/>
 	<key>WKCompanionAppBundleIdentifier</key>

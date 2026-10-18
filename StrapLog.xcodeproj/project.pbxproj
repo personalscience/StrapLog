@@ -33,6 +33,7 @@
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
+		4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF077986A9081AE0F646C2F1 /* StrapScanner.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
 		4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */; };
 		52F75E63CDDEBC6A13FA6A51 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27C9B67927661DECBD978D3 /* TrendChart.swift */; };
@@ -47,6 +48,7 @@
 		6F021ACDCE9DD828699947A1 /* StrapLogWatchShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */; };
 		709EDC933723275730834E4A /* Guide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B913F13B0F39F7BBCC9175EB /* Guide.swift */; };
 		711056491FBEE5CD529700DA /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050424C851AC49404C44C6E2 /* HelpView.swift */; };
+		73E73B3A14755CDE4330D713 /* StrapHeart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */; };
 		741423D438C24F3CCFAD35DC /* ComplicationFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABF24144449A6848A0D60C /* ComplicationFeed.swift */; };
 		74DB5FCCE3BAE0B23E11C059 /* LiveActivityDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA015499D0162D74378D9A98 /* LiveActivityDisplay.swift */; };
 		7B7BAC34E23DC4E2BC5AFA3F /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
@@ -73,6 +75,7 @@
 		A9779F70A7B9DFC9FC05C910 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
 		AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4053711F9AE1E85F78BE1168 /* RecordingRow.swift */; };
 		B13308E245F3000E48BD7071 /* WatchStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */; };
+		B4359F4349CAF3B9FA54AB4C /* StrapHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */; };
 		B72877446400D2803528FE01 /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
 		B74E44AFBF645F8ABA175172 /* LiveStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB838F79AB96531AB2A91409 /* LiveStatusView.swift */; };
 		B9B1249E21A08D152131C631 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
@@ -222,6 +225,7 @@
 		5990ECFEC25A9AA23909F07E /* MarkNextIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkNextIntent.swift; sourceTree = "<group>"; };
 		5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationProvider.swift; sourceTree = "<group>"; };
 		5D2EC470939C5D773CF85278 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
+		5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeart.swift; sourceTree = "<group>"; };
 		6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopRecordingIntent.swift; sourceTree = "<group>"; };
 		71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingComplication.swift; sourceTree = "<group>"; };
 		734ED09A3CD0628C06A46818 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -257,6 +261,8 @@
 		D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlock.swift; sourceTree = "<group>"; };
 		D84A709F33EBB43E9292A1F8 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
 		DB90CBD1036662A389D1322E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DF077986A9081AE0F646C2F1 /* StrapScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapScanner.swift; sourceTree = "<group>"; };
+		E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeartView.swift; sourceTree = "<group>"; };
 		E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWatchShortcuts.swift; sourceTree = "<group>"; };
 		EB3AE856E079C81C21212DCA /* SessionSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryCard.swift; sourceTree = "<group>"; };
 		EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStartView.swift; sourceTree = "<group>"; };
@@ -523,9 +529,12 @@
 				0D5B311291D9A08A22F87556 /* Info.plist */,
 				5990ECFEC25A9AA23909F07E /* MarkNextIntent.swift */,
 				D84A709F33EBB43E9292A1F8 /* PhoneLink.swift */,
+				5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */,
+				E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */,
 				1A98BFF647C3FB26BE9F5A90 /* StrapLogWatch.entitlements */,
 				40FD0D5D022DCD8F64EBEFFE /* StrapLogWatchApp.swift */,
 				E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */,
+				DF077986A9081AE0F646C2F1 /* StrapScanner.swift */,
 				5242B3303D3647F75E01A20B /* WatchPendingView.swift */,
 				EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */,
 				AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */,
@@ -987,8 +996,11 @@
 				7B7BAC34E23DC4E2BC5AFA3F /* LiveMarkedLine.swift in Sources */,
 				1BCEC5BF7206F1D05BD345D0 /* MarkNextIntent.swift in Sources */,
 				7EBEE88F4CCE77E73AA02DE4 /* PhoneLink.swift in Sources */,
+				73E73B3A14755CDE4330D713 /* StrapHeart.swift in Sources */,
+				B4359F4349CAF3B9FA54AB4C /* StrapHeartView.swift in Sources */,
 				573182B5190038A0C4F13AC6 /* StrapLogWatchApp.swift in Sources */,
 				6F021ACDCE9DD828699947A1 /* StrapLogWatchShortcuts.swift in Sources */,
+				4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */,
 				22AA87E24C7BDD1BF2499410 /* WatchPendingView.swift in Sources */,
 				DAEE078970FAB7C65D6AC724 /* WatchStartView.swift in Sources */,
 				B13308E245F3000E48BD7071 /* WatchStatusView.swift in Sources */,

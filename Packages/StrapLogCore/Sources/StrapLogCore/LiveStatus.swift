@@ -25,6 +25,9 @@ public struct LiveStatus: Sendable, Codable, Hashable {
     public let lastMarkerAtMs: Int64?
     /// Notifications arrive without beats (`RecorderModel.beatGapAfterMs`).
     public let beatGap: Bool
+    /// The connected strap's Polar device id, so the Watch can pick its HR broadcasts
+    /// (`StrapBroadcast`) out of the air when the phone is gone; nil while unlinked.
+    public let strapId: String?
 
     /// After this long without an update the activity is marked stale, so a dead app or link
     /// shows as a warning instead of an old HR that looks live.
@@ -33,7 +36,7 @@ public struct LiveStatus: Sendable, Codable, Hashable {
     public init(name: String, activity: String, startedAtMs: Int64, heartRate: Int?, contact: Bool?,
                 linked: Bool, alpha1: Double?, rmssd: Double?, battery: Int?, markers: [String], markerCount: Int,
                 lastMarkerLabel: String? = nil, lastMarkerText: String? = nil, lastMarkerAtMs: Int64? = nil,
-                beatGap: Bool = false) {
+                beatGap: Bool = false, strapId: String? = nil) {
         self.name = name
         self.activity = activity
         self.startedAtMs = startedAtMs
@@ -49,6 +52,7 @@ public struct LiveStatus: Sendable, Codable, Hashable {
         self.lastMarkerText = lastMarkerText
         self.lastMarkerAtMs = lastMarkerAtMs
         self.beatGap = beatGap
+        self.strapId = strapId
     }
 
     public var alpha1Band: Alpha1Band? { alpha1.map(Alpha1Band.init(alpha1:)) }

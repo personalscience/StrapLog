@@ -33,6 +33,7 @@ struct LiveStatusTests {
         #expect(started?.activity == "sleep")
         #expect(started?.heartRate == 58)
         #expect(started?.linked == true)
+        #expect(started?.strapId == "H10-1", "the Watch's key to the strap's broadcasts")
         #expect(started?.markers == ActivityPreset.sleep.markers)
         #expect(started?.linkText == "H10 · 82 %")
 

@@ -150,6 +150,8 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.personalscience.straplog
+        # StrapHeart: the strap's broadcast HR, read without connecting, while the iPhone is gone.
+        NSBluetoothAlwaysUsageDescription: StrapLog reads your Polar H10's broadcast heart rate when your iPhone is out of reach.
     # Shares the complication's snapshot (ComplicationStore) with StrapLogWatchWidgets.
     entitlements:
       path: StrapLogWatch/StrapLogWatch.entitlements
