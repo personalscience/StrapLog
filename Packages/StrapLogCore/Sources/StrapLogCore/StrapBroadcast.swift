@@ -61,7 +61,7 @@ public struct StrapBroadcast: Sendable, Equatable {
 
     /// The line under strap HR, saying where it comes from; `reading` nil while none is fresh.
     public static func caption(for reading: StrapBroadcast?) -> String {
-        guard let reading else { return "Looking for the H10…" }
-        return reading.contact ? "From the H10 · no iPhone" : "No skin contact"
+        guard let reading else { return "Looking for the strap…" }
+        return reading.contact ? "From the strap · no iPhone" : "No skin contact"
     }
 }

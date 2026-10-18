@@ -201,6 +201,13 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(chapter.waitForExistence(timeout: 5))
         chapter.tap()
         XCTAssertTrue(app.staticTexts["Put the strap on"].waitForExistence(timeout: 5))
+        app.buttons["BackButton"].tap()
+        XCTAssertTrue(app.scroll(to: app.buttons["acknowledgements"]))
+        app.buttons["acknowledgements"].tap()
+        let polar = app.buttons["acknowledgement-Polar BLE SDK"]
+        XCTAssertTrue(polar.waitForExistence(timeout: 5))
+        polar.tap()
+        XCTAssertTrue(app.navigationBars["Polar BLE SDK"].waitForExistence(timeout: 5))
         app.buttons["helpDone"].tap()
         XCTAssertTrue(app.buttons["startButton"].waitForExistence(timeout: 5))
     }

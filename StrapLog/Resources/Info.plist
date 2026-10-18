@@ -23,7 +23,7 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>StrapLog connects to your Polar H10 chest strap to record heart rate and beat-to-beat intervals.</string>
+	<string>StrapLog connects to your heart-rate chest strap to record heart rate and beat-to-beat intervals.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>NSUbiquitousContainers</key>

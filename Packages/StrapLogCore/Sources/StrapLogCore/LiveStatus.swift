@@ -84,12 +84,12 @@ public struct LiveStatus: Sendable, Codable, Hashable {
     public var alpha1Text: String { alpha1.map { String(format: "%.2f", $0) } ?? "--" }
     public var rmssdText: String { rmssd.map { String(format: "%.0f ms", $0) } ?? "--" }
 
-    /// One short line on the link, e.g. `H10 · 82 %`, `No skin contact`, `Reconnecting…`.
+    /// One short line on the link, e.g. `Strap · 82 %`, `No skin contact`, `Reconnecting…`.
     public var linkText: String {
         guard linked else { return "Reconnecting…" }
         if contact == false { return "No skin contact" }
         if beatGap { return "No beats" }
-        return battery.map { "H10 · \($0) %" } ?? "H10"
+        return battery.map { "Strap · \($0) %" } ?? "Strap"
     }
 
     /// The footer line: `linkText`, or a warning once the activity is stale (no update for

@@ -12,7 +12,7 @@ struct DeviceSheet: View {
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 let nowMs = Int64(context.date.timeIntervalSince1970 * 1000)
                 List {
-                    Section("Polar H10") {
+                    Section("Strap") {
                         LabeledContent("Link", value: Formats.link(model.link))
                         LabeledContent("Device ID", value: Formats.deviceId(model.link))
                             .accessibilityIdentifier("deviceId")

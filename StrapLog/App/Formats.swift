@@ -29,8 +29,8 @@ enum Formats {
 
     static func link(_ status: LinkStatus) -> String {
         switch status {
-        case .searching: "Searching for H10…"
-        case .connected(let id): "H10 \(id)"
+        case .searching: "Searching for strap…"
+        case .connected(let id): "Strap \(id)"
         case .disconnected: "Disconnected — reconnecting"
         case .bluetoothOff: "Bluetooth is off"
         }

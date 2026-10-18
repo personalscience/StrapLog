@@ -50,7 +50,7 @@ struct StrapBroadcastTests {
         #expect(StrapBroadcast(heartRate: 61, contact: true, frameCounter: 0).heartRateText == "61")
         #expect(StrapBroadcast(heartRate: 61, contact: false, frameCounter: 0).heartRateText == "--")
         #expect(StrapBroadcast(heartRate: 0, contact: true, frameCounter: 0).heartRateText == "--")
-        #expect(StrapBroadcast.caption(for: nil) == "Looking for the H10…")
+        #expect(StrapBroadcast.caption(for: nil) == "Looking for the strap…")
         #expect(StrapBroadcast.caption(for: StrapBroadcast(heartRate: 0, contact: false, frameCounter: 0))
                 == "No skin contact")
     }

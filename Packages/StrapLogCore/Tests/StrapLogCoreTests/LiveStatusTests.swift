@@ -35,7 +35,7 @@ struct LiveStatusTests {
         #expect(started?.linked == true)
         #expect(started?.strapId == "H10-1", "the Watch's key to the strap's broadcasts")
         #expect(started?.markers == ActivityPreset.sleep.markers)
-        #expect(started?.linkText == "H10 · 82 %")
+        #expect(started?.linkText == "Strap · 82 %")
 
         await model.stop()
         #expect(display.shown.last! == nil)

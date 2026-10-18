@@ -12,7 +12,7 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 
 ### What you need
 
-- An iPhone, and a chest strap that StrapLog supports. StrapLog works with the Polar H10 heart-rate sensor. Other straps, and watches or wrist sensors, do not connect.
+- An iPhone, and a chest strap that StrapLog supports. StrapLog requires a Polar H10-compatible heart-rate sensor. Watches and wrist sensors do not connect.
 - Optionally, an Apple Watch to see the recording and add markers from your wrist.
 
 ### Put the strap on

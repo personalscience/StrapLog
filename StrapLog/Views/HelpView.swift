@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// The guide's contents, shown as a sheet from the toolbar: the introduction, then one row per chapter.
+/// The guide's contents, shown as a sheet from the toolbar: the introduction, one row per chapter,
+/// then the acknowledgements.
 /// Every page carries Done, so a reader deep in a chapter can close the sheet without backing out.
 struct HelpView: View {
     let book: GuideBook
@@ -17,19 +18,35 @@ struct HelpView: View {
                 }
                 Section {
                     ForEach(book.chapters) { chapter in
-                        NavigationLink(chapter.title, value: chapter.title)
+                        NavigationLink(chapter.title, value: HelpRoute.chapter(title: chapter.title))
                             .accessibilityIdentifier("guideChapter-\(chapter.title)")
                     }
+                }
+                Section {
+                    NavigationLink("Acknowledgements", value: HelpRoute.acknowledgements)
+                    .accessibilityIdentifier("acknowledgements")
                 }
             }
             .navigationTitle(book.title)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: String.self) { title in
-                if let chapter = book.chapters.first(where: { $0.title == title }) {
-                    GuideChapterView(chapter: chapter).toolbar { done }
-                }
+            .navigationDestination(for: HelpRoute.self) { route in
+                page(for: route).toolbar { done }
             }
             .toolbar { done }
+        }
+    }
+
+    @ViewBuilder
+    private func page(for route: HelpRoute) -> some View {
+        switch route {
+        case .chapter(let title):
+            if let chapter = book.chapters.first(where: { $0.title == title }) {
+                GuideChapterView(chapter: chapter)
+            }
+        case .acknowledgements:
+            AcknowledgementsView(acknowledgements: Acknowledgement.all)
+        case .license(let item):
+            LicenseTextView(acknowledgement: item)
         }
     }
 

@@ -72,7 +72,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
-        NSBluetoothAlwaysUsageDescription: StrapLog connects to your Polar H10 chest strap to record heart rate and beat-to-beat intervals.
+        NSBluetoothAlwaysUsageDescription: StrapLog connects to your heart-rate chest strap to record heart rate and beat-to-beat intervals.
         UIBackgroundModes: [bluetooth-central]
         NSSupportsLiveActivities: true
         UIFileSharingEnabled: true
@@ -155,7 +155,7 @@ targets:
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.personalscience.straplog
         # StrapHeart: the strap's broadcast HR, read without connecting, while the iPhone is gone.
-        NSBluetoothAlwaysUsageDescription: StrapLog reads your Polar H10's broadcast heart rate when your iPhone is out of reach.
+        NSBluetoothAlwaysUsageDescription: StrapLog reads your chest strap's broadcast heart rate when your iPhone is out of reach.
     # Shares the complication's snapshot (ComplicationStore) with StrapLogWatchWidgets.
     entitlements:
       path: StrapLogWatch/StrapLogWatch.entitlements

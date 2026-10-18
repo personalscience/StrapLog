@@ -11,9 +11,9 @@ public enum LinkProblem: Sendable, Equatable {
     public var message: String {
         switch self {
         case .stale: "No update from the iPhone for over a minute."
-        case .disconnected: "The H10 disconnected."
-        case .contactLost: "The H10 lost skin contact."
-        case .beatGap: "The H10 has sent no beats for 10 seconds."
+        case .disconnected: "The strap disconnected."
+        case .contactLost: "The strap lost skin contact."
+        case .beatGap: "The strap has sent no beats for 10 seconds."
         }
     }
 }
