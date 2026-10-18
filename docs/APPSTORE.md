@@ -15,6 +15,8 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 | Secondary category | Sports                                                                                                       |
 | Price              | Paid, USD 0.99 tier                                                                                          |
 | Content rights     | No third-party content                                                                                       |
+| Availability       | 134 of 175: Americas, Asia-Pacific, Middle East/Africa, UK, Switzerland; not mainland China (ICP), not EU (DSA) |
+| Mac / Vision Pro   | Both unchecked: untested; recording relies on iPhone background Bluetooth, Live Activity and the Watch      |
 | Age rating         | 9+ (calculated; driven by Health or Wellness Topics = Yes, all else None/No; no override, not Made for Kids) |
 | Export compliance  | `ITSAppUsesNonExemptEncryption = NO` in both Info.plists, so ASC does not ask                                |
 | Support URL        | https://personalscience.com/docs/straplog/                                                                   |
