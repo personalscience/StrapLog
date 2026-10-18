@@ -15,6 +15,7 @@ final class PhoneLink: NSObject {
     /// The start or stop sent and not yet landed, or the phone's failure answer to it.
     private(set) var pending: PendingCommand?
     @ObservationIgnored private var alarm = LinkAlarm()
+    @ObservationIgnored private let face = ComplicationFeed()
     @ObservationIgnored private var isActivated = false
     @ObservationIgnored private var activationWaiters: [CheckedContinuation<Void, Never>] = []
     @ObservationIgnored private var staleWatch: Task<Void, Never>?
@@ -104,9 +105,20 @@ final class PhoneLink: NSObject {
         activationWaiters = []
     }
 
+    /// Waits, up to `limit`, for the session to hand over what it holds; a background
+    /// WatchConnectivity wake must not end before the context reaches the complication.
+    func drain(limit: Duration = .seconds(10)) async {
+        activate()
+        let deadline = ContinuousClock.now + limit
+        while ContinuousClock.now < deadline, !isActivated || WCSession.default.hasContentPending {
+            try? await Task.sleep(for: .milliseconds(250))
+        }
+    }
+
     private func receive(_ status: LiveStatus?) {
         self.status = status
         receivedAt = .now
+        face.show(status, receivedAt: .now)
         if let pending, pending.failure == nil, pending.isSettled(by: status) { self.pending = nil }
         checkAlarm()
     }
@@ -131,6 +143,13 @@ extension PhoneLink: WCSessionDelegate {
 
     nonisolated func session(_ session: WCSession, didReceiveApplicationContext context: [String: Any]) {
         let status = WatchPayload.status(in: context)
+        Task { @MainActor in receive(status) }
+    }
+
+    /// A start or stop sent for the complication (`WatchPayload.complicationInfo`).
+    nonisolated func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        guard WatchPayload.isComplicationInfo(userInfo) else { return }
+        let status = WatchPayload.status(in: userInfo)
         Task { @MainActor in receive(status) }
     }
 }

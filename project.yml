@@ -128,6 +128,7 @@ targets:
       - path: Shared/LiveMarkedLine.swift
     dependencies:
       - package: StrapLogCore
+      - target: StrapLogWatchWidgets
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.straplog.watchkitapp
@@ -147,6 +148,43 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.personalscience.straplog
+    # Shares the complication's snapshot (ComplicationStore) with StrapLogWatchWidgets.
+    entitlements:
+      path: StrapLogWatch/StrapLogWatch.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.personalscience.straplog]
+
+  # The Watch face complication, drawn from the snapshot the Watch app saves.
+  StrapLogWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: StrapLogWatchWidgets
+    dependencies:
+      - package: StrapLogCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.straplog.watchkitapp.widgets
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+    postBuildScripts:
+      - name: Stamp build
+        script: '"$SRCROOT/tools/stamp_build.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+    info:
+      path: StrapLogWatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: StrapLog
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: StrapLogWatchWidgets/StrapLogWatchWidgets.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.personalscience.straplog]
 
   StrapLogTests:
     type: bundle.unit-test

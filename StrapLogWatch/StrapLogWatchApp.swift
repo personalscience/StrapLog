@@ -3,6 +3,8 @@ import SwiftUI
 
 /// A remote display and marker button for the phone's recording: big HR, α1 band, elapsed
 /// time, link state. The link starts in `init` so an Action-button intent finds it running.
+/// With the complication on the face, watchOS also wakes the app in the background for the
+/// phone's updates, which reach the face through `ComplicationFeed`.
 @main
 struct StrapLogWatchApp: App {
     @State private var phone: PhoneLink
@@ -17,6 +19,9 @@ struct StrapLogWatchApp: App {
     var body: some Scene {
         WindowGroup {
             WatchStatusView(phone: phone)
+        }
+        .backgroundTask(.watchConnectivity) {
+            await phone.drain()
         }
     }
 }

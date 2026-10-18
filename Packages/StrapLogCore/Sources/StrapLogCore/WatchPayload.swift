@@ -3,11 +3,13 @@ import Foundation
 /// The WatchConnectivity wire format, both ways. Payloads are property-list dictionaries, so
 /// each value travels as JSON `Data` under one key: the phone's application context carries
 /// `LiveStatus` (absent while idle), a Watch message carries one `RemoteCommand`, and the
-/// phone answers a start or stop with a `CommandReply`.
+/// phone answers a start or stop with a `CommandReply`. A start or stop also goes as
+/// complication user info, which wakes a Watch app whose complication is on the face.
 public enum WatchPayload {
     static let statusKey = "status"
     static let commandKey = "command"
     static let replyKey = "reply"
+    static let complicationKey = "complication"
 
     /// The application context for `status`; empty when no recording is open.
     public static func context(for status: LiveStatus?) -> [String: Any] {
@@ -18,6 +20,17 @@ public enum WatchPayload {
     /// The status in `context`, or nil when idle or unreadable (an older or newer phone app).
     public static func status(in context: [String: Any]) -> LiveStatus? {
         (context[statusKey] as? Data).flatMap { try? JSONDecoder().decode(LiveStatus.self, from: $0) }
+    }
+
+    /// Complication user info for `status`: the application context, marked so an idle one
+    /// (no status) is not empty.
+    public static func complicationInfo(for status: LiveStatus?) -> [String: Any] {
+        context(for: status).merging([complicationKey: true]) { current, _ in current }
+    }
+
+    /// Whether `userInfo` is complication user info rather than a queued command.
+    public static func isComplicationInfo(_ userInfo: [String: Any]) -> Bool {
+        userInfo[complicationKey] as? Bool == true
     }
 
     public static func message(for command: RemoteCommand) -> [String: Any] {
