@@ -5,8 +5,8 @@ import Testing
 @Suite("LinkAlarm and next marker")
 struct LinkAlarmTests {
     func status(linked: Bool = true, contact: Bool? = true, beatGap: Bool = false, startedAtMs: Int64 = 0,
-                lastMarker: String? = nil) -> LiveStatus {
-        LiveStatus(name: "n", activity: "other", startedAtMs: startedAtMs, heartRate: 60, contact: contact,
+                lastMarker: String? = nil, activity: String = "other") -> LiveStatus {
+        LiveStatus(name: "n", activity: activity, startedAtMs: startedAtMs, heartRate: 60, contact: contact,
                    linked: linked, alpha1: nil, rmssd: nil, battery: 80, markers: ["a", "b", "end"],
                    markerCount: lastMarker == nil ? 0 : 1, lastMarkerLabel: lastMarker, lastMarkerText: lastMarker,
                    beatGap: beatGap)
@@ -42,6 +42,15 @@ struct LinkAlarmTests {
                         (status(linked: false, startedAtMs: 9), false), (status(startedAtMs: 9), false),
                         (status(startedAtMs: 9), true)])
                 == [nil, nil, nil, nil, nil, .stale])
+    }
+
+    @Test("an overnight recording never buzzes")
+    func quietOvernight() {
+        let sleep = ActivityPreset.sleep.id
+        #expect(alarms([(status(activity: sleep), false), (status(contact: false, activity: sleep), false),
+                        (status(linked: false, activity: sleep), false), (status(linked: false, activity: sleep), true),
+                        (status(activity: sleep), false), (status(beatGap: true, activity: sleep), false)])
+                == [nil, nil, nil, nil, nil, nil])
     }
 
     @Test("the next marker steps through the bar; the last repeats; a note starts over")

@@ -14,7 +14,7 @@ enum WristHaptics {
         WKInterfaceDevice.current().play(.failure)
     }
 
-    /// Beats stopped: the strongest pattern, twice, so it wakes a sleeper.
+    /// Beats stopped: the strongest pattern, twice, so it gets noticed (never overnight; `LinkAlarm`).
     static func alert(_ problem: LinkProblem) {
         WKInterfaceDevice.current().play(.failure)
         Task {

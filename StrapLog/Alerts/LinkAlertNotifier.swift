@@ -5,8 +5,8 @@ import UserNotifications
 
 /// Posts a notification when the open recording stops getting beats (`LinkAlarm`). With the
 /// iPhone locked, iOS shows it on the Watch, so a slipped strap buzzes the wrist whether or not
-/// the Watch app is running; the Watch app buzzes too while it is on screen. Time-sensitive, so
-/// a Sleep Focus that allows it lets it through. Only this file imports UserNotifications.
+/// the Watch app is running; the Watch app buzzes too while it is on screen. Silent for overnight
+/// recordings. Time-sensitive, so a Sleep Focus that allows it lets it through. Only this file imports UserNotifications.
 @MainActor
 final class LinkAlertNotifier: LiveStatusDisplay {
     private let log = Logger(subsystem: "com.personalscience.straplog", category: "LinkAlert")

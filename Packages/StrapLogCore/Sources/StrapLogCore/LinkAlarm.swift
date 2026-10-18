@@ -1,6 +1,7 @@
 /// Decides when a `LinkProblem` should buzz: once when beats stop flowing during a recording,
 /// not again while they stay stopped (a contact loss that turns into a disconnect buzzes once),
 /// and never for the state a display first sees (a resumed recording still reconnecting).
+/// Overnight recordings never buzz: a dropped strap is not worth waking the sleeper.
 public struct LinkAlarm: Sendable {
     private var recording: Int64?
     private var problem: LinkProblem?
@@ -19,7 +20,8 @@ public struct LinkAlarm: Sendable {
             recording = status.startedAtMs
             problem = now
         }
-        guard recording == status.startedAtMs, problem == nil else { return nil }
+        guard recording == status.startedAtMs, problem == nil,
+              !ActivityPreset.named(status.activity).overnight else { return nil }
         return now
     }
 }
