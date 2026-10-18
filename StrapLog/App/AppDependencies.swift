@@ -27,9 +27,12 @@ struct AppDependencies {
         } else {
             dbURL = URL.applicationSupportDirectory.appending(path: "StrapLog/live.sqlite")
             // The container's Documents is Files → iCloud Drive → StrapLog (NSUbiquitousContainers).
-            exports = ExportFolder(local: local) {
+            exports = ExportFolder(local: local, cloud: {
                 FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appending(path: "Documents")
-            }
+            }, download: { file in
+                // Returns at once; the file imports on a later foreground, once downloaded.
+                try? FileManager.default.startDownloadingUbiquitousItem(at: file)
+            })
         }
         let info = Bundle.main.infoDictionary ?? [:]
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"

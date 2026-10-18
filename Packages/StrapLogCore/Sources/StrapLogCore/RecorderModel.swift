@@ -200,11 +200,28 @@ public final class RecorderModel {
 
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
     /// since the app may not come back to the foreground before it is killed.
+    /// Coming to the foreground also imports snapshots missing from the database.
     public func appPhase(_ phase: AppPhase) async {
         await perform {
             try await session.appPhase(phase)
             guard phase == .background, isRecording else { return }
             lastSnapshot = try await session.snapshot(into: exports.url())
+        }
+        if phase == .foreground { await importSnapshots() }
+    }
+
+    /// Imports snapshots from the export folders that the database lacks (after a reinstall,
+    /// say), then refreshes the list and every folder's index. Evicted iCloud files are
+    /// requested and import on a later call.
+    public func importSnapshots() async {
+        await perform {
+            let folders = await exports.all()
+            let exports = self.exports
+            let imported = try await session.importSnapshots(from: folders) { exports.requestDownload($0) }
+            guard !imported.isEmpty else { return }
+            for directory in folders { try await session.reindex(directory) }
+            try refreshRecordings()
+            try refreshRecentNotes()
         }
     }
 

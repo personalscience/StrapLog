@@ -194,6 +194,13 @@ public actor RecordingSession {
         return try export(rec, id: id, into: directory)
     }
 
+    /// Imports the snapshots in `folders` that are not in the database (`SnapshotImport`).
+    /// Returns the imported recordings' ids.
+    @discardableResult
+    public func importSnapshots(from folders: [URL], requestDownload: @Sendable (URL) -> Void) throws -> [Int64] {
+        try SnapshotImport.run(database, folders: folders, requestDownload: requestDownload)
+    }
+
     /// Rewrites `directory`'s `index.json`, e.g. after a snapshot file was removed from it.
     public func reindex(_ directory: URL) throws {
         try ExportIndex.refresh(database, in: directory, appVersion: appVersion, nowMs: clock.nowMs())
@@ -398,7 +405,7 @@ public actor RecordingSession {
 
     /// Sets `ended_at_ms` and logs the `stop` event in the caller's transaction.
     @discardableResult
-    private static func finish(_ id: Int64, atMs: Int64, note: String?, db: Database) throws -> Recording {
+    static func finish(_ id: Int64, atMs: Int64, note: String?, db: Database) throws -> Recording {
         guard var rec = try Recording.fetchOne(db, key: id) else { throw RecordingSessionError.notRecording }
         rec.endedAtMs = atMs
         try rec.update(db)
@@ -414,7 +421,7 @@ public actor RecordingSession {
     }
 
     /// Latest event or notification time in the recording, or nil if it has neither.
-    private static func lastActivityMs(_ id: Int64, db: Database) throws -> Int64? {
+    static func lastActivityMs(_ id: Int64, db: Database) throws -> Int64? {
         try Int64.fetchOne(db, sql: """
             SELECT MAX(t) FROM (
                 SELECT MAX(at_ms) AS t FROM event WHERE recording_id = ?

@@ -34,6 +34,18 @@ public enum CoordinatedFile {
         try coordinate(target, .forDeleting) { try fm.removeItem(at: $0) }
     }
 
+    /// Copies `source` to `destination` under a coordinated read, so an iCloud file is
+    /// read whole and never mid-update.
+    public static func copy(_ source: URL, to destination: URL) throws {
+        var coordinationError: NSError?
+        var bodyError: Error?
+        NSFileCoordinator().coordinate(readingItemAt: source, options: .withoutChanges,
+                                       error: &coordinationError) { url in
+            do { try FileManager.default.copyItem(at: url, to: destination) } catch { bodyError = error }
+        }
+        if let error = coordinationError ?? bodyError { throw error }
+    }
+
     private static func coordinate(_ target: URL, _ options: NSFileCoordinator.WritingOptions,
                                    _ body: (URL) throws -> Void) throws {
         var coordinationError: NSError?

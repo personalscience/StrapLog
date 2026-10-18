@@ -6,12 +6,16 @@ import Foundation
 public actor ExportFolder {
     private let local: URL
     private let cloud: (@Sendable () -> URL?)?
+    private let download: @Sendable (URL) -> Void
     private var resolvedCloud: URL?
 
     /// `cloud` returns the iCloud folder or nil; omit it for a local-only folder.
-    public init(local: URL, cloud: (@Sendable () -> URL?)? = nil) {
+    /// `download` asks iCloud to fetch an evicted file (`requestDownload`).
+    public init(local: URL, cloud: (@Sendable () -> URL?)? = nil,
+                download: @escaping @Sendable (URL) -> Void = { _ in }) {
         self.local = local
         self.cloud = cloud
+        self.download = download
     }
 
     public func url() -> URL {
@@ -25,5 +29,10 @@ public actor ExportFolder {
     public func all() -> [URL] {
         let current = url()
         return current == local ? [local] : [current, local]
+    }
+
+    /// Asks iCloud to download the evicted file at `url` (its real name); returns at once.
+    nonisolated public func requestDownload(_ url: URL) {
+        download(url)
     }
 }
