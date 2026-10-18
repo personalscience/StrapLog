@@ -200,6 +200,7 @@ Tap the heart at the top left for details:
 - **Since last notification.** Seconds since the strap last reported. Normally under 1.5 s; a climbing number means the link has dropped.
 - **Longest gap.** The longest silence in this recording.
 - **Last export.** Where the latest file was written.
+- **Use a Different Strap.** Forgets your strap and connects to the next one StrapLog finds. Take the old strap off first. Not available while recording.
 
 ## Your recordings
 
@@ -397,7 +398,7 @@ Don't compare RMSSD from breathing sessions with your normal resting baseline: s
 Make sure you are wearing the strap with wet electrodes (it is off until it touches skin), Bluetooth is on, and StrapLog has Bluetooth permission (**Settings → StrapLog**). Check the strap's battery.
 
 **I have a new strap, or StrapLog connects to the wrong one.**
-StrapLog remembers the first strap it connected to. To pair a different one, delete and reinstall StrapLog. Your recordings come back from iCloud Drive; if iCloud Drive is off, copy the StrapLog folder from Files first (see *Exports and your data*).
+StrapLog remembers the first strap it connected to. To switch, stop any recording, take the old strap off, put the new one on, then tap the heart and **Use a Different Strap**.
 
 **Heart rate shows, but Beats doesn't grow and α1 stays at "--".**
 The strap is connected but not sending beats, almost always because of poor contact. Wet the electrodes and tighten the strap.

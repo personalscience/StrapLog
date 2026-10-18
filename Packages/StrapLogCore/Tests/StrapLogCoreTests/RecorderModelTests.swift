@@ -143,7 +143,7 @@ struct RecorderModelTests {
 
     @Test("motion streams only while recording: on for a resumed or started recording, off at Stop")
     func motionSwitch() async throws {
-        let idle = MotionSwitchSpy(FakeHeartSource(clock: clock, script: []))
+        let idle = HeartSourceSpy(FakeHeartSource(clock: clock, script: []))
         await model.consume(idle)
         #expect(idle.calls == [false])
 
@@ -155,7 +155,7 @@ struct RecorderModelTests {
         await model.start(name: "resumed")
         let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock)
         await relaunched.launch()
-        let source = MotionSwitchSpy(FakeHeartSource(clock: clock, script: []))
+        let source = HeartSourceSpy(FakeHeartSource(clock: clock, script: []))
         await relaunched.consume(source)
         #expect(source.calls == [true])
     }

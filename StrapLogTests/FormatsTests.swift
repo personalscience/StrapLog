@@ -129,4 +129,12 @@ struct FormatsTests {
         #expect(Formats.exportLocation(cloud) == "Files → iCloud Drive → StrapLog → x.sqlite")
         #expect(Formats.exportLocation(local) == "Files → On My iPhone → StrapLog → StrapLog/x.sqlite")
     }
+
+    @Test("the strap hint shows only while unlinked; switching is refused while recording")
+    func strapHints() {
+        #expect(Formats.strapHint(.connected(deviceId: "A")) == nil)
+        #expect(Formats.strapHint(.searching)?.contains("wet electrodes") == true)
+        #expect(Formats.strapHint(.bluetoothOff)?.contains("Bluetooth") == true)
+        #expect(Formats.switchStrapFooter(recording: true) == "Stop recording to switch straps.")
+    }
 }

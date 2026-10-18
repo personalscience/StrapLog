@@ -148,6 +148,22 @@ enum Formats {
     }
 
     /// The H10's printed ID while connected, or `--`.
+    /// Under the strap details: what to check while no strap is linked.
+    static func strapHint(_ status: LinkStatus) -> String? {
+        switch status {
+        case .connected: nil
+        case .bluetoothOff: "Turn Bluetooth on in Control Center."
+        case .searching, .disconnected: "Wear the strap with wet electrodes: it is off until it touches skin."
+        }
+    }
+
+    /// Under the switch-strap button.
+    static func switchStrapFooter(recording: Bool) -> String {
+        recording
+            ? "Stop recording to switch straps."
+            : "StrapLog forgets this strap and connects to the next one it finds. Take the old strap off first."
+    }
+
     static func deviceId(_ status: LinkStatus) -> String {
         if case .connected(let id) = status { id } else { "--" }
     }

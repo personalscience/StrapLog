@@ -19,7 +19,7 @@ Read before touching `StrapLog/Polar/`. Verified while planning on 2026-10-14.
 - `deviceHrObserver` is marked deprecated ("use startHrStreaming"), but `PolarBleApiImpl.startHrObserver` still runs unconditionally whenever the HR service (0x180D) is discovered, and only it carries `rrs` in 1/1024 s. `PolarHeartSource` uses it and accepts the one deprecation warning. If a future SDK stops calling it, fall back to `startHrStreaming` + `round(ms * 1.024)` or the raw CoreBluetooth client.
 - `PolarBleApi` is not class-bound: setting observers needs a `var` copy of the existential (the implementation is a class, so it mutates the same instance).
 - Firmware is not in `deviceConnected`; it arrives later through DIS. P3 recorded `firmware = NULL`; since U1 (2026-10-15) `disInformationReceived(uuid:)` emits `.firmware` (0x2A26) and `.serialNumber` (0x2A25), and the session fills `recording.firmware` if still NULL. The SDK also calls `disInformationReceivedWithKeysAsStrings` for the same values; it is ignored.
-- Device selection: the remembered id lives in `UserDefaults["polarDeviceId"]`; first run scans `searchForDevice(withNameContaining: "H10")` and takes the first hit. Delete the app (or that key) to pair a different strap.
+- Device selection: the remembered id lives in `UserDefaults["polarDeviceId"]`; first run scans `searchForDevice(withNameContaining: "H10")` and takes the first hit. "Forget this strap" (DeviceSheet → `RecorderModel.forgetStrap` → `forgetDevice`) clears the key, disconnects, and searches again; it is refused while recording. A failed search retries every 5 s.
 - `restoreIdentifier` is deliberately not set yet; P4 adds it with the restoration path.
 
 ## Learned in P4 (2026-10-15)

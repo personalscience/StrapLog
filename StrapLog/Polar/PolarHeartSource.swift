@@ -30,6 +30,10 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     private let motionWanted = Mutex(false)
     private let motionTask = Mutex<Task<Void, Never>?>(nil)
     private let heartFilter = Mutex(DuplicateHeartFilter())
+    /// The strap `forgetDevice` dropped: its disconnect is expected, so it is not reported.
+    private let forgotten = Mutex<String?>(nil)
+    /// How long a failed search waits before trying again.
+    private static let searchRetry = Duration.seconds(5)
 
     init(clock: any WallClock = SystemClock(), defaults: UserDefaults = .standard) {
         self.clock = clock
@@ -72,9 +76,20 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
                 }
             } catch {
                 self.emit(.disconnected(reason: "search failed: \(error)"))
+                try? await Task.sleep(for: Self.searchRetry)
+                if !Task.isCancelled { self.connect() }
             }
         }
         searchTask.withLock { $0?.cancel(); $0 = task }
+    }
+
+    func forgetDevice() {
+        if let id = defaults.string(forKey: Self.deviceIdKey) {
+            defaults.removeObject(forKey: Self.deviceIdKey)
+            forgotten.withLock { $0 = id }
+            try? api.disconnectFromDevice(id)
+        }
+        connect()
     }
 
     /// Wanted state survives reconnects: the stream (re)starts whenever streaming becomes ready.
@@ -141,6 +156,11 @@ extension PolarHeartSource: PolarBleApiObserver {
     func deviceDisconnected(_ identifier: PolarDeviceInfo, info: PolarBleDisconnectInfo) {
         streamingDevice.withLock { $0 = nil }
         motionTask.withLock { $0?.cancel(); $0 = nil }
+        let expected = forgotten.withLock { id in
+            defer { if id == identifier.deviceId { id = nil } }
+            return id == identifier.deviceId
+        }
+        guard !expected else { return }
         emit(.disconnected(reason: "\(info.reason)"))
     }
 }

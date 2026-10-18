@@ -12,7 +12,7 @@ struct DeviceSheet: View {
             TimelineView(.periodic(from: .now, by: 1)) { context in
                 let nowMs = Int64(context.date.timeIntervalSince1970 * 1000)
                 List {
-                    Section("Strap") {
+                    Section {
                         LabeledContent("Link", value: Formats.link(model.link))
                         LabeledContent("Device ID", value: Formats.deviceId(model.link))
                             .accessibilityIdentifier("deviceId")
@@ -20,6 +20,17 @@ struct DeviceSheet: View {
                         LabeledContent("Serial", value: Formats.text(model.serialNumber))
                         LabeledContent("Battery", value: Formats.battery(model.battery))
                         LabeledContent("Contact", value: model.contact.map(Formats.contact) ?? "--")
+                    } header: {
+                        Text("Strap")
+                    } footer: {
+                        if let hint = Formats.strapHint(model.link) { Text(hint) }
+                    }
+                    Section {
+                        Button("Use a Different Strap", role: .destructive) { model.forgetStrap() }
+                            .disabled(model.isRecording)
+                            .accessibilityIdentifier("forgetStrap")
+                    } footer: {
+                        Text(Formats.switchStrapFooter(recording: model.isRecording))
                     }
                     if model.isRecording {
                         Section("Recording") {

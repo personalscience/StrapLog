@@ -151,6 +151,19 @@ public final class RecorderModel {
         await finish(because: nil)
     }
 
+    /// Forgets the current strap so the next one found becomes the user's strap. Refused while
+    /// recording: dropping the link mid-recording would cut the recording short.
+    public func forgetStrap() {
+        guard !isRecording else { return }
+        source?.forgetDevice()
+        link = .searching
+        heartRate = nil
+        contact = nil
+        battery = nil
+        firmware = nil
+        serialNumber = nil
+    }
+
     /// The active recording's plan, nil unless it is overnight.
     public var overnightPlan: OvernightPlan? {
         guard let rec = activeRecording, activePreset.overnight else { return nil }
