@@ -27,6 +27,12 @@ xcodegen generate
 xcodebuild -scheme StrapLog -configuration Release -destination 'generic/platform=iOS' \
   -derivedDataPath build/dd-release -archivePath "$archive" -allowProvisioningUpdates archive
 
+# ASC rejects Apple product names in App Intent metadata (ITMS-90626, build 56: "iPhone").
+if find "$archive" -path '*Metadata.appintents/extract.actionsdata' -exec grep -liE 'iphone|ipad|icloud|apple watch|siri' {} + ; then
+  echo "release.sh: Apple product name in App Intent metadata (files above); ASC rejects it (ITMS-90626)" >&2
+  exit 1
+fi
+
 cat > "$out/ExportOptions.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

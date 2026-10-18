@@ -4,7 +4,7 @@ import StrapLogCore
 /// Stops and exports the open recording, as the Stop button does.
 struct StopRecordingIntent: AppIntent {
     static let title: LocalizedStringResource = "Stop Recording"
-    static let description = IntentDescription("Stops the StrapLog recording and exports it to iCloud Drive.")
+    static let description = IntentDescription("Stops the StrapLog recording and exports it to your StrapLog folder.")
 
     @Dependency private var launcher: Launcher
 

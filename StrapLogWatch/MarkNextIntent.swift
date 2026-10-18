@@ -5,7 +5,7 @@ import StrapLogCore
 /// Shortcut → Next Marker) or Siri. The phone picks the label (`RemoteCommand.markNext`).
 struct MarkNextIntent: AppIntent {
     static let title: LocalizedStringResource = "Next Marker"
-    static let description = IntentDescription("Adds the next marker to the StrapLog recording on the iPhone.")
+    static let description = IntentDescription("Adds the next marker to the current StrapLog recording.")
     static let openAppWhenRun = false
 
     @Dependency private var phone: PhoneLink
