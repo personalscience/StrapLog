@@ -78,7 +78,7 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
-    func testSleepRecordsOnADarkScreen() throws {
+    func testSleepRecordsWithPlanAndChart() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
         app.launch()
@@ -89,10 +89,12 @@ final class ReplaySmokeTests: XCTestCase {
         let plan = app.staticTexts["overnightPlan"]
         XCTAssertTrue(plan.waitForExistence(timeout: 10))
         XCTAssertTrue(plan.label.lowercased().contains("stops"))
-        XCTAssertFalse(app.segmentedControls["chartMetric"].exists, "no chart overnight")
+        XCTAssertTrue(app.segmentedControls["chartMetric"].exists, "sleep shows the live chart")
         app.buttons["marker-lights_out"].tap()
         XCTAssertTrue(app.staticTexts["lastMarker"].waitForLabel(containing: "lights_out", timeout: 5))
-        app.buttons["stopButton"].tap()
+        let stop = app.buttons["stopButton"]
+        XCTAssertTrue(app.scroll(to: stop))
+        stop.tap()
         let confirm = app.buttons["confirmStop"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5))
         confirm.tap()

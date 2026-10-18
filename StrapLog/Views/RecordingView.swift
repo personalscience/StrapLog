@@ -2,7 +2,7 @@ import StrapLogCore
 import SwiftUI
 
 /// Live screen while recording: HR and α1 up top, the trend chart, markers in the thumb zone,
-/// then pacer and Stop. In landscape the numbers sit left of the chart. Diagnostics live in the
+/// then pacer and Stop. Overnight presets add a line saying how the night will end. In landscape the numbers sit left of the chart. Diagnostics live in the
 /// device sheet behind the toolbar heart.
 struct RecordingView: View {
     let model: RecorderModel
@@ -15,6 +15,12 @@ struct RecordingView: View {
             let nowMs = Int64(context.date.timeIntervalSince1970 * 1000)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
+                    if let plan = model.overnightPlan {
+                        Text(Formats.overnightPlan(plan))
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("overnightPlan")
+                    }
                     if verticalSizeClass == .compact {
                         // Landscape: numbers left, chart right, markers and controls along the bottom.
                         HStack(alignment: .top, spacing: 16) {

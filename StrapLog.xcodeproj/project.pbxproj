@@ -65,6 +65,7 @@
 		90111E755328A951120E8279 /* LinkAlertNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038379790F496348954FEBCE /* LinkAlertNotifier.swift */; };
 		9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795ABEAC013BD867F90236B6 /* MetricsHero.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
+		9B49ECE744682F70866C7FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F900B418F2433FFA87A91B7 /* Assets.xcassets */; };
 		9D8575B0DC3570B57863BEF4 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2581715E43F6B3E193FE3D35 /* Alpha1MinutesBar.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
 		A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */; };
@@ -81,7 +82,6 @@
 		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
 		C50A5BD842688B695A9456FC /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */; };
 		C6660A5D11B6F4B4E9E0AA07 /* GuideParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */; };
-		CD4E98F08B4ADE5EF5C5E694 /* OvernightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */; };
 		CD9A10BCDE886C58D252C497 /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC07072223907ACD363FA3D1 /* Formats.swift */; };
 		D4C6537612F0F3B9918CF861 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 76CC64949C4120565D9DFA8B /* StrapLogCore */; };
 		D554AF1A13FF72226C9AF200 /* RecordingTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502E73BD38ED8D6288A5981A /* RecordingTitle.swift */; };
@@ -181,9 +181,9 @@
 		038379790F496348954FEBCE /* LinkAlertNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAlertNotifier.swift; sourceTree = "<group>"; };
 		050424C851AC49404C44C6E2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvernightView.swift; sourceTree = "<group>"; };
 		0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingLiveActivity.swift; sourceTree = "<group>"; };
 		0D5B311291D9A08A22F87556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0F900B418F2433FFA87A91B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParserTests.swift; sourceTree = "<group>"; };
 		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
 		1A98BFF647C3FB26BE9F5A90 /* StrapLogWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLogWatch.entitlements; sourceTree = "<group>"; };
@@ -407,7 +407,6 @@
 				B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */,
 				3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */,
 				795ABEAC013BD867F90236B6 /* MetricsHero.swift */,
-				0A65A5BB3DF745914F6ADEB4 /* OvernightView.swift */,
 				8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */,
 				2A701741B52661050CFADDEF /* RecordingDetailView.swift */,
 				4053711F9AE1E85F78BE1168 /* RecordingRow.swift */,
@@ -474,6 +473,14 @@
 			path = fixtures;
 			sourceTree = "<group>";
 		};
+		8B4694EEDF7EEBBC0E88AB05 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0F900B418F2433FFA87A91B7 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		9972F8520BFBF6591DBD2F18 /* LiveActivity */ = {
 			isa = PBXGroup;
 			children = (
@@ -523,6 +530,7 @@
 				EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */,
 				AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */,
 				772CF86972B76494B36BE609 /* WristHaptics.swift */,
+				8B4694EEDF7EEBBC0E88AB05 /* Resources */,
 			);
 			path = StrapLogWatch;
 			sourceTree = "<group>";
@@ -640,6 +648,7 @@
 			buildConfigurationList = F376F9D9C6E1BC2BCEC62381 /* Build configuration list for PBXNativeTarget "StrapLogWatch" */;
 			buildPhases = (
 				D9EA35509D82D7F6AB757DC7 /* Sources */,
+				B89929FEC531D888C5DC7B4E /* Resources */,
 				807CBBECEE15568B9D5CBAE6 /* Frameworks */,
 				5EFC77D7BAA53F1C934A14C3 /* Embed Foundation Extensions */,
 				08BFBA345A9EFD4BA36DBEBB /* Stamp build */,
@@ -768,6 +777,14 @@
 				8F87609FC672489A24D76EF1 /* Assets.xcassets in Resources */,
 				0FD5003A51D92056A70D53FE /* MetricsGuide.md in Resources */,
 				B9B1249E21A08D152131C631 /* resting.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B89929FEC531D888C5DC7B4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B49ECE744682F70866C7FA5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,7 +934,6 @@
 				5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */,
 				4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */,
 				9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */,
-				CD4E98F08B4ADE5EF5C5E694 /* OvernightView.swift in Sources */,
 				89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */,
 				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
 				1FFE0F2EFCF98386785F3E58 /* RecordingDetailView.swift in Sources */,

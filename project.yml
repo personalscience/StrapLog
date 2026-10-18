@@ -132,6 +132,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.straplog.watchkitapp
+        # Same artwork as the phone icon; tools/render_icon.sh writes both.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_USER_SCRIPT_SANDBOXING: NO
     # A companion Watch app must carry the phone app's version and build.
     postBuildScripts:
