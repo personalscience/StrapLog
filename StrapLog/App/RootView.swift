@@ -31,7 +31,7 @@ struct RootView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingHelp) { HelpView(blocks: Guide.blocks) }
+        .sheet(isPresented: $showingHelp) { HelpView(book: Guide.book) }
         .sheet(isPresented: $showingDevice) {
             DeviceSheet(model: model).presentationDetents([.medium, .large])
         }

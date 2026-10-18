@@ -197,7 +197,10 @@ final class ReplaySmokeTests: XCTestCase {
         let help = app.buttons["helpButton"]
         XCTAssertTrue(help.waitForExistence(timeout: 10))
         help.tap()
-        XCTAssertTrue(app.staticTexts["Understanding Your Numbers"].waitForExistence(timeout: 5))
+        let chapter = app.buttons["guideChapter-Getting started"]
+        XCTAssertTrue(chapter.waitForExistence(timeout: 5))
+        chapter.tap()
+        XCTAssertTrue(app.staticTexts["Put the strap on"].waitForExistence(timeout: 5))
         app.buttons["helpDone"].tap()
         XCTAssertTrue(app.buttons["startButton"].waitForExistence(timeout: 5))
     }

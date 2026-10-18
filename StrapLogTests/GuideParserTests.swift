@@ -32,13 +32,16 @@ struct GuideParserTests {
         #expect(GuideParser.parse(md) == [.table(header: ["A", "B"], rows: [["1", "**2**"], ["3", "4"]])])
     }
 
-    @Test("the bundled guide loads and has every block kind it relies on")
+    @Test("the bundled guide loads, has every block kind it relies on, and splits into chapters")
     func bundledGuide() {
         let blocks = Guide.load(from: .main)   // unit tests are hosted in the app
-        #expect(blocks.first == .heading(level: 1, text: "Understanding Your Numbers"))
+        #expect(blocks.first == .heading(level: 1, text: "StrapLog Guide"))
         #expect(blocks.contains { if case .table = $0 { true } else { false } })
         #expect(blocks.contains { if case .numbered = $0 { true } else { false } })
-        #expect(blocks.contains(.heading(level: 3, text: "DFA α1 (alpha-1)")))
+        let book = GuideBook(blocks)
+        #expect(book.chapters.first?.title == "Getting started")
+        #expect(book.chapters.contains { $0.title == "DFA α1 and training zones" })
+        #expect(book.chapters.last?.title == "Troubleshooting")
     }
 }
 

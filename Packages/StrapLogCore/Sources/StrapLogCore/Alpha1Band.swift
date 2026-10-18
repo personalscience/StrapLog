@@ -1,5 +1,5 @@
 /// Intensity band for a DFA α1 value, cut at 1.0, 0.75 (≈ VT1) and 0.50 (≈ VT2).
-/// The names match the colour-band table in `MetricsGuide.md`.
+/// The names match the colour-band table in `StrapLog/Resources/Guide.md`.
 public enum Alpha1Band: Sendable, Equatable, CaseIterable {
     /// α1 ≥ 1.0
     case rest

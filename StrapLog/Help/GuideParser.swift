@@ -1,6 +1,6 @@
 import Foundation
 
-/// Splits the guide's Markdown into blocks. Supports exactly what `MetricsGuide.md` uses:
+/// Splits the guide's Markdown into blocks. Supports exactly what `Guide.md` uses:
 /// ATX headings, paragraphs, `-` and `1.` lists, pipe tables and `---` rules.
 enum GuideParser {
     static func parse(_ markdown: String) -> [GuideBlock] {
