@@ -107,10 +107,12 @@
 		DAEE078970FAB7C65D6AC724 /* WatchStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */; };
 		DD8783E42E52D1F91C193199 /* DeviceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EB97DA2322B6EDF91B176A /* DeviceSheet.swift */; };
 		DDC793BDDC9831970B0DC6C1 /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7908B02825ED3D224A620B6B /* Acknowledgement.swift */; };
+		DE7D5B8C871E28194C2EC57D /* DimmedGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD93F1102F417D6BD1A2BFEA /* DimmedGlyph.swift */; };
 		E17C73D29E8536D0E525CDD9 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		E2581E0564DDF648D3F6A606 /* GuideChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2A712470E51A946333280 /* GuideChapter.swift */; };
 		E5395F6E732BA51C1B7C7D69 /* LiveControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71B999AA2EA9301B216B524 /* LiveControls.swift */; };
 		E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
+		E61CCC4AEC06D9871DD16A87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA2003C809D989DFEF440A25 /* Assets.xcassets */; };
 		EBDC5BB449B7ADD183C277C1 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		EDF8E341B85485AEE040F4D3 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 752221A3371BB6F53C1AA52D /* StrapLogCore */; };
 		EF03BFA9167258C364CD317E /* StrapLogWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 30C2069D2EA0F12DCCEE55C5 /* StrapLogWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -291,6 +293,7 @@
 		D27C9B67927661DECBD978D3 /* TrendChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChart.swift; sourceTree = "<group>"; };
 		D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlock.swift; sourceTree = "<group>"; };
 		D84A709F33EBB43E9292A1F8 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
+		DA2003C809D989DFEF440A25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB90CBD1036662A389D1322E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DF077986A9081AE0F646C2F1 /* StrapScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapScanner.swift; sourceTree = "<group>"; };
 		E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeartView.swift; sourceTree = "<group>"; };
@@ -308,6 +311,7 @@
 		FCA4CA21E955F6812830CF36 /* GuideBookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBookTests.swift; sourceTree = "<group>"; };
 		FCE40FBE212BB7FB44DDF8E9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FD2D5442358A337BFA7EBBC6 /* HRVKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HRVKit; path = Packages/HRVKit; sourceTree = SOURCE_ROOT; };
+		FD93F1102F417D6BD1A2BFEA /* DimmedGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimmedGlyph.swift; sourceTree = "<group>"; };
 		FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alpha1Tile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -563,9 +567,11 @@
 		B1688B78DCC374F7771A40C6 /* StrapLogWatchWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				DA2003C809D989DFEF440A25 /* Assets.xcassets */,
 				C4967ABE8CB6D2377481FFCB /* ComplicationEntry.swift */,
 				5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */,
 				F613D88B2F297250AF939BC8 /* ComplicationView.swift */,
+				FD93F1102F417D6BD1A2BFEA /* DimmedGlyph.swift */,
 				023947D286FF99DBB5CB6FD2 /* Info.plist */,
 				FCE40FBE212BB7FB44DDF8E9 /* PrivacyInfo.xcprivacy */,
 				71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */,
@@ -876,6 +882,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61CCC4AEC06D9871DD16A87 /* Assets.xcassets in Resources */,
 				0F5987B8B1DFE6A1A6D5675D /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -985,6 +992,7 @@
 				0D288779196B901901F86299 /* ComplicationEntry.swift in Sources */,
 				C50A5BD842688B695A9456FC /* ComplicationProvider.swift in Sources */,
 				314948EAB56AACF748B12974 /* ComplicationView.swift in Sources */,
+				DE7D5B8C871E28194C2EC57D /* DimmedGlyph.swift in Sources */,
 				A94871E53FB0F3F01CA7AF68 /* RecordingComplication.swift in Sources */,
 				6C43E074DA6058621E974A38 /* StrapLogWatchWidgetsBundle.swift in Sources */,
 			);

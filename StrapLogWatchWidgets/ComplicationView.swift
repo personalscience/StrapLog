@@ -4,7 +4,7 @@ import WidgetKit
 
 /// Recording: a heart with the last HR while it is recent, the elapsed time, and the link
 /// warning if any, in orange. No word from the phone for long: when it last heard, dimmed.
-/// Idle: the app's waveform, dimmed.
+/// Idle: the app's strap mark, dimmed.
 struct ComplicationView: View {
     let face: ComplicationFace
     let problem: LinkProblem?
@@ -14,10 +14,10 @@ struct ComplicationView: View {
 
     var body: some View {
         switch face {
-        case .idle: dimmed(symbol: "waveform.path.ecg", label: "Idle", line: Text("Not recording"))
+        case .idle: dimmed(.strap, label: "Idle", line: Text("Not recording"))
         case let .recording(status, heartRate): recording(status, heartRate: heartRate, warning: problem != nil)
         case let .noWord(since):
-            dimmed(symbol: "waveform.badge.exclamationmark", label: "No word",
+            dimmed(.symbol("waveform.badge.exclamationmark"), label: "No word",
                    line: Text("No word since ") + Text(since, style: .time))
         }
     }
@@ -63,25 +63,39 @@ struct ComplicationView: View {
         }
     }
 
-    /// `symbol` dimmed, for idle and for no word: `label` in the corner, `line` under the name.
+    /// `glyph` dimmed, for idle and for no word: `label` in the corner, `line` under the name.
     @ViewBuilder
-    private func dimmed(symbol: String, label: String, line: Text) -> some View {
+    private func dimmed(_ glyph: DimmedGlyph, label: String, line: Text) -> some View {
         switch family {
         case .accessoryCircular:
-            Image(systemName: symbol).font(.title2).foregroundStyle(.secondary)
+            image(glyph, width: 40).foregroundStyle(.secondary)
         case .accessoryCorner:
-            Image(systemName: symbol)
-                .font(.title2)
+            image(glyph, width: 32)
                 .foregroundStyle(.secondary)
                 .widgetLabel(label)
         case .accessoryRectangular:
             VStack(alignment: .leading) {
-                Label("StrapLog", systemImage: symbol)
+                Label { Text("StrapLog") } icon: { image(glyph, width: 28) }
                 line.foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
             Text("StrapLog · ") + line
+        }
+    }
+
+    /// The strap mark is a wide vector, so it is sized by width; symbols size by font as before.
+    @ViewBuilder
+    private func image(_ glyph: DimmedGlyph, width: CGFloat) -> some View {
+        switch glyph {
+        case .strap:
+            Image("StrapMark").resizable().scaledToFit().frame(width: width)
+        case .symbol(let name):
+            if family == .accessoryRectangular {
+                Image(systemName: name)
+            } else {
+                Image(systemName: name).font(.title2)
+            }
         }
     }
 }
