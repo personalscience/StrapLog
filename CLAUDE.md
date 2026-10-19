@@ -41,7 +41,8 @@ tools/check_listing.py                              # docs/APPSTORE.md lengths +
 
 ## Vault
 
-- Hub note: `~/Documents/Notes/Sprague2026/Health2026/Fitness/H10 R-R Capture After iOS 27.md`
+- Hub note: `~/Documents/Notes/Projects/Personal Science/StrapLog/StrapLog.md`
+- Background: `~/Documents/Notes/Sprague2026/Health2026/Fitness/H10 R-R Capture After iOS 27.md`
 
 ## Learned
 
