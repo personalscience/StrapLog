@@ -13,9 +13,9 @@ struct ActivityPresetTests {
         #expect(ActivityPreset.named("ruck-from-a-newer-build") == .other)
     }
 
-    @Test("sleep has no pacer; other keeps the a b c end bar")
+    @Test("sleep is overnight; other keeps the a b c end bar")
     func sleepFirst() {
-        #expect(!ActivityPreset.sleep.pacer)
+        #expect(ActivityPreset.sleep.overnight && !ActivityPreset.other.overnight)
         #expect(ActivityPreset.other.markers == ["a", "b", "c", "end"])
     }
 

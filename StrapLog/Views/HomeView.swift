@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// Idle screen: live HR to check the strap, activity picker (with a wake time for overnight
+/// Idle screen: live HR to check the strap, the pacer (when its panel is shown), activity picker (with a wake time for overnight
 /// presets), optional name, Start, the summary of the recording that just stopped, and past
 /// recordings (tap for detail; swipe to delete, after a confirmation).
 struct HomeView: View {
@@ -18,6 +18,13 @@ struct HomeView: View {
                 HeartRateTile(heartRate: model.heartRate, contact: model.contact)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
+            }
+            if model.pacerPanelShown {
+                Section {
+                    PacerSection(model: model)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                }
             }
             Section {
                 Picker("Activity", selection: $activity) {

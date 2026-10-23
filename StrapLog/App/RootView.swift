@@ -26,6 +26,9 @@ struct RootView: View {
                     RecordingTitle(recording: model.activeRecording)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    PacerToggle(model: model)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button("Guide", systemImage: "questionmark.circle") { showingHelp = true }
                         .accessibilityIdentifier("helpButton")
                 }

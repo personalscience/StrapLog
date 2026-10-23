@@ -1,10 +1,11 @@
 import StrapLogCore
 import SwiftUI
 
-/// Pick a rate and start the pacer, or follow it and stop it.
+/// Pick a rate and start the pacer, or follow it and stop it. Shown on Home and Recording
+/// while `RecorderModel.pacerPanelShown`; the rate is remembered (`PacerSettings`).
 struct PacerSection: View {
     let model: RecorderModel
-    @State private var rate = BreathingPacer.defaultRate
+    @AppStorage(PacerSettings.rateKey) private var savedRate = BreathingPacer.defaultRate
 
     var body: some View {
         VStack(spacing: 12) {
@@ -14,15 +15,19 @@ struct PacerSection: View {
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("pacerStop")
             } else {
-                Stepper(value: $rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
-                    Text(Formats.rate(rate)).monospacedDigit()
+                Stepper(value: rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
+                    Text(Formats.rate(rate.wrappedValue)).monospacedDigit()
                 }
-                Button("Start pacer") { Task { await model.startPacer(breathsPerMinute: rate) } }
+                Button("Start pacer") { Task { await model.startPacer(breathsPerMinute: rate.wrappedValue) } }
                     .buttonStyle(.bordered)
                     .accessibilityIdentifier("pacerStart")
             }
         }
         .padding(12)
         .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private var rate: Binding<Double> {
+        Binding(get: { PacerSettings.rate(savedRate) }, set: { savedRate = $0 })
     }
 }

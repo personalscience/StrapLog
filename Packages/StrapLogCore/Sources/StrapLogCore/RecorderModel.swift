@@ -30,8 +30,11 @@ public final class RecorderModel {
     public var markerCount: Int { markers.count }
     /// HRV windows and RR history for the active recording.
     public private(set) var live = LiveMetrics()
-    /// The running breathing pacer, or nil.
+    /// The running breathing pacer, or nil. It runs with or without a recording; only a
+    /// recording's `pacer_start`/`pacer_stop` events are saved.
     public private(set) var pacer: BreathingPacer?
+    /// Whether Home and Recording show the pacer panel (`showPacerPanel`).
+    public private(set) var pacerPanelShown = false
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     /// The recording that just stopped, for Home's summary card; cleared by the next Start.
@@ -62,7 +65,7 @@ public final class RecorderModel {
         guard let lastBeatAtMs, let lastHeardAtMs else { return false }
         return lastHeardAtMs - lastBeatAtMs >= Self.beatGapAfterMs
     }
-    /// The active recording's preset: its marker bar and pacer. `other` when idle.
+    /// The active recording's preset: its marker bar. `other` when idle.
     public var activePreset: ActivityPreset { markerPresets.preset(activeRecording?.activity ?? ActivityPreset.other.id) }
 
     private let session: RecordingSession
@@ -142,6 +145,7 @@ public final class RecorderModel {
             source?.setMotionStreaming(true)
             lastFinished = nil
             try loadActive(id)
+            if let pacer { try await session.logPacerStart(pacer) }
             try refreshRecordings()
         }
         publishStatus()
@@ -200,15 +204,24 @@ public final class RecorderModel {
     /// Starts the pacer at `breathsPerMinute` (within `BreathingPacer.rates`), replacing a running one.
     public func startPacer(breathsPerMinute: Double) async {
         await stopPacer()
-        await perform {
-            pacer = try await session.startPacer(breathsPerMinute: breathsPerMinute)
-        }
+        let started = BreathingPacer(breathsPerMinute: breathsPerMinute, startedAtMs: clock.nowMs())
+        pacer = started
+        pacerPanelShown = true
+        guard isRecording else { return }
+        await perform { try await session.logPacerStart(started) }
     }
 
     public func stopPacer() async {
         guard pacer != nil else { return }
         pacer = nil
-        await perform { try await session.stopPacer() }
+        guard isRecording else { return }
+        await perform { try await session.logPacerStop() }
+    }
+
+    /// Shows or hides the pacer panel; hiding it stops a running pacer.
+    public func showPacerPanel(_ shown: Bool) async {
+        pacerPanelShown = shown
+        if !shown { await stopPacer() }
     }
 
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
@@ -354,8 +367,10 @@ public final class RecorderModel {
     // MARK: Private
 
     /// Stops and exports the recording, by the user (`reason` nil) or by itself.
+    /// A running pacer keeps running (the user may still be breathing along); the recording
+    /// just logs its `pacer_stop`.
     private func finish(because reason: AutoStop?) async {
-        await stopPacer()
+        if pacer != nil { await perform { try await session.logPacerStop() } }
         await perform {
             let directory = await exports.url()
             let rec = try await session.stop(because: reason, snapshotInto: directory)
@@ -426,7 +441,6 @@ public final class RecorderModel {
         beatCount = beats.count
         live = LiveMetrics()
         for beat in beats { live.add(beat) }
-        pacer = nil
         lastHeardAtMs = lastHeard
         lastBeatAtMs = nil
         self.markers = markers

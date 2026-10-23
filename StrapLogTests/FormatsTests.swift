@@ -36,6 +36,12 @@ struct FormatsTests {
         #expect(Formats.duration(s) == "10:00")
     }
 
+    @Test("overnight line: lowest HR and whole minutes recorded")
+    func overnightLow() {
+        #expect(Formats.overnightLow(lowestHR: 46.4, elapsedMs: 18_779_000) == "Low 46 · 5 h 12 min")
+        #expect(Formats.overnightLow(lowestHR: nil, elapsedMs: 179_999) == "Low -- · 2 min")
+    }
+
     @Test("summary strings: duration or open, clock in the recording's zone, minutes as h/min")
     func summaryStrings() {
         #expect(Formats.duration(ms: 28_812_000) == "8:00:12")

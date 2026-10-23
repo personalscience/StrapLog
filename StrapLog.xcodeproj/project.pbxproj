@@ -38,6 +38,7 @@
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
+		43039C4E08B8CD15DCA18585 /* PacerToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553305D924FCB7A86E68DDF7 /* PacerToggle.swift */; };
 		4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF077986A9081AE0F646C2F1 /* StrapScanner.swift */; };
 		488E950BB6061D01D1A5E1EF /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */; };
 		4C19ADCC032CC3A148F95A45 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8728059CDA30AD297BCB2BD7 /* RecordingView.swift */; };
@@ -245,6 +246,7 @@
 		52224F2DD8A002A51A709411 /* GuideBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlockView.swift; sourceTree = "<group>"; };
 		5242B3303D3647F75E01A20B /* WatchPendingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPendingView.swift; sourceTree = "<group>"; };
 		54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplaySmokeTests.swift; sourceTree = "<group>"; };
+		553305D924FCB7A86E68DDF7 /* PacerToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerToggle.swift; sourceTree = "<group>"; };
 		58D54421499ED5501162C196 /* AddMarkerIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMarkerIntent.swift; sourceTree = "<group>"; };
 		59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Alpha1Band+Color.swift"; sourceTree = "<group>"; };
 		598364997011C1C2FF07B2C7 /* GuideParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParser.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				3E76528F20DB2D373DAA13F4 /* MarkerPresetEditor.swift */,
 				795ABEAC013BD867F90236B6 /* MetricsHero.swift */,
 				8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */,
+				553305D924FCB7A86E68DDF7 /* PacerToggle.swift */,
 				2A701741B52661050CFADDEF /* RecordingDetailView.swift */,
 				4053711F9AE1E85F78BE1168 /* RecordingRow.swift */,
 				502E73BD38ED8D6288A5981A /* RecordingTitle.swift */,
@@ -1053,6 +1056,7 @@
 				4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */,
 				9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */,
 				89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */,
+				43039C4E08B8CD15DCA18585 /* PacerToggle.swift in Sources */,
 				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
 				1FFE0F2EFCF98386785F3E58 /* RecordingDetailView.swift in Sources */,
 				AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */,

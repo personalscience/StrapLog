@@ -99,7 +99,7 @@ struct SnapshotTests {
         #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'app_version'") == "dev")
         #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'exported_at_ms'") == String(rig.clock.nowMs()))
         #expect(try sqlite3(url, "SELECT value FROM meta WHERE key = 'preset'")
-                == #"{"id":"sleep","markers":["lights_out","awake","up"],"overnight":true,"pacer":false,"title":"Sleep"}"#)
+                == #"{"id":"sleep","markers":["lights_out","awake","up"],"overnight":true,"title":"Sleep"}"#)
         #expect(try sqlite3(url, "SELECT json_array_length(value) FROM meta WHERE key = 'event_kinds'")
                 == String(EventKind.allCases.count))
         #expect(try rig.count("meta") == 2)

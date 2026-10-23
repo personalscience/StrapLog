@@ -132,6 +132,12 @@ enum Formats {
         return "RMSSD \(ms(rmssd)) · artifacts \(percent(artifactRate)) · α1 \(ago(ms: nowMs - alpha1AtMs))"
     }
 
+    /// The HR tile's overnight line: lowest 2-min HR so far and whole minutes recorded,
+    /// e.g. `Low 46 · 5 h 12 min`.
+    static func overnightLow(lowestHR: Double?, elapsedMs: Int64) -> String {
+        "Low \(lowestHR.map { String(format: "%.0f", $0) } ?? "--") · \(minutes(Double(max(0, elapsedMs) / 60_000)))"
+    }
+
     /// Toolbar title while recording, e.g. `12:41 · RAVINE`.
     static func recordingTitle(name: String, elapsedMs: Int64) -> String {
         name.isEmpty ? elapsed(ms: elapsedMs) : "\(elapsed(ms: elapsedMs)) · \(name)"

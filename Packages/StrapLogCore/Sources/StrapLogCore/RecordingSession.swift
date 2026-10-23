@@ -135,15 +135,14 @@ public actor RecordingSession {
         return try log(.marker, label: label, note: note, recordingId: id, atMs: clock.nowMs())
     }
 
-    /// Starts a breathing pacer now and logs `pacer_start` noted with its rate.
-    public func startPacer(breathsPerMinute: Double) throws -> BreathingPacer {
+    /// Logs `pacer_start` now, noted with `pacer`'s rate. A pacer already running when a
+    /// recording starts is logged at the start, so the file says it was paced.
+    public func logPacerStart(_ pacer: BreathingPacer) throws {
         let id = try requireRecording()
-        let pacer = BreathingPacer(breathsPerMinute: breathsPerMinute, startedAtMs: clock.nowMs())
-        try log(.pacerStart, note: pacer.note, recordingId: id, atMs: pacer.startedAtMs)
-        return pacer
+        try log(.pacerStart, note: pacer.note, recordingId: id, atMs: clock.nowMs())
     }
 
-    public func stopPacer() throws {
+    public func logPacerStop() throws {
         let id = try requireRecording()
         try log(.pacerStop, note: nil, recordingId: id, atMs: clock.nowMs())
     }

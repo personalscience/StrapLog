@@ -44,6 +44,34 @@ struct LiveMetricsTests {
         #expect(aligned == Array(batch.prefix(aligned.count)))
     }
 
+    @Test("lowest window HR equals SessionSummary.lowestHR on the same beats", arguments: RRFixture.names)
+    func lowestMatchesSummary(name: String) throws {
+        let fx = try RRFixture.load(name)
+        let ends = fx.endTimesMs(originMs: Self.origin)
+        var live = LiveMetrics()
+        for (end, rr) in zip(ends, fx.rr_ms) { live.add(tEndMs: end, rrMs: rr) }
+        // Close any window still open at the last beat, without adding a window with features.
+        live.add(tEndMs: ends.last! + 600_000, rrMs: 1000)
+        let summary = SessionSummary(rrMs: fx.rr_ms, tEndMs: ends, durationMs: nil, coverage: 1)
+        #expect(live.lowestWindowHR != nil)
+        #expect(live.lowestWindowHR == summary.lowestHR)
+    }
+
+    @Test("lowest window HR is the running minimum of the 60 s-stride windows")
+    func lowestIsRunningMinimum() throws {
+        let fx = try RRFixture.load(RRFixture.names[0])
+        var live = LiveMetrics()
+        #expect(live.lowestWindowHR == nil)
+        var previous: Double?
+        for (end, rr) in zip(fx.endTimesMs(originMs: Self.origin), fx.rr_ms) {
+            live.add(tEndMs: end, rrMs: rr)
+            let aligned = live.windows.filter { ($0.tCenter - 60).truncatingRemainder(dividingBy: 60) == 0 }
+            #expect(live.lowestWindowHR == aligned.map(\.hrBpm).min())
+            if let previous { #expect(live.lowestWindowHR! <= previous) }
+            previous = live.lowestWindowHR
+        }
+    }
+
     @Test("α1 history is stamped at each window's end")
     func alpha1AtWindowEnd() throws {
         let fx = try RRFixture.load(RRFixture.names[0])

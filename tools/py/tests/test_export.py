@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from conftest import START_MS, TZ, make_straplog, make_v3, steady
+from conftest import OTHER_PRESET_1_1, START_MS, TZ, make_straplog, make_v3, steady
 from straplog import export
 
 
@@ -28,6 +28,17 @@ def test_meta_decodes_json_values(tmp_path: Path):
     assert m["schema_version"] == "3" and m["app_version"] == "0.2.0 (7)"
     assert m["preset"]["markers"] == ["lights_out", "awake", "up"]
     assert m["event_kinds"] == ["start", "stop", "marker"]
+
+
+def test_1_1_preset_without_pacer_reads_with_pacer_events(tmp_path: Path):
+    path = make_v3(tmp_path / "261015-1349-other_2026-10-15.sqlite", steady(100), activity="other",
+                   preset=OTHER_PRESET_1_1, name="other 2026-10-15", end_ms=START_MS + 100_000,
+                   events=[(START_MS, "pacer_start", "6.0/min"), (START_MS + 90_000, "pacer_stop", None)])
+    assert "pacer" not in export.meta(path)["preset"]
+    [e] = export.recordings(path)
+    assert e["activity"] == "other" and e["beats"] == 100
+    assert [(x["kind"], x["note"]) for x in export.events(path) if x["kind"].startswith("pacer")] == \
+        [("pacer_start", "6.0/min"), ("pacer_stop", None)]
 
 
 def test_v2_reads_as_other_without_labels(walk: Path):

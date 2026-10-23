@@ -2,11 +2,10 @@ import StrapLogCore
 import SwiftUI
 
 /// Live screen while recording: HR and α1 up top, the trend chart, markers in the thumb zone,
-/// then pacer and Stop. Overnight presets add a line saying how the night will end. In landscape the numbers sit left of the chart. Diagnostics live in the
+/// then the pacer (when its panel is shown) and Stop. Overnight presets add a line saying how the night will end. In landscape the numbers sit left of the chart. Diagnostics live in the
 /// device sheet behind the toolbar heart.
 struct RecordingView: View {
     let model: RecorderModel
-    @State private var showingPacer = false
     @State private var confirmingStop = false
     @SceneStorage("chartViewport") private var viewport = ChartViewport()
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -34,7 +33,7 @@ struct RecordingView: View {
                         chart(nowMs: nowMs, height: 200)
                     }
                     MarkerBar(model: model, nowMs: nowMs)
-                    if showingPacer || model.pacer != nil {
+                    if model.pacerPanelShown {
                         PacerSection(model: model)
                     }
                     controls
@@ -57,13 +56,6 @@ struct RecordingView: View {
 
     private var controls: some View {
         HStack {
-            if model.pacer == nil, model.activePreset.pacer {
-                Button(showingPacer ? "Hide pacer" : "Pacer", systemImage: "wind") {
-                    showingPacer.toggle()
-                }
-                .buttonStyle(.bordered)
-                .accessibilityIdentifier("pacerToggle")
-            }
             Spacer()
             Button("Stop…", systemImage: "stop.circle", role: .destructive) { confirmingStop = true }
                 .buttonStyle(.borderedProminent)

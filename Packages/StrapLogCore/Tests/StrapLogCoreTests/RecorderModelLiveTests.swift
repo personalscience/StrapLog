@@ -89,12 +89,60 @@ struct RecorderModelLiveTests {
                 == ["start:", "pacer_start:6.0/min", "pacer_stop:", "pacer_start:5.5/min", "pacer_stop:"])
     }
 
-    @Test("Stop with the pacer running logs pacer_stop before stop")
-    func stopEndsPacer() async throws {
+    @Test("Stop with the pacer running logs pacer_stop before stop and leaves the pacer running")
+    func stopKeepsPacer() async throws {
         await model.start(name: "breathe")
         await model.startPacer(breathsPerMinute: BreathingPacer.defaultRate)
+        let pacer = model.pacer
         await model.stop()
-        #expect(model.pacer == nil)
+        #expect(model.pacer == pacer)
         #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "pacer_start", "pacer_stop", "stop", "snapshot"])
+        await model.stopPacer()
+        #expect(model.errorMessage == nil, "stopping it after the recording writes nothing")
+        #expect(try strings("SELECT kind FROM event WHERE kind LIKE 'pacer%'") == ["pacer_start", "pacer_stop"])
+    }
+
+    @Test("the pacer runs without a recording and writes nothing")
+    func pacerWhileIdle() async throws {
+        await model.startPacer(breathsPerMinute: 5)
+        #expect(model.pacer == BreathingPacer(breathsPerMinute: 5, startedAtMs: clock.nowMs()))
+        #expect(model.pacerPanelShown)
+        await model.startPacer(breathsPerMinute: 6)
+        await model.stopPacer()
+        #expect(model.pacer == nil)
+        #expect(model.errorMessage == nil)
+        #expect(try strings("SELECT kind FROM event").isEmpty)
+    }
+
+    @Test("a recording started mid-breath logs pacer_start at its start, keeping the pacer's phase")
+    func startWhilePacing() async throws {
+        await model.startPacer(breathsPerMinute: 4.5)
+        let pacer = model.pacer
+        clock.advance(byMs: 7_000)
+        await model.start(name: "breathe")
+        #expect(model.pacer == pacer, "the breath goes on uninterrupted")
+        #expect(try strings("SELECT kind || ':' || COALESCE(note, '') FROM event ORDER BY id")
+                == ["start:", "pacer_start:4.5/min"])
+        #expect(try strings("SELECT at_ms FROM event ORDER BY id") == Array(repeating: String(clock.nowMs()), count: 2))
+    }
+
+    @Test("hiding the pacer panel stops the pacer")
+    func hidePanel() async throws {
+        await model.showPacerPanel(true)
+        #expect(model.pacerPanelShown && model.pacer == nil)
+        await model.start(name: "breathe")
+        await model.startPacer(breathsPerMinute: 6)
+        await model.showPacerPanel(false)
+        #expect(!model.pacerPanelShown && model.pacer == nil)
+        #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "pacer_start", "pacer_stop"])
+    }
+
+    @Test("a saved pacer rate is snapped into range")
+    func savedRate() {
+        #expect(PacerSettings.rate(6) == 6)
+        #expect(PacerSettings.rate(5.4) == 5.5)
+        #expect(PacerSettings.rate(2) == BreathingPacer.rates.lowerBound)
+        #expect(PacerSettings.rate(12) == BreathingPacer.rates.upperBound)
+        #expect(PacerSettings.rate(.nan) == BreathingPacer.defaultRate)
     }
 }

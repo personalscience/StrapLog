@@ -10,20 +10,18 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable, Encod
     public let systemImage: String
     /// One-tap marker labels, in bar order, stored in `event.label`.
     public let markers: [String]
-    /// Whether the recording screen offers the breathing pacer.
-    public let pacer: Bool
-    /// Overnight mode: a dark screen with no chart, posture events, and auto-stop (`OvernightPlan`).
+    /// Overnight mode: posture events, auto-stop (`OvernightPlan`), and the live lowest HR on the HR tile.
     public let overnight: Bool
 
     /// What an export says about its preset (`ExportMeta`); the symbol is app chrome only.
     enum CodingKeys: String, CodingKey {
-        case id, title, markers, pacer, overnight
+        case id, title, markers, overnight
     }
 
     public static let sleep = ActivityPreset(id: "sleep", title: "Sleep", systemImage: "bed.double",
-                                             markers: ["lights_out", "awake", "up"], pacer: false, overnight: true)
+                                             markers: ["lights_out", "awake", "up"], overnight: true)
     public static let other = ActivityPreset(id: "other", title: "Other", systemImage: "waveform.path.ecg",
-                                             markers: ["a", "b", "c", "end"], pacer: true, overnight: false)
+                                             markers: ["a", "b", "c", "end"], overnight: false)
 
     /// Picker order.
     public static let all = [sleep, other]
@@ -35,7 +33,7 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable, Encod
 
     /// This preset with another marker bar (`MarkerPresets`).
     public func with(markers: [String]) -> ActivityPreset {
-        ActivityPreset(id: id, title: title, systemImage: systemImage, markers: markers, pacer: pacer, overnight: overnight)
+        ActivityPreset(id: id, title: title, systemImage: systemImage, markers: markers, overnight: overnight)
     }
 
     /// The name a recording gets when none is typed: `<id> <local date>`, e.g. `sleep 2026-10-16`.

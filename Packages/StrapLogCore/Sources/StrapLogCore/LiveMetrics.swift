@@ -27,6 +27,9 @@ public struct LiveMetrics: Sendable {
     public private(set) var latest: WindowFeatures?
     /// Number of windows closed so far, including those with too few beats.
     public private(set) var closedWindows = 0
+    /// Lowest HR of the closed windows that are also the skills' 60 s-stride windows: what
+    /// `SessionSummary.lowestHR` gives for the beats so far. Nil until one has enough beats.
+    public private(set) var lowestWindowHR: Double?
 
     /// Beats (seconds since `originMs`) that may still belong to an open window.
     private var pending: [TimedSample<Double>] = []
@@ -92,7 +95,12 @@ public struct LiveMetrics: Sendable {
         let (lo, hi) = (w.lower(ofWindow: k), w.upper(ofWindow: k))
         let raw = pending.filter { $0.t >= lo && $0.t < hi }.map(\.value)
         latest = analyzer.features(of: raw, center: w.center(ofWindow: k))
-        if let latest { windows.append(latest) }
+        if let latest {
+            windows.append(latest)
+            if lo.truncatingRemainder(dividingBy: HRVDefaults.strideSeconds) == 0 {
+                lowestWindowHR = min(lowestWindowHR ?? latest.hrBpm, latest.hrBpm)
+            }
+        }
         closedWindows = k + 1
         let nextLo = w.lower(ofWindow: closedWindows)
         pending.removeAll { $0.t < nextLo }

@@ -53,7 +53,7 @@ Home offers two activities. StrapLog remembers the one you used last.
 | Activity | Use it for | What's different |
 |---|---|---|
 | **Sleep** | Overnight recordings | Can stop itself at your wake time. Never sends link alerts. Marker buttons: *lights out*, *awake*, *up*. |
-| **Other** | Everything else: rest, exercise, breathing practice | Offers the breathing pacer. Marker buttons: *a*, *b*, *c*, *end*. |
+| **Other** | Everything else: rest, exercise, breathing practice | Marker buttons: *a*, *b*, *c*, *end*. |
 
 You can give the recording a **name**, or leave it blank and StrapLog names it after the activity and the date ("sleep 2026-10-16"). You can rename it later.
 
@@ -76,7 +76,7 @@ You can start a recording before the strap connects. Beats are saved from the mo
 - The α1 view shades the intensity bands and draws the 0.75 and 0.50 lines.
 - Markers appear as labelled dashed lines.
 
-**Markers** sit below the chart (see *Markers*). **Pacer** opens the breathing pacer for activities that use it (see *Paced breathing*).
+**Markers** sit below the chart (see *Markers*). The **wind** button at the top opens the breathing pacer (see *Paced breathing*).
 
 In landscape, the numbers sit on the left and the chart fills the right.
 
@@ -374,11 +374,13 @@ Only exercise as hard as is safe for you.
 
 ## Paced breathing
 
-In an **Other** recording, tap **Pacer** to breathe along with a guide, by default **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7. The phone taps at each turn so you can close your eyes.
+Tap the **wind** button at the top of the screen to breathe along with a guide, any time, recording or not. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. The phone taps at each turn so you can close your eyes.
 
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 
-Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours. Pacer start and stop are saved in the recording.
+Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.
+
+The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. Hiding the pacer stops it.
 
 Don't compare RMSSD from breathing sessions with your normal resting baseline: slow breathing raises it.
 

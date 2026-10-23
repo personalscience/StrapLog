@@ -10,7 +10,7 @@ struct MarkerPresetsTests {
         var presets = MarkerPresets()
         presets.setMarkers(["warmup", " set ", "", "set", "cooldown"], for: "other")
         #expect(presets.preset("other").markers == ["warmup", "set", "cooldown"])
-        #expect(presets.preset("other").pacer == ActivityPreset.other.pacer)
+        #expect(presets.preset("other").overnight == ActivityPreset.other.overnight)
         #expect(presets.preset("sleep") == .sleep)
         #expect(presets.isEdited("other"))
         #expect(!presets.isEdited("sleep"))

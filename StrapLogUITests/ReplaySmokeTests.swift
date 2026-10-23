@@ -20,6 +20,7 @@ final class ReplaySmokeTests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["heartRate"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.segmentedControls["chartMetric"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["overnightLow"].exists, "only overnight presets show the lowest HR")
         heart.tap()
         let done = app.buttons["deviceDone"]
         XCTAssertTrue(done.waitForExistence(timeout: 5), "device sheet did not open")
@@ -97,6 +98,7 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(plan.waitForExistence(timeout: 10))
         XCTAssertTrue(plan.label.lowercased().contains("stops"))
         XCTAssertTrue(app.segmentedControls["chartMetric"].exists, "sleep shows the live chart")
+        XCTAssertTrue(app.staticTexts["overnightLow"].label.hasPrefix("Low "), "sleep shows the lowest HR so far")
         app.buttons["marker-lights_out"].tap()
         XCTAssertTrue(app.staticTexts["lastMarker"].waitForLabel(containing: "lights_out", timeout: 5))
         let stop = app.buttons["stopButton"]
@@ -150,15 +152,13 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
-    func testPacerStartsAndStops() throws {
+    func testPacerRunsBeforeAndDuringARecording() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
         app.launch()
-        app.segmentedControls["activityPicker"].buttons["Other"].tap()
-        app.buttons["startButton"].tap()
 
         let toggle = app.buttons["pacerToggle"]
-        XCTAssertTrue(app.scroll(to: toggle))
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5), "the pacer is in the toolbar while idle")
         toggle.tap()
         let start = app.buttons["pacerStart"]
         XCTAssertTrue(app.scroll(to: start))
@@ -166,6 +166,13 @@ final class ReplaySmokeTests: XCTestCase {
         let instruction = app.staticTexts["pacerInstruction"]
         XCTAssertTrue(instruction.waitForExistence(timeout: 5))
         XCTAssertTrue(instruction.label.hasPrefix("Breathe"))
+
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
+        let record = app.buttons["startButton"]
+        XCTAssertTrue(app.scroll(to: record))
+        record.tap()
+        XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scroll(to: instruction), "the pacer keeps running into the recording")
         let stop = app.buttons["pacerStop"]
         XCTAssertTrue(stop.label.contains("6.0/min"))
         stop.tap()
