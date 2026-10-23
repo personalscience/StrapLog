@@ -4,17 +4,22 @@ import SwiftUI
 /// The recording at a glance with its marker and stop buttons, a start or stop on its way, or
 /// the start buttons. Re-evaluated every few seconds so a phone that went quiet shows as stale
 /// rather than as an old HR that looks live. While the phone is gone, HR comes from the
-/// strap's broadcasts (`StrapHeart`), labelled as such.
+/// strap's broadcasts (`StrapHeart`), labelled as such. With the wrist down (Always On) the
+/// recording shrinks to `WatchDimmedView` and the timeline slows to once a minute.
 struct WatchStatusView: View {
     let phone: PhoneLink
     let heart: StrapHeart
     @State private var confirmingStop = false
+    @Environment(\.isLuminanceReduced) private var isDimmed
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 5)) { timeline in
+        TimelineView(.periodic(from: .now, by: isDimmed ? 60 : 5)) { timeline in
             let strap = heart.source == .strap ? heart.shownReading(at: timeline.date) : nil
             if let pending = phone.pending {
                 WatchPendingView(pending: pending) { phone.dismissPending() }
+            } else if let status = phone.status, isDimmed {
+                WatchDimmedView(status: status, isStale: phone.isStale(at: timeline.date),
+                                heartRateText: heartRateText(status, strap: strap))
             } else if let status = phone.status {
                 ScrollView {
                     VStack(spacing: 8) {
@@ -51,7 +56,7 @@ struct WatchStatusView: View {
                 .font(.headline.monospacedDigit())
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Image(systemName: "heart.fill").foregroundStyle(.red)
-                Text(heart.source == .strap ? strap?.heartRateText ?? "--" : status.heartRateText)
+                Text(heartRateText(status, strap: strap))
                     .font(.system(size: 56, weight: .semibold, design: .rounded).monospacedDigit())
             }
             if heart.source == .strap {
@@ -66,6 +71,10 @@ struct WatchStatusView: View {
                 .foregroundStyle(status.needsAttention(isStale: isStale) ? .orange : .secondary)
         }
         .accessibilityIdentifier("watch.status")
+    }
+
+    private func heartRateText(_ status: LiveStatus, strap: StrapBroadcast?) -> String {
+        heart.source == .strap ? strap?.heartRateText ?? "--" : status.heartRateText
     }
 
     /// The big button marks the next label; the rest of the bar follows for a repeat (`awake`).

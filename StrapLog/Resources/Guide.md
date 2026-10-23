@@ -172,6 +172,14 @@ Add StrapLog to a watch face (circular, corner, rectangular or inline). While re
 
 To save battery, the complication updates only now and then (at start, stop, link changes and about hourly). The heart rate it shows can be up to 20 minutes old and disappears after that; open the app for the live number.
 
+### Keep StrapLog on screen
+
+By default the Watch goes back to the clock face 2 minutes after you lower your wrist. To keep StrapLog up during a workout or a long session, on the Watch open **Settings › General › Return to Clock**, scroll to **StrapLog**, turn on **Custom** and choose **After 1 hour** (or **Always**).
+
+With the wrist down, on a Watch with Always On, StrapLog stays on screen dimmed: just your heart rate, a heart (or an orange warning if the strap has a problem) and how many markers you have added. It updates about once a minute in that state, which costs little battery; raise your wrist for the full screen and the live number.
+
+If the Watch has gone back to the clock anyway, the complication is the quickest way back: tap it.
+
 ## Alerts and gaps
 
 ### Link alerts
