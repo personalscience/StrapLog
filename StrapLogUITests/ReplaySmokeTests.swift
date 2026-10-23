@@ -54,6 +54,9 @@ final class ReplaySmokeTests: XCTestCase {
         name.typeText("DETAIL")
         app.buttons["startButton"].tap()
         XCTAssertTrue(app.staticTexts["heartRate"].waitForExistence(timeout: 10))
+        let markerA = app.buttons["marker-a"]
+        XCTAssertTrue(app.scroll(to: markerA))
+        markerA.tap()
         sleep(5) // replay compresses receive times, so no α1 window closes; the summary still fills
         let stop = app.buttons["stopButton"]
         XCTAssertTrue(app.scroll(to: stop))
@@ -68,6 +71,10 @@ final class ReplaySmokeTests: XCTestCase {
         card.tap()
 
         XCTAssertTrue(app.staticTexts["summaryBeats"].waitForExistence(timeout: 10))
+        let markerRow = app.buttons["markerRow-0"]
+        XCTAssertTrue(app.scroll(to: markerRow), "no marker row in the detail view")
+        markerRow.tap()
+        XCTAssertTrue(app.otherElements["trendChart"].exists, "chart gone after jumping to a marker")
         let detailName = app.textFields["detailName"]
         XCTAssertTrue(app.scroll(to: detailName))
         detailName.tap()

@@ -20,6 +20,14 @@ struct ChartWindowTests {
         #expect(ChartWindow(span: .all, nowMs: now, startedAtMs: Self.start).startMs == Self.start)
     }
 
+    @Test("a window may end before now; .all then runs from the start to that end")
+    func endedEarlier() {
+        let end = Self.start + 10 * 60_000
+        let w = ChartWindow(span: .fiveMinutes, endMs: end, startedAtMs: Self.start)
+        #expect(w.endMs == end && w.startMs == end - 300_000)
+        #expect(ChartWindow(span: .all, endMs: end, startedAtMs: Self.start).startMs == Self.start)
+    }
+
     @Test("x-axis ticks fall on whole minutes, at most maxAxisTicks of them")
     func axisStride() {
         func stride(minutes: Int64) -> Int {

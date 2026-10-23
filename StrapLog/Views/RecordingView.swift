@@ -8,6 +8,7 @@ struct RecordingView: View {
     let model: RecorderModel
     @State private var showingPacer = false
     @State private var confirmingStop = false
+    @SceneStorage("chartViewport") private var viewport = ChartViewport()
     @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     var body: some View {
@@ -50,7 +51,8 @@ struct RecordingView: View {
 
     private func chart(nowMs: Int64, height: CGFloat) -> some View {
         TrendChart(live: model.live, markers: model.markers,
-                   startedAtMs: model.activeRecording?.startedAtMs ?? nowMs, nowMs: nowMs, height: height)
+                   startedAtMs: model.activeRecording?.startedAtMs ?? nowMs, nowMs: nowMs,
+                   viewport: $viewport, height: height)
     }
 
     private var controls: some View {

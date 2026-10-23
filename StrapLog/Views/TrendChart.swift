@@ -2,39 +2,34 @@ import Charts
 import StrapLogCore
 import SwiftUI
 
-/// HR, α1 or RR over a pinch-zoomable span ending at `nowMs`, with markers as labelled rules.
-/// Double-tap resets to `defaultSpan`; the chip picks a span directly. Tab and span persist per
-/// scene, the span under `spanKey` so a past recording's chart keeps its own.
+/// HR, α1 or RR over a window the owner keeps in `viewport`: pinch walks the span, a sideways
+/// drag pans back through the recording, the chip picks a span directly, double-tap resets to
+/// `defaultSpan`. When panned back, a pill (`followLabel`) returns to the end. The metric tab
+/// persists per scene.
 struct TrendChart: View {
     let live: LiveMetrics
     let markers: [RecordingEvent]
     let startedAtMs: Int64
     let nowMs: Int64
-    let height: CGFloat
-    private let defaultSpan: ChartSpan
+    @Binding var viewport: ChartViewport
+    var height: CGFloat = 200
+    var defaultSpan: ChartSpan = .default
+    var followLabel = "Live"
 
     @SceneStorage("chartMetric") private var metric = ChartMetric.heartRate
-    @SceneStorage private var span: ChartSpan
     @GestureState private var pinch = 1.0
-
-    init(live: LiveMetrics, markers: [RecordingEvent], startedAtMs: Int64, nowMs: Int64, height: CGFloat = 200,
-         spanKey: String = "chartSpan", defaultSpan: ChartSpan = .default) {
-        self.live = live
-        self.markers = markers
-        self.startedAtMs = startedAtMs
-        self.nowMs = nowMs
-        self.height = height
-        self.defaultSpan = defaultSpan
-        _span = SceneStorage(wrappedValue: defaultSpan, spanKey)
-    }
+    @GestureState private var dragPx: CGFloat = 0
+    @State private var widthPx: CGFloat = 1
 
     /// α1 axis: room for every band's edge plus a little above rest.
     private static let alpha1Top = 1.5
 
     var body: some View {
-        let elapsedMs = nowMs - startedAtMs
-        let shown = span.zoomed(by: pinch, elapsedMs: elapsedMs)
-        let window = ChartWindow(span: shown, nowMs: nowMs, startedAtMs: startedAtMs)
+        let committed = viewport.window(nowMs: nowMs, startedAtMs: startedAtMs)
+        let shown = viewport
+            .zoomed(by: pinch, nowMs: nowMs, startedAtMs: startedAtMs)
+            .panned(byMs: panMs(dragPx, in: committed), nowMs: nowMs, startedAtMs: startedAtMs)
+        let window = shown.window(nowMs: nowMs, startedAtMs: startedAtMs)
         let points = metric.points(in: window, of: live)
         VStack(spacing: 8) {
             HStack {
@@ -46,31 +41,58 @@ struct TrendChart: View {
                 .accessibilityIdentifier("chartMetric")
                 Spacer()
                 Menu {
-                    Picker("Span", selection: $span) {
+                    Picker("Span", selection: $viewport.span) {
                         ForEach(ChartSpan.allCases.sorted(), id: \.self) { Text(Formats.span($0)).tag($0) }
                     }
                 } label: {
-                    Label(Formats.span(shown), systemImage: "arrow.up.left.and.arrow.down.right")
+                    Label(Formats.span(shown.span), systemImage: "arrow.up.left.and.arrow.down.right")
                         .font(.caption.bold().monospacedDigit())
                         .padding(.horizontal, 10).padding(.vertical, 5)
                         .background(.quaternary, in: Capsule())
                 }
                 .accessibilityIdentifier("chartSpan")
             }
-            chart(points: points, window: window)
+            chart(points: points, window: window, highlightMs: shown.highlightMs)
                 .frame(height: height)
                 .contentShape(Rectangle())
+                .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { widthPx = max($0, 1) }
                 .gesture(MagnifyGesture()
                     .updating($pinch) { value, state, _ in state = value.magnification }
-                    .onEnded { span = span.zoomed(by: $0.magnification, elapsedMs: elapsedMs) })
-                .onTapGesture(count: 2) { span = defaultSpan }
+                    .onEnded { viewport = viewport.zoomed(by: $0.magnification, nowMs: nowMs, startedAtMs: startedAtMs) })
+                .simultaneousGesture(DragGesture(minimumDistance: 12)
+                    .updating($dragPx) { value, state, _ in state = Self.sideways(value.translation) }
+                    .onEnded {
+                        let ms = panMs(Self.sideways($0.translation), in: committed)
+                        viewport = viewport.panned(byMs: ms, nowMs: nowMs, startedAtMs: startedAtMs)
+                    })
+                .onTapGesture(count: 2) { viewport = ChartViewport(span: defaultSpan) }
+                .overlay(alignment: .topTrailing) {
+                    if shown.isPinned {
+                        Button(followLabel, systemImage: "arrow.right.to.line") { viewport.anchorEndMs = nil }
+                            .font(.caption.bold())
+                            .buttonStyle(.borderedProminent)
+                            .buttonBorderShape(.capsule)
+                            .controlSize(.mini)
+                            .accessibilityIdentifier("chartFollow")
+                    }
+                }
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("trendChart")
         }
     }
 
+    /// A drag's horizontal travel, or 0 when it is mostly vertical (the page is scrolling).
+    private static func sideways(_ t: CGSize) -> CGFloat {
+        abs(t.width) > abs(t.height) ? t.width : 0
+    }
+
+    /// Dragging right by `px` moves back in time by the width that covers.
+    private func panMs(_ px: CGFloat, in window: ChartWindow) -> Int64 {
+        Int64(-Double(px) * Double(window.endMs - window.startMs) / Double(widthPx))
+    }
+
     @ViewBuilder
-    private func chart(points: [TrendPoint], window: ChartWindow) -> some View {
+    private func chart(points: [TrendPoint], window: ChartWindow, highlightMs: Int64?) -> some View {
         let start = Date(timeIntervalSince1970: Double(window.startMs) / 1000)
         let end = Date(timeIntervalSince1970: Double(window.endMs) / 1000)
         let shownMarkers = window.visible(markers)
@@ -101,9 +123,10 @@ struct TrendChart: View {
             }
             ForEach(shownMarkers.indices, id: \.self) { i in
                 let marker = shownMarkers[i]
+                let highlighted = marker.atMs == highlightMs
                 RuleMark(x: .value("Marker", Date(timeIntervalSince1970: Double(marker.atMs) / 1000)))
-                    .foregroundStyle(.secondary)
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [2, 2]))
+                    .foregroundStyle(highlighted ? AnyShapeStyle(Color.orange) : AnyShapeStyle(.secondary))
+                    .lineStyle(highlighted ? StrokeStyle(lineWidth: 2) : StrokeStyle(lineWidth: 1, dash: [2, 2]))
                     .annotation(position: .top, alignment: window.labelFits(atMs: marker.atMs) ? .leading : .trailing) {
                         Text(marker.markerText).font(.caption2.bold())
                     }

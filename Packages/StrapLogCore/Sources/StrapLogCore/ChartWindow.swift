@@ -1,4 +1,4 @@
-/// The time range the live chart shows: `span` ending at `nowMs`. Slices a series to that
+/// The time range the chart shows: `span` ending at `endMs` (now, unless panned back). Slices a series to that
 /// range and thins it for drawing, so the view only plots what it is handed.
 public struct ChartWindow: Sendable, Equatable {
     /// Points the chart draws at most: `Downsample.minMax` keeps two per bucket.
@@ -7,9 +7,13 @@ public struct ChartWindow: Sendable, Equatable {
     public let startMs: Int64
     public let endMs: Int64
 
+    public init(span: ChartSpan, endMs: Int64, startedAtMs: Int64) {
+        self.endMs = endMs
+        startMs = endMs - span.lengthMs(elapsedMs: endMs - startedAtMs)
+    }
+
     public init(span: ChartSpan, nowMs: Int64, startedAtMs: Int64) {
-        endMs = nowMs
-        startMs = nowMs - span.lengthMs(elapsedMs: nowMs - startedAtMs)
+        self.init(span: span, endMs: nowMs, startedAtMs: startedAtMs)
     }
 
     /// Whole-minute steps for x-axis ticks: labels are hour:minute, never seconds, so they fit.

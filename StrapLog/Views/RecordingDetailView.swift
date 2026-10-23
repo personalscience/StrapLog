@@ -10,6 +10,7 @@ struct RecordingDetailView: View {
     @State private var edit = RecordingEdit(name: "", activity: ActivityPreset.other.id)
     @State private var exportURL: URL?
     @State private var busy = false
+    @State private var viewport = ChartViewport(span: .all)
 
     var body: some View {
         Group {
@@ -31,14 +32,20 @@ struct RecordingDetailView: View {
             }
             Section {
                 TrendChart(live: detail.live, markers: detail.markers, startedAtMs: rec.startedAtMs,
-                           nowMs: detail.endMs, spanKey: "detailChartSpan", defaultSpan: .all)
+                           nowMs: detail.endMs, viewport: $viewport, defaultSpan: .all, followLabel: "End")
                     .padding(.vertical, 4)
             }
             if !detail.markers.isEmpty {
                 Section("Markers") {
                     ForEach(detail.markers.indices, id: \.self) { i in
                         let marker = detail.markers[i]
-                        LabeledContent(marker.markerText, value: Formats.clock(atMs: marker.atMs, tzOffsetS: rec.tzOffsetS))
+                        Button {
+                            viewport = viewport.jump(toMs: marker.atMs, nowMs: detail.endMs, startedAtMs: rec.startedAtMs)
+                        } label: {
+                            LabeledContent(marker.markerText, value: Formats.clock(atMs: marker.atMs, tzOffsetS: rec.tzOffsetS))
+                        }
+                        .tint(.primary)
+                        .accessibilityIdentifier("markerRow-\(i)")
                     }
                 }
             }
