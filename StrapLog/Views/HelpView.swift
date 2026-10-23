@@ -1,11 +1,12 @@
 import SwiftUI
 
 /// The guide's contents, shown as a sheet from the toolbar: the introduction, one row per chapter,
-/// then the acknowledgements.
+/// a link out to the analysis skills, then the acknowledgements.
 /// Every page carries Done, so a reader deep in a chapter can close the sheet without backing out.
 struct HelpView: View {
     let book: GuideBook
     @Environment(\.dismiss) private var dismiss
+    @State private var copied = false
 
     var body: some View {
         NavigationStack {
@@ -21,6 +22,20 @@ struct HelpView: View {
                         NavigationLink(chapter.title, value: HelpRoute.chapter(title: chapter.title))
                             .accessibilityIdentifier("guideChapter-\(chapter.title)")
                     }
+                }
+                Section {
+                    Link(destination: HelpRoute.analyzeURL) {
+                        Label("Analyze with Claude skills", systemImage: "arrow.up.right.square")
+                    }
+                    .accessibilityIdentifier("analyzeLink")
+                    Button(copied ? "Copied" : "Copy install command",
+                           systemImage: copied ? "checkmark" : "doc.on.doc") {
+                        UIPasteboard.general.string = HelpRoute.installCommands
+                        copied = true
+                    }
+                    .accessibilityIdentifier("copyInstallCommand")
+                } footer: {
+                    Text("Open-source skills for Claude Code that read your recordings' files: overnight, resting, workout and threshold analyses.")
                 }
                 Section {
                     NavigationLink("Acknowledgements", value: HelpRoute.acknowledgements)

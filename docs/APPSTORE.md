@@ -22,7 +22,7 @@ Rule from `straplog-kzk.3`: "Polar" and "H10" appear only in the one compatibili
 | Support URL        | https://personalscience.com/docs/straplog/                                                                   |
 | Privacy policy URL | https://personalscience.com/docs/straplog/privacy/                                                           |
 
-## Version 1.0 text
+## Version 1.1 text
 
 <!-- listing:name -->
 StrapLog HRV
@@ -48,27 +48,42 @@ StrapLog requires a Polar H10-compatible heart-rate sensor. Watches and wrist se
 BEAT BY BEAT
 • Every RR interval the strap measures, stored as it arrives, so even a crash or a dead battery loses almost nothing.
 • Live heart rate, RMSSD and DFA alpha 1, with artifact percentage so you know how clean the data is.
-• Charts of HR, alpha 1 and RR that you can pinch from one minute to the whole session.
+• Charts of HR, alpha 1 and RR that you can pinch from one minute to the whole session, and drag back through to any moment.
 
 SLEEP AND MORNING READINGS
 • Overnight recordings that stop themselves at your wake time, after a 5-minute resting reading if you are still lying down.
 • The strap's motion sensor tells lying from upright, so the recording ends when you get up.
+• The night's lowest heart rate so far, live on the recording screen.
 
 TRAINING ZONES
 • DFA alpha 1 refreshed every 20 seconds and coloured by intensity band, for finding your aerobic and anaerobic thresholds on a walk, ride or treadmill.
-• A breathing pacer for slow-breathing practice.
+• A breathing pacer for slow-breathing practice, any time, recording or not.
 
 MARKERS
 • Tap to stamp "lights out", "start stage 3" or "coffee" into the recording, from the app, the Lock Screen, the Dynamic Island, your Apple Watch or Siri.
 
 APPLE WATCH
-• See heart rate and alpha 1 on your wrist, add markers, and start or stop the recording on your iPhone. Complications for the watch face.
+• See heart rate and alpha 1 on your wrist, add markers, and start or stop the recording on your iPhone. Complications for the watch face, and an Always On view when you lower your wrist.
 
 YOUR DATA, YOUR FILES
 • Each recording is a single SQLite file in iCloud Drive or On My iPhone. Open it in Python, R or any SQLite tool.
 • No account, no server, no analytics. Nothing leaves your devices unless you share it.
 
+ANALYZE IT
+• Free, open-source skills for Claude Code read the files directly: overnight HRV reports, resting HRV against a 7-day baseline, workout summaries, and thresholds from a ramp test. The in-app guide shows how to install them.
+• A Python package does the same from your own scripts.
+
 StrapLog is a personal measurement tool, not a medical device. It does not diagnose, treat or prevent any condition.
+<!-- /listing -->
+
+## What's New (1.1)
+
+<!-- listing:whatsnew -->
+• Charts scroll: drag back through a recording, and tap a marker on a recording's page to jump to it.
+• The breathing pacer works any time, with or without a recording.
+• Sleep recordings show the night's lowest heart rate live.
+• Apple Watch: StrapLog stays on screen, dimmed, when you lower your wrist on an Always On watch.
+• An illustrated guide, with a new chapter on analyzing your recordings with Claude skills.
 <!-- /listing -->
 
 ## What's New (1.0)

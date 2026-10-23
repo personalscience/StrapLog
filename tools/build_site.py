@@ -7,9 +7,12 @@
 
 Each page source may use {{analytics}} (the shared GA4 tag in site/src/_analytics.html);
 the docs page also takes {{guide}}. The web page renders the same Guide.md the app ships
-(from "## Getting started" on), plus two web-only edits. Each edit must find its anchor,
-so a reworded Guide fails the build instead of silently dropping the edit.
+(from "## Getting started" on), plus web-only edits. Each edit must find its anchor,
+so a reworded Guide fails the build instead of silently dropping the edit. Guide images
+(![caption](name.jpg), made by tools/guide_images.py) become figures from img/guide/.
 """
+import html
+import re
 from pathlib import Path
 
 import markdown
@@ -21,12 +24,9 @@ GUIDE = ROOT / "StrapLog/Resources/Guide.md"
 PAGES = {"straplog.html": "index.html", "privacy.html": "privacy/index.html"}
 
 START = "## Getting started"
+IMAGE = re.compile(r"^!\[(.*)\]\(([^)/]+\.jpg)\)$", re.MULTILINE)
+IMAGES = SITE / "img/guide"
 WEB_EDITS = [
-    ("\n### Reinstalling",
-     "\nFor ready-made analyses — overnight reports, workout summaries, threshold tests — see"
-     " [Analyze it](#analyze) above: a Python package and open-source Claude skills that read"
-     " these files directly. The experiments I run with them go out in the"
-     " [Personal Science newsletter](#newsletter), one a month.\n\n### Reinstalling"),
     ("Include it if you contact support.",
      "Include it when you write to [support@personalscience.com](mailto:support@personalscience.com?subject=StrapLog)."),
 ]
@@ -39,9 +39,20 @@ def guide_html() -> str:
         if text.count(anchor) != 1:
             raise SystemExit(f"Guide.md: expected one {anchor!r}; update WEB_EDITS")
         text = text.replace(anchor, replacement)
+    text = IMAGE.sub(figure, text)
     # baselevel 2: the Guide's ## chapters sit under the page's <h2 id="guide"> as <h3>.
     return markdown.markdown(text, extensions=["tables", "toc"],
                              extension_configs={"toc": {"baselevel": 2}})
+
+
+def figure(match: re.Match) -> str:
+    caption, file = match.groups()
+    if not (IMAGES / file).exists():
+        raise SystemExit(f"Guide.md: {file} not in {IMAGES.relative_to(ROOT)}; run tools/guide_images.py")
+    cap = markdown.markdown(caption).removeprefix("<p>").removesuffix("</p>")  # inline Markdown
+    alt = html.escape(html.unescape(re.sub(r"<[^>]+>", "", cap)), quote=True)
+    return (f'<figure class="shot"><img src="img/guide/{file}" alt="{alt}" loading="lazy">'
+            f'<figcaption>{cap}</figcaption></figure>')
 
 
 def fill(page: str, name: str, slots: dict[str, str]) -> str:

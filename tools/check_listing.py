@@ -4,7 +4,7 @@ import re
 import sys
 from pathlib import Path
 
-LIMITS = {"name": 30, "subtitle": 30, "keywords": 100, "promo": 170, "description": 4000}
+LIMITS = {"name": 30, "subtitle": 30, "keywords": 100, "promo": 170, "description": 4000, "whatsnew": 4000}
 # Polar's marks may appear only in the description's single compatibility line (straplog-kzk.3).
 MARKS = re.compile(r"polar|h10", re.IGNORECASE)
 

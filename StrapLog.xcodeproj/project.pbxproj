@@ -34,6 +34,7 @@
 		331D29C83817F53633181E2B /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD72ADC7ECD0503DF33CEB0 /* Alpha1Tile.swift */; };
 		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
 		3AEBB441E085ECAAC94361AA /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3AE856E079C81C21212DCA /* SessionSummaryCard.swift */; };
+		3C11B13ADFD74D4D22F21B8E /* GuideImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */; };
 		3D097411B8B33F27D8C750F3 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */; };
 		3D900950CD4C010403970238 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 418A17ED855F2E814D5B2EB8 /* HomeView.swift */; };
 		3FEA3E87CB9D23860A02AC89 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7D7751F59B57AB1684FA26 /* HeartRateTile.swift */; };
@@ -273,6 +274,7 @@
 		8728059CDA30AD297BCB2BD7 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerSection.swift; sourceTree = "<group>"; };
 		8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNumber.swift; sourceTree = "<group>"; };
+		8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GuideImages.xcassets; sourceTree = "<group>"; };
 		9221BBDEA94E79A819D853DF /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		93109613355B501AC6E485DB /* PolarBleSdk.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PolarBleSdk.txt; sourceTree = "<group>"; };
 		99332494B44CF002893B4096 /* WatchLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLink.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 			children = (
 				DB90CBD1036662A389D1322E /* Assets.xcassets */,
 				E7B8219DAE56CD77848AE9A1 /* Guide.md */,
+				8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */,
 				849DE00058EC3CD1F7CDB061 /* Info.plist */,
 				B95A73F72D3E2290BC73FF0E /* PrivacyInfo.xcprivacy */,
 				5148B9B491E178AD1383E09D /* StrapLog.entitlements */,
@@ -876,6 +879,7 @@
 				8F87609FC672489A24D76EF1 /* Assets.xcassets in Resources */,
 				BDC2471C14938D142F1F1100 /* GRDB.txt in Resources */,
 				09790EE3841FC10F5B218AC9 /* Guide.md in Resources */,
+				3C11B13ADFD74D4D22F21B8E /* GuideImages.xcassets in Resources */,
 				87E0A4FC572EA33E6570E50B /* PolarBleSdk.txt in Resources */,
 				75B71FC7F5DD63FB08180183 /* PrivacyInfo.xcprivacy in Resources */,
 				7B261077183189BC7EA243D9 /* SwiftProtobuf.txt in Resources */,

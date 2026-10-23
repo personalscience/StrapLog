@@ -6,4 +6,6 @@ enum GuideBlock: Equatable {
     case numbered([String])
     case table(header: [String], rows: [[String]])
     case rule
+    /// `![caption](name.jpg)` on a line of its own; `name` is the asset in `GuideImages.xcassets`.
+    case image(name: String, caption: String)
 }

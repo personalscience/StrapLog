@@ -30,6 +30,22 @@ struct GuideBlockView: View {
             .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
         case .rule:
             Divider().padding(.vertical, 4)
+        case .image(let name, let caption):
+            VStack(spacing: 6) {
+                Image(name)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 440)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .accessibilityLabel(Text(Self.inline(caption)))
+                Text(Self.inline(caption))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .accessibilityHidden(true)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
         }
     }
 

@@ -42,6 +42,8 @@ When you start your first recording, iOS also asks whether StrapLog may send **n
 3. Sit still for a few minutes and watch the numbers fill in. Heart rate shows at once; the HRV numbers need about 2 minutes of beats.
 4. Tap **Stop…** and confirm. StrapLog saves the recording and writes its file.
 
+![Home after a recording: the *Last recording* card sums it up](guide-home.jpg)
+
 That's it. The chapters below explain everything else.
 
 ## Recording
@@ -61,6 +63,8 @@ You can start a recording before the strap connects. Beats are saved from the mo
 
 ### The recording screen
 
+![A recording in progress: heart rate, α1, the chart and the marker buttons](guide-recording.jpg)
+
 **The title** shows a red dot, the elapsed time and the recording's name.
 
 **Heart rate (bpm), left tile.** The strap's own beats-per-minute reading, sent about once a second. The strap smooths it, so it lags sudden changes by a few seconds. A warning appears under it when the strap loses skin contact.
@@ -69,9 +73,10 @@ You can start a recording before the strap connects. Beats are saved from the mo
 
 **The line beneath** shows the latest RMSSD, the artifact % and how long ago α1 was computed. If that age keeps growing, too few clean beats are arriving.
 
-**The chart.** Pick **HR**, **α1** or **RR**. The chart always ends at now.
+**The chart.** Pick **HR**, **α1** or **RR**. The chart follows the newest beats.
 
 - **Pinch** to zoom out (1, 2, 5, 15, 30, 60 min, or the whole recording) or in.
+- **Drag sideways** to look back through the recording. A **Live** button appears; tap it to return to now.
 - **Double-tap** to go back to 5 minutes, or tap the span chip to pick one.
 - The α1 view shades the intensity bands and draws the 0.75 and 0.50 lines.
 - Markers appear as labelled dashed lines.
@@ -108,6 +113,8 @@ StrapLog uses the strap's motion sensor to tell lying down from sitting or stand
 - **At your wake time, if you are still lying down,** StrapLog marks *resting start* and records 5 more minutes. Stay still for those minutes: they give you a clean morning resting reading. Then it stops.
 - **At your wake time, if you are already up,** it stops at once.
 - **Once you have been upright for 10 minutes** after lying down, it stops, whatever the time. Sitting up in bed before you have lain down does not count.
+
+While a Sleep recording runs, the heart-rate tile adds a second line, for example "Low 46 · 5 h 12 min": the night's lowest heart rate so far (the same 2-minute average as *Lowest HR* in the summary) and how long you have been recording.
 
 The recording screen spells out the plan, for example "5 min resting at 06:30, then stops; or after 10 min upright". Turn **Stop at wake time** off and only the 10-minutes-upright rule applies.
 
@@ -153,6 +160,9 @@ The Watch app is a remote display and control for the recording on your iPhone. 
 
 - **Not recording:** buttons to **Start Sleep** and **Start Other**. A Sleep start uses the wake time set on the iPhone.
 - **Recording:** the timer, your heart rate and α1, the status line, every marker button and **Stop** (which asks first).
+
+![The Watch app during a recording](guide-watch-recording.jpg)
+
 - **Mark next** (the green button) steps through your marker buttons in order, then repeats the last one. It suits a workout with several stages.
 - If the iPhone is out of reach, a command waits and is sent when it comes back ("Waiting for iPhone…"). You can cancel it.
 
@@ -165,6 +175,8 @@ The **Next Marker** action adds the next marker from the Watch. Assign it to the
 ### When the iPhone is out of reach
 
 If the Watch app is on screen and the iPhone has gone quiet (out of range, or left in another room), the Watch listens to the strap directly and shows its heart rate with the caption "no iPhone". This is heart rate only: no α1 and nothing is saved. It switches back as soon as the iPhone reports again. The first time, the Watch asks for Bluetooth permission.
+
+![Heart rate straight from the strap while the iPhone is away](guide-watch-no-iphone.jpg)
 
 ### Complications
 
@@ -222,9 +234,36 @@ After you stop, a **Last recording** card sums up the session:
 - **Coverage**: the share of the recording that had heart data.
 - **Minutes per α1 band.**
 
-Tap the card or any row to open the recording: its summary, a chart of the whole session (pinch to zoom), the markers with their clock times and the strap's battery at start and end. You can change the name, activity and notes there. Saving renames the file to match.
+Tap the card or any row to open the recording: its summary, a chart of the whole session (pinch to zoom, drag to pan), the markers with their clock times and the strap's battery at start and end. Tap a marker to centre the chart on it.
+
+You can change the name, activity and notes there. Saving renames the file to match.
+
+![A finished recording's page](guide-detail.jpg)
 
 **Swipe a row left** to delete a recording. This removes it from the iPhone *and* deletes its file from iCloud Drive, so share or copy the file first if you want to keep it.
+
+## Analyzing your recordings
+
+StrapLog's numbers on screen are a live view. The real product is the file each recording leaves behind: every beat, marker and posture change, in a format any tool can read (see *Exports and your data*). Ready-made analyses read those files directly.
+
+**Claude skills.** Five open-source skills for Claude Code turn a recording into a report:
+
+- **hrv-overnight**: how the night went. RMSSD and SDNN in blocks through the night, Bluetooth gaps, and Apple Watch sleep stages alongside.
+- **hrv-resting**: today's resting HRV (RMSSD, LnRMSSD, SDNN, pNN50), logged against your rolling 7-day baseline.
+- **h10-session**: a workout. Heart-rate zones, DFA α1, cardiac drift, and per-set peaks and recovery for strength sessions.
+- **hrv-ramp-test**: your aerobic and anaerobic thresholds (α1 0.75 and 0.50) from a graded ramp, and the training zones they give.
+- **h10**: picks the right skill for a recording by its activity.
+
+To install them, run these two commands in Claude Code on a Mac (it also needs `uv`, from docs.astral.sh/uv):
+
+1. `/plugin marketplace add personalscience/straplog-skills`
+2. `/plugin install straplog-skills@personalscience`
+
+In the app, **Copy install command** on the guide's contents page copies both lines. Then, with iCloud Drive on the Mac, ask Claude "How did I sleep last night?"
+
+**Python.** The `straplog` package (`pip install straplog`) lists your recordings and prints beats, events and metadata as CSV or JSON, with the same HRV algorithms the skills use.
+
+The skills, the package and StrapLog itself are open source; personalscience.com/docs/straplog links to all three.
 
 ## Exports and your data
 
@@ -364,6 +403,8 @@ As exercise gets harder, α1 falls in a consistent way. That makes it a strap-on
 | **0.50** | **anaerobic threshold** | Hard; sustainable for tens of minutes at most |
 | below 0.50 | very hard (red) | Above threshold |
 
+![The α1 chart: shaded bands with the 0.75 and 0.50 lines](guide-alpha1.jpg)
+
 ### Finding your thresholds
 
 1. Choose **Other** and start a recording. Warm up easily for 5–10 minutes.
@@ -383,6 +424,8 @@ Only exercise as hard as is safe for you.
 ## Paced breathing
 
 Tap the **wind** button at the top of the screen to breathe along with a guide, any time, recording or not. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. The phone taps at each turn so you can close your eyes.
+
+![The breathing pacer](guide-pacer.jpg)
 
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 

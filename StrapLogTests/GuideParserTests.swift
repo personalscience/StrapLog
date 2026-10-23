@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import UIKit
 @testable import StrapLog
 
 @Suite("GuideParser")
@@ -30,6 +31,32 @@ struct GuideParserTests {
     func table() {
         let md = "| A | B |\n|---|:-:|\n| 1 | **2** |\n| 3 | 4 |"
         #expect(GuideParser.parse(md) == [.table(header: ["A", "B"], rows: [["1", "**2**"], ["3", "4"]])])
+    }
+
+    @Test("an image line becomes an image block named without its extension")
+    func image() {
+        let md = "Text\n![The *pacer*](guide-pacer.jpg)\n- a"
+        #expect(GuideParser.parse(md) == [
+            .paragraph("Text"),
+            .image(name: "guide-pacer", caption: "The *pacer*"),
+            .bullets(["a"]),
+        ])
+    }
+
+    @Test("an inline image mid-paragraph is left as text")
+    func inlineImageIsText() {
+        #expect(GuideParser.parse("See ![x](y.jpg) here") == [.paragraph("See ![x](y.jpg) here")])
+    }
+
+    @Test("every image in the bundled guide is in the asset catalog")
+    func bundledImagesResolve() {
+        let names = Guide.load(from: .main).compactMap { block -> String? in
+            if case .image(let name, _) = block { name } else { nil }
+        }
+        #expect(!names.isEmpty)
+        for name in names {
+            #expect(UIImage(named: name) != nil, "missing asset \(name)")
+        }
     }
 
     @Test("the bundled guide loads, has every block kind it relies on, and splits into chapters")

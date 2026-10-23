@@ -167,6 +167,8 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <li>Sit still for a few minutes and watch the numbers fill in. Heart rate shows at once; the HRV numbers need about 2 minutes of beats.</li>
 <li>Tap <strong>Stop…</strong> and confirm. StrapLog saves the recording and writes its file.</li>
 </ol>
+<figure class="shot"><img src="img/guide/guide-home.jpg" alt="Home after a recording: the Last recording card sums it up" loading="lazy"><figcaption>Home after a recording: the <em>Last recording</em> card sums it up</figcaption></figure>
+
 <p>That's it. The chapters below explain everything else.</p>
 <h3 id="recording">Recording</h3>
 <h4 id="choosing-an-activity">Choosing an activity</h4>
@@ -188,25 +190,28 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <tr>
 <td><strong>Other</strong></td>
 <td>Everything else: rest, exercise, breathing practice</td>
-<td>Offers the breathing pacer. Marker buttons: <em>a</em>, <em>b</em>, <em>c</em>, <em>end</em>.</td>
+<td>Marker buttons: <em>a</em>, <em>b</em>, <em>c</em>, <em>end</em>.</td>
 </tr>
 </tbody>
 </table>
 <p>You can give the recording a <strong>name</strong>, or leave it blank and StrapLog names it after the activity and the date ("sleep 2026-10-16"). You can rename it later.</p>
 <p>You can start a recording before the strap connects. Beats are saved from the moment it does.</p>
 <h4 id="the-recording-screen">The recording screen</h4>
+<figure class="shot"><img src="img/guide/guide-recording.jpg" alt="A recording in progress: heart rate, α1, the chart and the marker buttons" loading="lazy"><figcaption>A recording in progress: heart rate, α1, the chart and the marker buttons</figcaption></figure>
+
 <p><strong>The title</strong> shows a red dot, the elapsed time and the recording's name.</p>
 <p><strong>Heart rate (bpm), left tile.</strong> The strap's own beats-per-minute reading, sent about once a second. The strap smooths it, so it lags sudden changes by a few seconds. A warning appears under it when the strap loses skin contact.</p>
 <p><strong>DFA α1, right tile.</strong> The latest α1 (see <em>DFA α1 and training zones</em>), refreshed every <strong>20 seconds</strong>. The tile takes the colour of its intensity band, so a glance tells you how hard you are working. Until there are 2 minutes of beats it reads "First α1 after 2 min of beats".</p>
 <p><strong>The line beneath</strong> shows the latest RMSSD, the artifact % and how long ago α1 was computed. If that age keeps growing, too few clean beats are arriving.</p>
-<p><strong>The chart.</strong> Pick <strong>HR</strong>, <strong>α1</strong> or <strong>RR</strong>. The chart always ends at now.</p>
+<p><strong>The chart.</strong> Pick <strong>HR</strong>, <strong>α1</strong> or <strong>RR</strong>. The chart follows the newest beats.</p>
 <ul>
 <li><strong>Pinch</strong> to zoom out (1, 2, 5, 15, 30, 60 min, or the whole recording) or in.</li>
+<li><strong>Drag sideways</strong> to look back through the recording. A <strong>Live</strong> button appears; tap it to return to now.</li>
 <li><strong>Double-tap</strong> to go back to 5 minutes, or tap the span chip to pick one.</li>
 <li>The α1 view shades the intensity bands and draws the 0.75 and 0.50 lines.</li>
 <li>Markers appear as labelled dashed lines.</li>
 </ul>
-<p><strong>Markers</strong> sit below the chart (see <em>Markers</em>). <strong>Pacer</strong> opens the breathing pacer for activities that use it (see <em>Paced breathing</em>).</p>
+<p><strong>Markers</strong> sit below the chart (see <em>Markers</em>). The <strong>wind</strong> button at the top opens the breathing pacer (see <em>Paced breathing</em>).</p>
 <p>In landscape, the numbers sit on the left and the chart fills the right.</p>
 <h4 id="stopping">Stopping</h4>
 <p>Tap <strong>Stop…</strong> and confirm. StrapLog closes the recording, writes its file and shows a summary on Home.</p>
@@ -228,6 +233,7 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <li><strong>At your wake time, if you are already up,</strong> it stops at once.</li>
 <li><strong>Once you have been upright for 10 minutes</strong> after lying down, it stops, whatever the time. Sitting up in bed before you have lain down does not count.</li>
 </ul>
+<p>While a Sleep recording runs, the heart-rate tile adds a second line, for example "Low 46 · 5 h 12 min": the night's lowest heart rate so far (the same 2-minute average as <em>Lowest HR</em> in the summary) and how long you have been recording.</p>
 <p>The recording screen spells out the plan, for example "5 min resting at 06:30, then stops; or after 10 min upright". Turn <strong>Stop at wake time</strong> off and only the 10-minutes-upright rule applies.</p>
 <h4 id="overnight-tips">Overnight tips</h4>
 <ul>
@@ -262,6 +268,10 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <ul>
 <li><strong>Not recording:</strong> buttons to <strong>Start Sleep</strong> and <strong>Start Other</strong>. A Sleep start uses the wake time set on the iPhone.</li>
 <li><strong>Recording:</strong> the timer, your heart rate and α1, the status line, every marker button and <strong>Stop</strong> (which asks first).</li>
+</ul>
+<figure class="shot"><img src="img/guide/guide-watch-recording.jpg" alt="The Watch app during a recording" loading="lazy"><figcaption>The Watch app during a recording</figcaption></figure>
+
+<ul>
 <li><strong>Mark next</strong> (the green button) steps through your marker buttons in order, then repeats the last one. It suits a workout with several stages.</li>
 <li>If the iPhone is out of reach, a command waits and is sent when it comes back ("Waiting for iPhone…"). You can cancel it.</li>
 </ul>
@@ -270,9 +280,15 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <p>The <strong>Next Marker</strong> action adds the next marker from the Watch. Assign it to the Apple Watch Ultra's Action button, or say "Mark next in StrapLog".</p>
 <h4 id="when-the-iphone-is-out-of-reach">When the iPhone is out of reach</h4>
 <p>If the Watch app is on screen and the iPhone has gone quiet (out of range, or left in another room), the Watch listens to the strap directly and shows its heart rate with the caption "no iPhone". This is heart rate only: no α1 and nothing is saved. It switches back as soon as the iPhone reports again. The first time, the Watch asks for Bluetooth permission.</p>
+<figure class="shot"><img src="img/guide/guide-watch-no-iphone.jpg" alt="Heart rate straight from the strap while the iPhone is away" loading="lazy"><figcaption>Heart rate straight from the strap while the iPhone is away</figcaption></figure>
+
 <h4 id="complications">Complications</h4>
 <p>Add StrapLog to a watch face (circular, corner, rectangular or inline). While recording it shows a heart and your heart rate or the elapsed time, or an orange warning if the strap has a problem. When idle it reads "Not recording". Tap it to open the Watch app.</p>
 <p>To save battery, the complication updates only now and then (at start, stop, link changes and about hourly). The heart rate it shows can be up to 20 minutes old and disappears after that; open the app for the live number.</p>
+<h4 id="keep-straplog-on-screen">Keep StrapLog on screen</h4>
+<p>By default the Watch goes back to the clock face 2 minutes after you lower your wrist. To keep StrapLog up during a workout or a long session, on the Watch open <strong>Settings › General › Return to Clock</strong>, scroll to <strong>StrapLog</strong>, turn on <strong>Custom</strong> and choose <strong>After 1 hour</strong> (or <strong>Always</strong>).</p>
+<p>With the wrist down, on a Watch with Always On, StrapLog stays on screen dimmed: just your heart rate, a heart (or an orange warning if the strap has a problem) and how many markers you have added. It updates about once a minute in that state, which costs little battery; raise your wrist for the full screen and the live number.</p>
+<p>If the Watch has gone back to the clock anyway, the complication is the quickest way back: tap it.</p>
 <h3 id="alerts-and-gaps">Alerts and gaps</h3>
 <h4 id="link-alerts">Link alerts</h4>
 <p>During a recording that isn't <strong>Sleep</strong>, StrapLog sends a notification when beats stop arriving:</p>
@@ -306,8 +322,29 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <li><strong>Coverage</strong>: the share of the recording that had heart data.</li>
 <li><strong>Minutes per α1 band.</strong></li>
 </ul>
-<p>Tap the card or any row to open the recording: its summary, a chart of the whole session (pinch to zoom), the markers with their clock times and the strap's battery at start and end. You can change the name, activity and notes there. Saving renames the file to match.</p>
+<p>Tap the card or any row to open the recording: its summary, a chart of the whole session (pinch to zoom, drag to pan), the markers with their clock times and the strap's battery at start and end. Tap a marker to centre the chart on it.</p>
+<p>You can change the name, activity and notes there. Saving renames the file to match.</p>
+<figure class="shot"><img src="img/guide/guide-detail.jpg" alt="A finished recording&#x27;s page" loading="lazy"><figcaption>A finished recording's page</figcaption></figure>
+
 <p><strong>Swipe a row left</strong> to delete a recording. This removes it from the iPhone <em>and</em> deletes its file from iCloud Drive, so share or copy the file first if you want to keep it.</p>
+<h3 id="analyzing-your-recordings">Analyzing your recordings</h3>
+<p>StrapLog's numbers on screen are a live view. The real product is the file each recording leaves behind: every beat, marker and posture change, in a format any tool can read (see <em>Exports and your data</em>). Ready-made analyses read those files directly.</p>
+<p><strong>Claude skills.</strong> Five open-source skills for Claude Code turn a recording into a report:</p>
+<ul>
+<li><strong>hrv-overnight</strong>: how the night went. RMSSD and SDNN in blocks through the night, Bluetooth gaps, and Apple Watch sleep stages alongside.</li>
+<li><strong>hrv-resting</strong>: today's resting HRV (RMSSD, LnRMSSD, SDNN, pNN50), logged against your rolling 7-day baseline.</li>
+<li><strong>h10-session</strong>: a workout. Heart-rate zones, DFA α1, cardiac drift, and per-set peaks and recovery for strength sessions.</li>
+<li><strong>hrv-ramp-test</strong>: your aerobic and anaerobic thresholds (α1 0.75 and 0.50) from a graded ramp, and the training zones they give.</li>
+<li><strong>h10</strong>: picks the right skill for a recording by its activity.</li>
+</ul>
+<p>To install them, run these two commands in Claude Code on a Mac (it also needs <code>uv</code>, from docs.astral.sh/uv):</p>
+<ol>
+<li><code>/plugin marketplace add personalscience/straplog-skills</code></li>
+<li><code>/plugin install straplog-skills@personalscience</code></li>
+</ol>
+<p>In the app, <strong>Copy install command</strong> on the guide's contents page copies both lines. Then, with iCloud Drive on the Mac, ask Claude "How did I sleep last night?"</p>
+<p><strong>Python.</strong> The <code>straplog</code> package (<code>pip install straplog</code>) lists your recordings and prints beats, events and metadata as CSV or JSON, with the same HRV algorithms the skills use.</p>
+<p>The skills, the package and StrapLog itself are open source; personalscience.com/docs/straplog links to all three.</p>
 <h3 id="exports-and-your-data">Exports and your data</h3>
 <h4 id="where-the-files-go">Where the files go</h4>
 <p>Every recording is saved as one file in <strong>Files → iCloud Drive → StrapLog</strong>, or in <strong>Files → On My iPhone → StrapLog</strong> if iCloud Drive is off. The exact location appears under <strong>Last export</strong>.</p>
@@ -324,7 +361,6 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <li><strong>meta</strong>: the file format and version.</li>
 </ul>
 <p>All times are stored in UTC (milliseconds since 1970), with your time-zone offset saved for each recording. A beat's time is an estimate, because the strap does not time-stamp beats: StrapLog infers it from when the phone received each beat.</p>
-<p>For ready-made analyses — overnight reports, workout summaries, threshold tests — see <a href="#analyze">Analyze it</a> above: a Python package and open-source Claude skills that read these files directly. The experiments I run with them go out in the <a href="#newsletter">Personal Science newsletter</a>, one a month.</p>
 <h4 id="reinstalling">Reinstalling</h4>
 <p>Your recordings live in two places: the app's own database, and the files above. If you delete and reinstall StrapLog, it reads the files back in when it opens, and your recordings reappear on Home. Files that iCloud has moved off the phone come back a little later, once they have downloaded.</p>
 <p>Files in <em>On My iPhone</em> are deleted along with the app. If iCloud Drive is off, copy the StrapLog folder somewhere safe before you delete the app.</p>
@@ -481,6 +517,8 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 </tr>
 </tbody>
 </table>
+<figure class="shot"><img src="img/guide/guide-alpha1.jpg" alt="The α1 chart: shaded bands with the 0.75 and 0.50 lines" loading="lazy"><figcaption>The α1 chart: shaded bands with the 0.75 and 0.50 lines</figcaption></figure>
+
 <h4 id="finding-your-thresholds">Finding your thresholds</h4>
 <ol>
 <li>Choose <strong>Other</strong> and start a recording. Warm up easily for 5–10 minutes.</li>
@@ -497,9 +535,12 @@ straplog events &lt;file.sqlite&gt; --markers</code></pre>
 <li>The 0.75 and 0.50 lines are averages from research. Your own thresholds may sit a little higher or lower.</li>
 </ul>
 <h3 id="paced-breathing">Paced breathing</h3>
-<p>In an <strong>Other</strong> recording, tap <strong>Pacer</strong> to breathe along with a guide, by default <strong>6 breaths per minute</strong> (5 seconds in, 5 seconds out), adjustable from 4.5 to 7. The phone taps at each turn so you can close your eyes.</p>
+<p>Tap the <strong>wind</strong> button at the top of the screen to breathe along with a guide, any time, recording or not. It runs by default at <strong>6 breaths per minute</strong> (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. The phone taps at each turn so you can close your eyes.</p>
+<figure class="shot"><img src="img/guide/guide-pacer.jpg" alt="The breathing pacer" loading="lazy"><figcaption>The breathing pacer</figcaption></figure>
+
 <p>Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.</p>
-<p>Most people have a personal <strong>resonance rate</strong> between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours. Pacer start and stop are saved in the recording.</p>
+<p>Most people have a personal <strong>resonance rate</strong> between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.</p>
+<p>The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. Hiding the pacer stops it.</p>
 <p>Don't compare RMSSD from breathing sessions with your normal resting baseline: slow breathing raises it.</p>
 <h3 id="getting-good-data">Getting good data</h3>
 <ul>

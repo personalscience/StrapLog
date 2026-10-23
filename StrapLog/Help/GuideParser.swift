@@ -1,7 +1,7 @@
 import Foundation
 
 /// Splits the guide's Markdown into blocks. Supports exactly what `Guide.md` uses:
-/// ATX headings, paragraphs, `-` and `1.` lists, pipe tables and `---` rules.
+/// ATX headings, paragraphs, `-` and `1.` lists, pipe tables, `---` rules and one-line images.
 enum GuideParser {
     static func parse(_ markdown: String) -> [GuideBlock] {
         var blocks: [GuideBlock] = []
@@ -22,6 +22,8 @@ enum GuideParser {
                 flush()
             } else if line == "---" {
                 flush(); blocks.append(.rule)
+            } else if let (name, caption) = image(line) {
+                flush(); blocks.append(.image(name: name, caption: caption))
             } else if let (level, text) = heading(line) {
                 flush(); blocks.append(.heading(level: level, text: text))
             } else if line.hasPrefix("|") {
@@ -45,6 +47,16 @@ enum GuideParser {
         let hashes = line.prefix { $0 == "#" }.count
         guard (1...6).contains(hashes), line.dropFirst(hashes).first == " " else { return nil }
         return (hashes, String(line.dropFirst(hashes + 1)))
+    }
+
+    /// `![caption](file.jpg)` → the file's name without its extension, and the caption.
+    private static func image(_ line: String) -> (String, String)? {
+        guard line.hasPrefix("!["), line.hasSuffix(")"),
+              let mid = line.range(of: "](") else { return nil }
+        let caption = String(line[line.index(line.startIndex, offsetBy: 2)..<mid.lowerBound])
+        let file = line[mid.upperBound..<line.index(before: line.endIndex)]
+        let name = file.split(separator: ".").first.map(String.init) ?? ""
+        return name.isEmpty ? nil : (name, caption)
     }
 
     private static func listItem(_ line: String) -> (ordered: Bool, String)? {
