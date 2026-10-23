@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Publish site/straplog/ (support + privacy pages) to https://personalscience.com/docs/straplog/.
+# Build, then publish site/straplog/ (docs + privacy pages) to https://personalscience.com/docs/straplog/.
 # The bucket sits behind the personalscience.com CloudFront distribution, which serves index.html for */.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+tools/build_site.py
 aws s3 sync site/straplog/ s3://personalscience-docs/docs/straplog/ --delete --exclude ".DS_Store" \
   --cache-control "max-age=300"
 # The IAM user may create invalidations but not watch them; changes show within a minute or two.

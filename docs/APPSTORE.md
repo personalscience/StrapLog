@@ -99,4 +99,4 @@ First release.
 
 ## Support and privacy pages
 
-Sources in `site/straplog/` (support page, `privacy/`); `tools/publish_site.sh` syncs them to the `personalscience-docs` bucket behind personalscience.com. Contact: support@personalscience.com.
+Sources: `site/src/` (docs and privacy pages, shared GA4 tag; `tools/build_site.py` renders them, with the in-app Guide.md, into `site/straplog/`); `tools/publish_site.sh` builds and syncs them to the `personalscience-docs` bucket behind personalscience.com. Contact: support@personalscience.com.

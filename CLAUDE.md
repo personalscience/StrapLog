@@ -14,6 +14,7 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 tools/release.sh [--upload]                         # App Store archive + export (clean tree; build = commit count)
 tools/screenshots.sh                                # 6.9" App Store PNGs → build/screenshots/ (~4 min real-time replay)
 tools/check_listing.py                              # docs/APPSTORE.md lengths + no-Polar-marks rule
+tools/publish_site.sh                               # build docs page (Guide.md → site/straplog/) + deploy
 ```
 
 ## Map
@@ -42,7 +43,7 @@ tools/check_listing.py                              # docs/APPSTORE.md lengths +
 ## Vault
 
 - Hub note: `~/Documents/Notes/Projects/Personal Science/StrapLog/StrapLog.md`
-- Background: `~/Documents/Notes/Sprague2026/Health2026/Fitness/H10 R-R Capture After iOS 27.md`
+- Background (why StrapLog exists) and feature ideas: hub section *Why StrapLog exists*; `StrapLog Planning.md` beside the hub
 
 ## Learned
 
