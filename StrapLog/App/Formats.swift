@@ -178,13 +178,6 @@ enum Formats {
         value ?? "--"
     }
 
-    /// `0.1.0 (1) · dd795a4-dirty`, from the Info.plist stamped by tools/stamp_build.sh.
-    static func build(_ info: [String: Any]) -> String {
-        let version = info["CFBundleShortVersionString"] as? String ?? "?"
-        let number = info["CFBundleVersion"] as? String ?? "?"
-        return "\(version) (\(number)) · \(info["StrapLogCommit"] as? String ?? "unstamped")"
-    }
-
     // MARK: Chart
 
     static func span(_ span: ChartSpan) -> String {

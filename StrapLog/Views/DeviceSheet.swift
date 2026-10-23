@@ -49,7 +49,7 @@ struct DeviceSheet: View {
                         }
                     }
                     Section("App") {
-                        LabeledContent("Build", value: Formats.build(info))
+                        LabeledContent("Build", value: BuildStamp.full(info))
                             .accessibilityIdentifier("appBuild")
                         LabeledContent("Built", value: Formats.text(info["StrapLogBuiltAt"] as? String))
                     }

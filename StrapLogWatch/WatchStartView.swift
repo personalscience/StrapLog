@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Idle: one start button per activity. The phone records, with the wake time and marker bar
 /// set in its app; the name is the activity and date. Above them, the strap's HR while the
-/// phone is gone.
+/// phone is gone. Below them, the Watch app's version.
 struct WatchStartView: View {
     let phone: PhoneLink
     let showsStrap: Bool
@@ -24,6 +24,10 @@ struct WatchStartView: View {
                     .tint(.red)
                     .accessibilityIdentifier("watch.start.\(preset.id)")
                 }
+                Text(BuildStamp.short(Bundle.main.infoDictionary ?? [:]))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("watch.version")
             }
         }
     }

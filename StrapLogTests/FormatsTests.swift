@@ -120,13 +120,6 @@ struct FormatsTests {
         #expect(Formats.countdown(seconds: 0.2) == "1")
     }
 
-    @Test("build names version, build number and commit")
-    func build() {
-        let info: [String: Any] = ["CFBundleShortVersionString": "0.1.0", "CFBundleVersion": "1",
-                                   "StrapLogCommit": "dd795a4-dirty"]
-        #expect(Formats.build(info) == "0.1.0 (1) · dd795a4-dirty")
-        #expect(Formats.build([:]) == "? (?) · unstamped")
-    }
 
     @Test("export location names the Files path for iCloud and the local fallback")
     func exportLocation() {
