@@ -60,12 +60,12 @@ enum Formats {
         ms.map { elapsed(ms: $0) } ?? "open"
     }
 
-    /// Wall-clock time in a recording's own time zone, e.g. `23:41:07`.
-    static func clock(atMs: Int64, tzOffsetS: Int) -> String {
+    /// Wall-clock time in a recording's own time zone, e.g. `23:41:07`, or `23:41` without seconds.
+    static func clock(atMs: Int64, tzOffsetS: Int, seconds: Bool = true) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = TimeZone(secondsFromGMT: tzOffsetS)
-        f.dateFormat = "HH:mm:ss"
+        f.dateFormat = seconds ? "HH:mm:ss" : "HH:mm"
         return f.string(from: Date(timeIntervalSince1970: Double(atMs) / 1000))
     }
 
@@ -132,10 +132,11 @@ enum Formats {
         return "RMSSD \(ms(rmssd)) · artifacts \(percent(artifactRate)) · α1 \(ago(ms: nowMs - alpha1AtMs))"
     }
 
-    /// The HR tile's overnight line: lowest 2-min HR so far and whole minutes recorded,
-    /// e.g. `Low 46 · 5 h 12 min`.
-    static func overnightLow(lowestHR: Double?, elapsedMs: Int64) -> String {
-        "Low \(lowestHR.map { String(format: "%.0f", $0) } ?? "--") · \(minutes(Double(max(0, elapsedMs) / 60_000)))"
+    /// The HR tile's overnight lines: lowest 2-min HR so far and when (the window's centre, in
+    /// the recording's time zone), then whole minutes recorded, e.g. `Low 46 at 03:40` / `5 h 12 min`.
+    static func overnightLow(lowest: TrendPoint?, tzOffsetS: Int, elapsedMs: Int64) -> String {
+        let low = lowest.map { String(format: "Low %.0f at ", $0.value) + clock(atMs: $0.atMs, tzOffsetS: tzOffsetS, seconds: false) }
+        return "\(low ?? "Low --")\n\(minutes(Double(max(0, elapsedMs) / 60_000)))"
     }
 
     /// Toolbar title while recording, e.g. `12:41 · RAVINE`.

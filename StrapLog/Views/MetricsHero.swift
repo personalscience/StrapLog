@@ -27,6 +27,7 @@ struct MetricsHero: View {
 
     private var overnightLow: String? {
         guard let rec = model.activeRecording, model.activePreset.overnight else { return nil }
-        return Formats.overnightLow(lowestHR: model.live.lowestWindowHR, elapsedMs: nowMs - rec.startedAtMs)
+        return Formats.overnightLow(lowest: model.live.lowestWindow, tzOffsetS: rec.tzOffsetS,
+                                    elapsedMs: nowMs - rec.startedAtMs)
     }
 }

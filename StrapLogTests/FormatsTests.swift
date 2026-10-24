@@ -38,8 +38,10 @@ struct FormatsTests {
 
     @Test("overnight line: lowest HR and whole minutes recorded")
     func overnightLow() {
-        #expect(Formats.overnightLow(lowestHR: 46.4, elapsedMs: 18_779_000) == "Low 46 · 5 h 12 min")
-        #expect(Formats.overnightLow(lowestHR: nil, elapsedMs: 179_999) == "Low -- · 2 min")
+        // 2026-10-24 10:40:30 UTC is 03:40 in Pacific daylight time (UTC-7).
+        let low = TrendPoint(atMs: 1_792_838_430_000, value: 46.4)
+        #expect(Formats.overnightLow(lowest: low, tzOffsetS: -25_200, elapsedMs: 18_779_000) == "Low 46 at 03:40\n5 h 12 min")
+        #expect(Formats.overnightLow(lowest: nil, tzOffsetS: 0, elapsedMs: 179_999) == "Low --\n2 min")
     }
 
     @Test("summary strings: duration or open, clock in the recording's zone, minutes as h/min")

@@ -28,8 +28,9 @@ public struct LiveMetrics: Sendable {
     /// Number of windows closed so far, including those with too few beats.
     public private(set) var closedWindows = 0
     /// Lowest HR of the closed windows that are also the skills' 60 s-stride windows: what
-    /// `SessionSummary.lowestHR` gives for the beats so far. Nil until one has enough beats.
-    public private(set) var lowestWindowHR: Double?
+    /// `SessionSummary.lowestHR` gives for the beats so far, stamped at that window's centre
+    /// (the earliest on a tie). Nil until one has enough beats.
+    public private(set) var lowestWindow: TrendPoint?
 
     /// Beats (seconds since `originMs`) that may still belong to an open window.
     private var pending: [TimedSample<Double>] = []
@@ -59,6 +60,9 @@ public struct LiveMetrics: Sendable {
     public var hrHistory: [TrendPoint] {
         rrHistory.map { TrendPoint(atMs: $0.atMs, value: 60_000 / $0.value) }
     }
+
+    /// `lowestWindow`'s HR.
+    public var lowestWindowHR: Double? { lowestWindow?.value }
 
     /// End time (epoch ms) of the most recently closed window, or nil before the first closes.
     public var latestWindowEndMs: Int64? {
@@ -97,8 +101,9 @@ public struct LiveMetrics: Sendable {
         latest = analyzer.features(of: raw, center: w.center(ofWindow: k))
         if let latest {
             windows.append(latest)
-            if lo.truncatingRemainder(dividingBy: HRVDefaults.strideSeconds) == 0 {
-                lowestWindowHR = min(lowestWindowHR ?? latest.hrBpm, latest.hrBpm)
+            if lo.truncatingRemainder(dividingBy: HRVDefaults.strideSeconds) == 0, let originMs,
+               latest.hrBpm < lowestWindow?.value ?? .infinity {
+                lowestWindow = TrendPoint(atMs: originMs + Int64(latest.tCenter * 1000), value: latest.hrBpm)
             }
         }
         closedWindows = k + 1

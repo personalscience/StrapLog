@@ -114,7 +114,7 @@ StrapLog uses the strap's motion sensor to tell lying down from sitting or stand
 - **At your wake time, if you are already up,** it stops at once.
 - **Once you have been upright for 10 minutes** after lying down, it stops, whatever the time. Sitting up in bed before you have lain down does not count.
 
-While a Sleep recording runs, the heart-rate tile adds a second line, for example "Low 46 · 5 h 12 min": the night's lowest heart rate so far (the same 2-minute average as *Lowest HR* in the summary) and how long you have been recording.
+While a Sleep recording runs, the heart-rate tile adds two lines, for example "Low 46 at 03:40" and "5 h 12 min": the night's lowest heart rate so far (the same 2-minute average as *Lowest HR* in the summary), when it happened, and how long you have been recording. A low late in the night often follows a late meal, alcohol, a hard evening workout or stress.
 
 The recording screen spells out the plan, for example "5 min resting at 06:30, then stops; or after 10 min upright". Turn **Stop at wake time** off and only the 10-minutes-upright rule applies.
 

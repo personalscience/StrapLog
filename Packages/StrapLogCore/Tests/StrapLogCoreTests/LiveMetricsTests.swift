@@ -67,6 +67,9 @@ struct LiveMetricsTests {
             live.add(tEndMs: end, rrMs: rr)
             let aligned = live.windows.filter { ($0.tCenter - 60).truncatingRemainder(dividingBy: 60) == 0 }
             #expect(live.lowestWindowHR == aligned.map(\.hrBpm).min())
+            let first = aligned.first { $0.hrBpm == live.lowestWindowHR }
+            #expect(live.lowestWindow?.atMs == first.map { Self.origin + Int64($0.tCenter * 1000) },
+                    "stamped at the centre of the earliest lowest window")
             if let previous { #expect(live.lowestWindowHR! <= previous) }
             previous = live.lowestWindowHR
         }
