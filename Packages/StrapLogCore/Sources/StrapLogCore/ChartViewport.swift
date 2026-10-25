@@ -78,8 +78,12 @@ extension ChartViewport: RawRepresentable {
         self.init(span: span, anchorEndMs: stored.anchorEndMs, highlightMs: stored.highlightMs)
     }
 
+    /// Sorted keys keep the string stable: with `RawRepresentable`, `==` can resolve to the
+    /// stdlib overload that compares raw values, and unsorted JSON key order varies per run.
     public var rawValue: String {
         let stored = Stored(span: span.rawValue, anchorEndMs: anchorEndMs, highlightMs: highlightMs)
-        return String(decoding: (try? JSONEncoder().encode(stored)) ?? Data(), as: UTF8.self)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        return String(decoding: (try? encoder.encode(stored)) ?? Data(), as: UTF8.self)
     }
 }
