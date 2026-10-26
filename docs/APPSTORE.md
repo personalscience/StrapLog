@@ -78,6 +78,8 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 
 ## What's New (1.1)
 
+Submitted for review 2026-10-25.
+
 <!-- listing:whatsnew -->
 • Charts scroll: drag back through a recording, and tap a marker on a recording's page to jump to it.
 • The breathing pacer works any time, with or without a recording.
@@ -88,7 +90,7 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 
 ## What's New (1.0)
 
-First release.
+First release. Submitted for review 2026-10-18.
 
 ## App Privacy (nutrition label)
 
