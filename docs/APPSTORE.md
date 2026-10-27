@@ -78,7 +78,7 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 
 ## What's New (1.1)
 
-Submitted for review 2026-10-25.
+Submitted for review 2026-10-25; Ready for Distribution 2026-10-26.
 
 <!-- listing:whatsnew -->
 • Charts scroll: drag back through a recording, and tap a marker on a recording's page to jump to it.
