@@ -34,7 +34,7 @@ th { color: var(--ink-2); font-weight: 600; }
 .button { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; padding: 10px 18px; border-radius: 10px; }
 .shots { display: flex; gap: 12px; align-items: flex-start; margin: 24px 0; }
 .shots figure { margin: 0; flex: 1; text-align: center; }
-.shots img { width: 100%; border-radius: 14px; border: 1px solid var(--rule); }
+.shots img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--rule); }
 .shots figcaption { font-size: 13px; color: var(--muted); margin-top: 4px; }
 .guide { border-top: 1px solid var(--rule); }
 .guide figure.shot { margin: 16px auto; max-width: 300px; text-align: center; }
