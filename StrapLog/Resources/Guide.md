@@ -423,15 +423,17 @@ Only exercise as hard as is safe for you.
 
 ## Paced breathing
 
-Tap the **wind** button at the top of the screen to breathe along with a guide, any time, recording or not. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. The phone taps at each turn so you can close your eyes.
+Tap the **wind** button at the top of the screen to breathe along with a guide, any time, recording or not. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. You can also pick an inhale:exhale ratio, **1:1**, **4:6** or **1:2**, and the pacer remembers it with the rate. The ratio is a preference. Studies disagree on whether a longer exhale changes HRV, so the file records which ratio you used and you can compare for yourself. The phone taps at each turn so you can close your eyes.
 
 ![The breathing pacer](guide-pacer.jpg)
+
+**Sound** is off by default. Turn it on to hear a rising tone to breathe in and a falling tone to breathe out, including with the phone locked or in a pocket. It plays alongside music and ignores the silent switch, so the Sound toggle is the mute. The phone's tap at each turn only works while the screen is on.
 
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 
 Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.
 
-The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. Hiding the pacer stops it.
+The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. While the pacer runs with no recording open, **Record this session** starts a **Breathing** recording without interrupting the breath. The recording stores the rate, the inhale and exhale lengths and the moment the pacer started, so your analysis knows exactly what was paced. Hiding the pacer stops it.
 
 Don't compare RMSSD from breathing sessions with your normal resting baseline: slow breathing raises it.
 

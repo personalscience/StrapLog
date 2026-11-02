@@ -19,6 +19,14 @@ struct ActivityPresetTests {
         #expect(ActivityPreset.other.markers == ["a", "b", "c", "end"])
     }
 
+    @Test("breathing sits between sleep and other: not overnight, settle/start/end bar")
+    func breathing() {
+        #expect(ActivityPreset.all.map(\.id) == ["sleep", "breathing", "other"])
+        #expect(!ActivityPreset.breathing.overnight)
+        #expect(ActivityPreset.breathing.markers == ["settle", "start", "end"])
+        #expect(ActivityPreset.named("breathing") == .breathing)
+    }
+
     @Test("default name uses the local date, not UTC")
     func defaultName() {
         // 2025-10-10 03:00 UTC is still Oct 9 at -7 h.

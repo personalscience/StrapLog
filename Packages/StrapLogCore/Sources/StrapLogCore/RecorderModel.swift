@@ -79,6 +79,8 @@ public final class RecorderModel {
     private let defaults: UserDefaults
     /// The source being consumed; told to stream motion only while recording.
     private var source: (any HeartSource)?
+    /// Plays the pacer's turns while it runs, or nil with nothing to play them on.
+    private let pacerClock: PacerClock?
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
@@ -91,7 +93,8 @@ public final class RecorderModel {
     public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
                 snapshotEveryMs: Int64 = RecorderModel.defaultSnapshotEveryMs, appVersion: String = "dev",
                 defaults: UserDefaults = .standard, display: (any LiveStatusDisplay)? = nil,
-                throttle: LiveStatusThrottle = LiveStatusThrottle()) {
+                throttle: LiveStatusThrottle = LiveStatusThrottle(), cues: (any PacerCueSink)? = nil,
+                sleeper: any PacerSleeper = TaskSleeper()) {
         self.database = database
         self.clock = clock
         self.display = display
@@ -99,6 +102,7 @@ public final class RecorderModel {
         self.exports = exports
         self.snapshotEveryMs = snapshotEveryMs
         self.defaults = defaults
+        self.pacerClock = cues.map { PacerClock(clock: clock, sleeper: sleeper, sink: $0) }
         let markerPresets = MarkerPresets.load(from: defaults)
         self.markerPresets = markerPresets
         self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
@@ -201,12 +205,13 @@ public final class RecorderModel {
         await save(edited)
     }
 
-    /// Starts the pacer at `breathsPerMinute` (within `BreathingPacer.rates`), replacing a running one.
-    public func startPacer(breathsPerMinute: Double) async {
+    /// Starts the pacer at `breathsPerMinute` (within `BreathingPacer.rates`) and `ratio`, replacing a running one.
+    public func startPacer(breathsPerMinute: Double, ratio: BreathRatio = .default) async {
         await stopPacer()
-        let started = BreathingPacer(breathsPerMinute: breathsPerMinute, startedAtMs: clock.nowMs())
+        let started = BreathingPacer(breathsPerMinute: breathsPerMinute, ratio: ratio, startedAtMs: clock.nowMs())
         pacer = started
         pacerPanelShown = true
+        pacerClock?.run(started)
         guard isRecording else { return }
         await perform { try await session.logPacerStart(started) }
     }
@@ -214,6 +219,7 @@ public final class RecorderModel {
     public func stopPacer() async {
         guard pacer != nil else { return }
         pacer = nil
+        pacerClock?.stop()
         guard isRecording else { return }
         await perform { try await session.logPacerStop() }
     }

@@ -76,17 +76,26 @@ ANALYZE IT
 StrapLog is a personal measurement tool, not a medical device. It does not diagnose, treat or prevent any condition.
 <!-- /listing -->
 
+## What's New (1.2)
+
+Not yet submitted for review.
+
+<!-- listing:whatsnew -->
+• Pacer sound: optional tones at each turn of the breath, so you can follow with the phone locked or in a pocket. Off by default. They play alongside your music.
+• Inhale:exhale ratio: 1:1, 4:6 or 1:2.
+• New Breathing activity. Tap "Record this session" on the pacer to start recording without breaking the breath.
+• Recordings now store exactly what was paced: rate, inhale, exhale and start time.
+<!-- /listing -->
+
 ## What's New (1.1)
 
 Submitted for review 2026-10-25; Ready for Distribution 2026-10-26.
 
-<!-- listing:whatsnew -->
 • Charts scroll: drag back through a recording, and tap a marker on a recording's page to jump to it.
 • The breathing pacer works any time, with or without a recording.
 • Sleep recordings show the night's lowest heart rate live.
 • Apple Watch: StrapLog stays on screen, dimmed, when you lower your wrist on an Always On watch.
 • An illustrated guide, with a new chapter on analyzing your recordings with Claude skills.
-<!-- /listing -->
 
 ## What's New (1.0)
 
@@ -106,7 +115,9 @@ First release. Submitted for review 2026-10-18.
 >
 > Without a strap, the app opens to Home with a grey searching heart. You can still start and stop a recording, open the in-app Guide (? button), browse settings and see the strap sheet.
 >
-> Background mode bluetooth-central: an overnight sleep recording runs for 7–9 hours with the phone locked. The app must keep receiving the strap's heart-rate and RR notifications in the background, or the night's data is lost. It uses no location or audio background modes.
+> Background mode bluetooth-central: an overnight sleep recording runs for 7–9 hours with the phone locked. The app must keep receiving the strap's heart-rate and RR notifications in the background, or the night's data is lost. It uses no location background mode.
+>
+> Background mode audio: the optional breathing pacer plays short tones at each turn of the breath so it can be followed with the phone locked. The tones are real audible content and the user's only cue when the screen is off. The Sound toggle is off by default; the audio session is active only while the pacer runs with Sound on, mixes with other audio, and is deactivated when the pacer stops or Sound is turned off.
 >
 > Time-sensitive notifications: during a daytime recording, if the strap disconnects, loses skin contact or sends no beats for 10 seconds, one link alert tells the user to check the strap. Sleep recordings never send these alerts.
 >

@@ -48,6 +48,7 @@
 		55B22B900FB1F84127A44341 /* LiveMetricLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2921990E24264C14F324C4DA /* LiveMetricLabel.swift */; };
 		562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */; };
 		573182B5190038A0C4F13AC6 /* StrapLogWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FD0D5D022DCD8F64EBEFFE /* StrapLogWatchApp.swift */; };
+		5761A68DCF86142B6D373EC2 /* PacerToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */; };
 		589C2FBACBA698559BDF94A8 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = DA5F5BE64ED9A4978504D76C /* StrapLogCore */; };
 		5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */; };
 		6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */; };
@@ -101,6 +102,7 @@
 		BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */; };
 		BDC2471C14938D142F1F1100 /* GRDB.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8392FC46A8840630FEF60B78 /* GRDB.txt */; };
 		BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407BC12CED71B5822CEB173A /* AppDelegate.swift */; };
+		BF49D98C6D5DDEC34FEE6E65 /* PacerSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91479013540976CBF4CC5EE3 /* PacerSounds.swift */; };
 		C1F5B4B6A92742994C932620 /* BreathingPacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443633C69E6A56647BF4CA19 /* BreathingPacerView.swift */; };
 		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
 		C50A5BD842688B695A9456FC /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */; };
@@ -119,6 +121,7 @@
 		E5395F6E732BA51C1B7C7D69 /* LiveControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71B999AA2EA9301B216B524 /* LiveControls.swift */; };
 		E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		E61CCC4AEC06D9871DD16A87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA2003C809D989DFEF440A25 /* Assets.xcassets */; };
+		EB7D6582C703C8991200108C /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC633BBEC97798E07AA7260 /* PacerTone.swift */; };
 		EBDC5BB449B7ADD183C277C1 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		EDF8E341B85485AEE040F4D3 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 752221A3371BB6F53C1AA52D /* StrapLogCore */; };
 		EF03BFA9167258C364CD317E /* StrapLogWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 30C2069D2EA0F12DCCEE55C5 /* StrapLogWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -275,6 +278,8 @@
 		8948C9D9BB5CC368071FF7B9 /* PacerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerSection.swift; sourceTree = "<group>"; };
 		8D7D0B581F1DFF9255C185D9 /* HeroNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNumber.swift; sourceTree = "<group>"; };
 		8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GuideImages.xcassets; sourceTree = "<group>"; };
+		8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerToneTests.swift; sourceTree = "<group>"; };
+		91479013540976CBF4CC5EE3 /* PacerSounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerSounds.swift; sourceTree = "<group>"; };
 		9221BBDEA94E79A819D853DF /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		93109613355B501AC6E485DB /* PolarBleSdk.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PolarBleSdk.txt; sourceTree = "<group>"; };
 		99332494B44CF002893B4096 /* WatchLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLink.swift; sourceTree = "<group>"; };
@@ -293,6 +298,7 @@
 		B95A73F72D3E2290BC73FF0E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BA2EE715B9CE35D456E62655 /* StrapLogCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StrapLogCore; path = Packages/StrapLogCore; sourceTree = SOURCE_ROOT; };
 		BD9A566C1CDC7F48C265C5A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BEC633BBEC97798E07AA7260 /* PacerTone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerTone.swift; sourceTree = "<group>"; };
 		C16AEFFB732918F52EACD94D /* LaunchOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptions.swift; sourceTree = "<group>"; };
 		C4967ABE8CB6D2377481FFCB /* ComplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationEntry.swift; sourceTree = "<group>"; };
 		C71B999AA2EA9301B216B524 /* LiveControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveControls.swift; sourceTree = "<group>"; };
@@ -409,6 +415,7 @@
 				FCA4CA21E955F6812830CF36 /* GuideBookTests.swift */,
 				11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */,
 				17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */,
+				8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */,
 			);
 			path = StrapLogTests;
 			sourceTree = "<group>";
@@ -431,6 +438,15 @@
 				038379790F496348954FEBCE /* LinkAlertNotifier.swift */,
 			);
 			path = Alerts;
+			sourceTree = "<group>";
+		};
+		39B34D2C774ABBFB3D195159 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				91479013540976CBF4CC5EE3 /* PacerSounds.swift */,
+				BEC633BBEC97798E07AA7260 /* PacerTone.swift */,
+			);
+			path = Audio;
 			sourceTree = "<group>";
 		};
 		3ABDAA8CDD6E7229CC834281 /* Packages */ = {
@@ -641,6 +657,7 @@
 			children = (
 				3835085E061359E4F4FA113C /* Alerts */,
 				0457F6A3BD1D57BA776452ED /* App */,
+				39B34D2C774ABBFB3D195159 /* Audio */,
 				DCFFD2E3724DDEA54504419C /* Help */,
 				5FC908C1B5E8F0B0F7364D71 /* Intents */,
 				9972F8520BFBF6591DBD2F18 /* LiveActivity */,
@@ -1001,6 +1018,7 @@
 				AC524F9D47C04BC1F194C5E9 /* GuideBookTests.swift in Sources */,
 				C6660A5D11B6F4B4E9E0AA07 /* GuideParserTests.swift in Sources */,
 				325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */,
+				5761A68DCF86142B6D373EC2 /* PacerToneTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,7 +1081,9 @@
 				4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */,
 				9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */,
 				89365F8AFEE76BB4F1CABFBF /* PacerSection.swift in Sources */,
+				BF49D98C6D5DDEC34FEE6E65 /* PacerSounds.swift in Sources */,
 				43039C4E08B8CD15DCA18585 /* PacerToggle.swift in Sources */,
+				EB7D6582C703C8991200108C /* PacerTone.swift in Sources */,
 				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
 				1FFE0F2EFCF98386785F3E58 /* RecordingDetailView.swift in Sources */,
 				AAD0550B341D61A0438E5E86 /* RecordingRow.swift in Sources */,
@@ -1213,7 +1233,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1434,7 +1454,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

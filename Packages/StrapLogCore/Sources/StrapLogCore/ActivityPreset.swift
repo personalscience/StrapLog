@@ -23,8 +23,11 @@ public struct ActivityPreset: Sendable, Equatable, Hashable, Identifiable, Encod
     public static let other = ActivityPreset(id: "other", title: "Other", systemImage: "waveform.path.ecg",
                                              markers: ["a", "b", "c", "end"], overnight: false)
 
+    public static let breathing = ActivityPreset(id: "breathing", title: "Breathing", systemImage: "wind",
+                                                 markers: ["settle", "start", "end"], overnight: false)
+
     /// Picker order.
-    public static let all = [sleep, other]
+    public static let all = [sleep, breathing, other]
 
     /// The preset stored as `id`; `other` for an id this build does not know.
     public static func named(_ id: String) -> ActivityPreset {

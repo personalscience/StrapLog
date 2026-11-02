@@ -5,6 +5,15 @@ import Foundation
 public enum PacerSettings {
     public static let rateKey = "pacerBreathsPerMinute"
 
+    public static let ratioKey = "pacerBreathRatio"
+    /// Whether the pacer plays its tones (`PacerCueSink`); off unless the user turns it on.
+    public static let soundKey = "pacerSound"
+
+    /// The saved inhale:exhale ratio; missing or unknown values read as the default.
+    public static func ratio(_ stored: String?) -> BreathRatio {
+        stored.flatMap(BreathRatio.init(rawValue:)) ?? .default
+    }
+
     /// `stored` as a rate `BreathingPacer` accepts: snapped to `rateStep` within `rates`.
     public static func rate(_ stored: Double) -> Double {
         guard stored.isFinite else { return BreathingPacer.defaultRate }

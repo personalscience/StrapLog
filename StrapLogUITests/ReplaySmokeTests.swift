@@ -180,6 +180,26 @@ final class ReplaySmokeTests: XCTestCase {
     }
 
     @MainActor
+    func testRecordThisSessionStartsABreathingRecording() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+
+        let toggle = app.buttons["pacerToggle"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
+        toggle.tap()
+        let start = app.buttons["pacerStart"]
+        XCTAssertTrue(app.scroll(to: start))
+        start.tap()
+        let record = app.buttons["pacerRecord"]
+        XCTAssertTrue(app.scroll(to: record))
+        record.tap()
+        XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["pacerStop"].exists, "the pacer keeps running into the recording")
+        XCTAssertFalse(record.exists, "no second recording can start from the pacer")
+    }
+
+    @MainActor
     func testLandscapeKeepsNumbersChartAndMarkers() throws {
         let app = XCUIApplication()
         app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]

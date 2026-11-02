@@ -41,7 +41,7 @@ struct AppDependencies {
             ? [LiveActivityDisplay(), watch] : [LiveActivityDisplay(), watch, LinkAlertNotifier()]
         openModel = { [defaults] in
             RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, display: LiveStatusFanOut(displays))
+                          defaults: defaults, display: LiveStatusFanOut(displays), cues: PacerSounds())
         }
 
         if let fixture = options.replayFixture {

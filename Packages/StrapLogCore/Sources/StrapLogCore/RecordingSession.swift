@@ -135,7 +135,7 @@ public actor RecordingSession {
         return try log(.marker, label: label, note: note, recordingId: id, atMs: clock.nowMs())
     }
 
-    /// Logs `pacer_start` now, noted with `pacer`'s rate. A pacer already running when a
+    /// Logs `pacer_start` now, noted with `pacer`'s stamp (`PacerStamp`). A pacer already running when a
     /// recording starts is logged at the start, so the file says it was paced.
     public func logPacerStart(_ pacer: BreathingPacer) throws {
         let id = try requireRecording()
