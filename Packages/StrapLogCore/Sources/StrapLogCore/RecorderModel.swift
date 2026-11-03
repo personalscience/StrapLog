@@ -42,8 +42,8 @@ public final class RecorderModel {
     public private(set) var errorMessage: String?
     /// The user's marker bars, one per activity.
     public private(set) var markerPresets: MarkerPresets
-    /// Free-text marker notes offered as one-tap suggestions, most recent first.
-    public private(set) var recentNotes: [String] = []
+    /// Free-text marker notes offered as suggestions, most recent first.
+    public private(set) var recentNotes: [RecentNote] = []
 
     public var isRecording: Bool { activeRecording != nil }
 
@@ -87,7 +87,7 @@ public final class RecorderModel {
     /// How long notifications may arrive without beats before `LiveStatus.beatGap` is set.
     public static let beatGapAfterMs: Int64 = 10_000
     /// How many `recentNotes` to offer.
-    public static let recentNoteLimit = 8
+    public static let recentNoteLimit = 100
 
     /// `appVersion` is stamped into every export (`ExportMeta`, `index.json`).
     public init(database: StrapLogDatabase, exports: ExportFolder, clock: any WallClock = SystemClock(),
@@ -180,11 +180,34 @@ public final class RecorderModel {
 
     /// A label from `activePreset.markers`, free text, or both; blank text is dropped.
     public func marker(label: String? = nil, note: String? = nil) async {
+        await addMarker(label: label, note: note, atMs: nil)
+    }
+
+    /// Starts a note now, so its marker keeps this moment however long the typing takes.
+    public func beginNote() -> NoteDraft {
+        NoteDraft(startedAtMs: clock.nowMs())
+    }
+
+    /// Adds `draft`'s note, dated when it began; never before the recording it lands in.
+    public func marker(note: String, draft: NoteDraft) async {
+        let atMs = activeRecording.map { max(draft.startedAtMs, $0.startedAtMs) }
+        await addMarker(label: nil, note: note, atMs: atMs)
+    }
+
+    /// `recentNotes` to offer for `query` (`RecentNote.suggestions`), for the active recording.
+    public func noteSuggestions(matching query: String) -> [String] {
+        RecentNote.suggestions(recentNotes, matching: query, activity: activeRecording?.activity ?? "")
+    }
+
+    private func addMarker(label: String?, note: String?, atMs: Int64?) async {
         let note = note?.trimmingCharacters(in: .whitespacesAndNewlines)
         let text = note?.isEmpty == false ? note : nil
         guard label != nil || text != nil else { return }
         await perform {
-            markers.append(try await session.marker(label: label, note: text))
+            let marker = try await session.marker(label: label, note: text, atMs: atMs)
+            // In time order: a marker sent from the Watch can land while a note is being typed.
+            let index = markers.lastIndex { $0.atMs <= marker.atMs }.map { $0 + 1 } ?? 0
+            markers.insert(marker, at: index)
             if text != nil { try refreshRecentNotes() }
         }
         publishStatus()
@@ -440,7 +463,7 @@ public final class RecorderModel {
              try Beat.filter(sql: "recording_id = ?", arguments: [id]).order(sql: "id").fetchAll(db),
              try Int64.fetchOne(db, sql: "SELECT MAX(received_at_ms) FROM notification WHERE recording_id = ?",
                                 arguments: [id]),
-             try RecordingEvent.fetchAll(db, sql: "SELECT * FROM event WHERE recording_id = ? AND kind = 'marker' ORDER BY id",
+             try RecordingEvent.fetchAll(db, sql: "SELECT * FROM event WHERE recording_id = ? AND kind = 'marker' ORDER BY at_ms, id",
                                          arguments: [id]))
         }
         activeRecording = rec

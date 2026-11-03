@@ -12,6 +12,9 @@ struct WatchStatusView: View {
     @State private var confirmingStop = false
     @Environment(\.isLuminanceReduced) private var isDimmed
 
+    /// Small: the buttons already span the screen.
+    private static let landedScale: CGFloat = 1.08
+
     var body: some View {
         TimelineView(.periodic(from: .now, by: isDimmed ? 60 : 5)) { timeline in
             let strap = heart.source == .strap ? heart.shownReading(at: timeline.date) : nil
@@ -88,6 +91,8 @@ struct WatchStatusView: View {
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
             .tint(.green)
+            .buttonBorderShape(.capsule)
+            .markerLanded(markerCount: status.markerCount, isLatest: true, scale: Self.landedScale, cornerRadius: 22)
             .accessibilityIdentifier("watch.markNext")
         }
         LiveMarkedLine(status: status)
@@ -96,6 +101,9 @@ struct WatchStatusView: View {
                 Task { await phone.send(.mark(label)) }
             }
             .tint(status.isLastMarker(label) ? .green : nil)
+            .buttonBorderShape(.capsule)
+            .markerLanded(markerCount: status.markerCount, isLatest: status.isLastMarker(label),
+                          scale: Self.landedScale, cornerRadius: 22)
         }
     }
 }

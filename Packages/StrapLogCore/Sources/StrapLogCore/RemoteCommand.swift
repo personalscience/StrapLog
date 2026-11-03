@@ -11,4 +11,12 @@ public enum RemoteCommand: Sendable, Codable, Hashable {
     /// The activity's next marker (`LiveStatus.nextMarker`), decided by the phone: the Watch's
     /// Action button has no screen to pick one on.
     case markNext
+
+    /// Whether this adds a marker.
+    public var isMark: Bool {
+        switch self {
+        case .mark, .markNext: true
+        case .start, .stop: false
+        }
+    }
 }

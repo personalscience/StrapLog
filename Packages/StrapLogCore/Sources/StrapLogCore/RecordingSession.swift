@@ -128,11 +128,11 @@ public actor RecordingSession {
         return rec
     }
 
-    /// `marker` event with a preset `label`, free-text `note`, or both. Returns the stored row.
+    /// `marker` event with a preset `label`, free-text `note`, or both, dated `atMs` or now. Returns the stored row.
     @discardableResult
-    public func marker(label: String? = nil, note: String? = nil) throws -> RecordingEvent {
+    public func marker(label: String? = nil, note: String? = nil, atMs: Int64? = nil) throws -> RecordingEvent {
         let id = try requireRecording()
-        return try log(.marker, label: label, note: note, recordingId: id, atMs: clock.nowMs())
+        return try log(.marker, label: label, note: note, recordingId: id, atMs: atMs ?? clock.nowMs())
     }
 
     /// Logs `pacer_start` now, noted with `pacer`'s stamp (`PacerStamp`). A pacer already running when a

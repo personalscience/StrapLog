@@ -9,6 +9,11 @@ enum WristHaptics {
         WKInterfaceDevice.current().play(.click)
     }
 
+    /// The phone saved a marker sent from here.
+    static func markerLanded() {
+        WKInterfaceDevice.current().play(.success)
+    }
+
     /// The phone could not start or stop.
     static func failed() {
         WKInterfaceDevice.current().play(.failure)

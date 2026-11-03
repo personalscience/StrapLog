@@ -6,7 +6,7 @@ import SwiftUI
 struct MarkerBar: View {
     let model: RecorderModel
     let nowMs: Int64
-    @State private var addingNote = false
+    @State private var note: NoteDraft?
     @State private var editing = false
 
     var body: some View {
@@ -14,6 +14,7 @@ struct MarkerBar: View {
             Text(Formats.marker(model.lastMarker, count: model.markerCount, nowMs: nowMs))
                 .font(.callout.monospacedDigit())
                 .foregroundStyle(model.lastMarker == nil ? .secondary : .primary)
+                .markerLanded(markerCount: model.markerCount, isLatest: true, scale: 1.04, cornerRadius: 6)
                 .accessibilityIdentifier("lastMarker")
                 .sensoryFeedback(.impact, trigger: model.markerCount)
             HStack {
@@ -25,29 +26,32 @@ struct MarkerBar: View {
                                     .lineLimit(1)
                                     .frame(minWidth: 44, minHeight: 44)
                             }
+                            .markerLanded(markerCount: model.markerCount, isLatest: model.lastMarker?.label == marker)
                             .accessibilityIdentifier("marker-\(marker)")
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
+                .scrollClipDisabled() // A button pops past the row's edge when its marker lands.
                 // Pinned outside the scroll so a long bar never hides it.
-                Button { addingNote = true } label: {
+                Button { note = model.beginNote() } label: {
                     Image(systemName: "plus").font(.title3.bold())
                         .frame(minWidth: 44, minHeight: 44)
                 }
+                .markerLanded(markerCount: model.markerCount, isLatest: model.lastMarker?.label == nil)
                 .accessibilityLabel("Add note")
                 .accessibilityIdentifier("markerAdd")
             }
             .buttonStyle(.bordered)
+            .buttonBorderShape(.roundedRectangle(radius: MarkerLandedEffect.defaultCornerRadius))
             .contextMenu {
                 Button("Edit markers…", systemImage: "pencil") { editing = true }
             }
         }
-        .sheet(isPresented: $addingNote) {
-            MarkerNoteSheet(recentNotes: model.recentNotes) { note in
-                Task { await model.marker(note: note) }
+        .sheet(item: $note) { draft in
+            MarkerNoteSheet(suggestions: model.noteSuggestions(matching:)) { text in
+                Task { await model.marker(note: text, draft: draft) }
             }
-            .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $editing) {
             MarkerPresetEditor(preset: model.activePreset,

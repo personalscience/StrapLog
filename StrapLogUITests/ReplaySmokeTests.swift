@@ -135,6 +135,19 @@ final class ReplaySmokeTests: XCTestCase {
         recent.tap()
         XCTAssertTrue(lastMarker.waitForLabel(containing: "2 markers", timeout: 5))
 
+        add.tap()
+        XCTAssertTrue(note.waitForExistence(timeout: 5))
+        note.typeText("nothing like it")
+        XCTAssertFalse(app.buttons["recentNote-felt dizzy"].exists, "typing filters the list")
+        note.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 15) + "diz")
+        let copy = app.buttons["copyNote-felt dizzy"]
+        XCTAssertTrue(copy.waitForExistence(timeout: 5), "a word prefix finds the note")
+        copy.tap()
+        XCTAssertEqual(note.value as? String, "felt dizzy", "the arrow copies the note to edit")
+        note.typeText(" again")
+        app.buttons["markerNoteAdd"].tap()
+        XCTAssertTrue(lastMarker.waitForLabel(containing: "felt dizzy again", timeout: 5))
+
         app.buttons["marker-a"].press(forDuration: 1)
         let edit = app.buttons["Edit markers…"]
         XCTAssertTrue(edit.waitForExistence(timeout: 5))

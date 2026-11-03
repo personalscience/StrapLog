@@ -132,6 +132,7 @@ targets:
       - path: StrapLogWatch
       - path: Shared/Alpha1Band+Color.swift
       - path: Shared/LiveMarkedLine.swift
+      - path: Shared/MarkerLandedEffect.swift
     dependencies:
       - package: StrapLogCore
       - target: StrapLogWatchWidgets

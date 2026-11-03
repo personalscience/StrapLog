@@ -25,12 +25,15 @@ public struct RecordingEvent: Codable, Sendable, Equatable, FetchableRecord, Mut
         [label, note].compactMap { $0 }.joined(separator: " · ")
     }
 
-    /// Distinct free-text marker notes across all recordings, most recently used first.
-    public static func recentNotes(_ db: Database, limit: Int) throws -> [String] {
-        try String.fetchAll(db, sql: """
-            SELECT note FROM event WHERE kind = 'marker' AND note IS NOT NULL
-            GROUP BY note ORDER BY MAX(id) DESC LIMIT ?
-            """, arguments: [limit])
+    /// Distinct free-text marker notes across all recordings, most recently used first; case
+    /// variants count as one note.
+    public static func recentNotes(_ db: Database, limit: Int) throws -> [RecentNote] {
+        let rows = try Row.fetchAll(db, sql: """
+            SELECT e.note, r.activity FROM event e JOIN recording r ON r.id = e.recording_id
+            WHERE e.kind = 'marker' AND e.note IS NOT NULL
+            GROUP BY e.note, r.activity ORDER BY MAX(e.id) DESC
+            """)
+        return RecentNote.merged(rows.map { (text: $0["note"], activity: $0["activity"]) }, limit: limit)
     }
 
     enum CodingKeys: String, CodingKey {

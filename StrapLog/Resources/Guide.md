@@ -131,8 +131,8 @@ To start a Sleep recording automatically at bedtime, see *Shortcuts and Siri*.
 
 A marker stamps the current moment with a label: "lying down", "start stage 3", "coffee". Markers are saved with the recording, so you can later compare the parts of a session (before vs. after, rest vs. exercise). They never change any measurement.
 
-- **Tap a marker button** (*a*, *b*, *c*, *end* for Other; *lights out*, *awake*, *up* for Sleep) to add it now. The phone gives a tap of feedback and the line below shows what was marked and when.
-- **Tap +** to type a note instead. Notes you have used before are offered again for one-tap reuse.
+- **Tap a marker button** (*a*, *b*, *c*, *end* for Other; *lights out*, *awake*, *up* for Sleep) to add it now. When it is saved the button pops and flashes green, the phone gives a tap of feedback and the line above the buttons shows what was marked and when.
+- **Tap +** to type a note instead. The note is dated when you tap +, not when you finish typing. Your last 100 notes are listed, those from the same activity first, and typing narrows the list: "shou" finds *Shoulder Press 130*. Tap a note to log it, or tap its arrow to copy it into the field and edit it first, say to change the weight.
 - **Long-press the marker row** and choose **Edit markers…** to add, rename, delete or reorder the buttons. Each activity keeps its own set. Changes apply at once, even mid-recording. **Restore … defaults** brings back the original set.
 
 You can also add markers from the Lock Screen, the Dynamic Island, the Apple Watch and Siri.
@@ -163,7 +163,7 @@ The Watch app is a remote display and control for the recording on your iPhone. 
 
 ![The Watch app during a recording](guide-watch-recording.jpg)
 
-- **Mark next** (the green button) steps through your marker buttons in order, then repeats the last one. It suits a workout with several stages.
+- **Mark next** (the green button) steps through your marker buttons in order, then repeats the last one. It suits a workout with several stages. A tap clicks as the marker leaves the Watch; a stronger buzz and a green flash mean the phone saved it.
 - If the iPhone is out of reach, a command waits and is sent when it comes back ("Waiting for iPhone…"). You can cancel it.
 
 The Watch taps your wrist when a command is sent, and buzzes twice if the strap stops sending beats while the app is on screen.

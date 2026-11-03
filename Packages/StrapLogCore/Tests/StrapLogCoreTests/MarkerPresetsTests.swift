@@ -101,7 +101,7 @@ struct RecorderModelMarkerTests {
         await model.start(name: "one")
         for note in ["dizzy", "water", "dizzy"] { await model.marker(note: note) }
         await model.marker(label: "a")
-        #expect(model.recentNotes == ["dizzy", "water"])
+        #expect(model.recentNotes.map(\.text) == ["dizzy", "water"])
         await model.stop()
 
         await model.start(name: "two")
@@ -111,7 +111,42 @@ struct RecorderModelMarkerTests {
         let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
         await relaunched.launch()
         #expect(relaunched.recentNotes.count == RecorderModel.recentNoteLimit)
-        #expect(relaunched.recentNotes.first == "n\(RecorderModel.recentNoteLimit - 1)")
-        #expect(!relaunched.recentNotes.contains("dizzy"))
+        #expect(relaunched.recentNotes.first?.text == "n\(RecorderModel.recentNoteLimit - 1)")
+        #expect(!relaunched.recentNotes.contains { $0.text == "dizzy" })
+    }
+
+    @Test("a note is dated when it began, never before its recording, and markers stay in time order")
+    func noteStamp() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        await model.launch()
+        await model.start(name: "one")
+        let began = clock.nowMs()
+        let draft = model.beginNote()
+        clock.advance(byMs: 15_000)
+        await model.marker(label: "a")
+        await model.marker(note: "coffee", draft: draft)
+        #expect(model.markers.map(\.atMs) == [began, began + 15_000])
+        #expect(model.lastMarker?.label == "a", "the later marker stays the latest")
+
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        await relaunched.launch()
+        #expect(relaunched.markers.map(\.note) == ["coffee", nil], "a relaunch loads them in the same order")
+
+        await model.stop()
+        clock.advance(byMs: 1_000)
+        await model.start(name: "two")
+        await model.marker(note: "late", draft: draft)
+        #expect(model.lastMarker?.atMs == model.activeRecording?.startedAtMs)
+    }
+
+    @Test("suggestions rank by the active recording's activity")
+    func suggestionsUseActivity() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        await model.launch()
+        await model.start(.other, name: "gym")
+        await model.marker(note: "Shoulder Press 130")
+        await model.marker(note: "Should Not")
+        #expect(model.noteSuggestions(matching: "shou") == ["Should Not", "Shoulder Press 130"])
+        #expect(model.noteSuggestions(matching: "press") == ["Shoulder Press 130"])
     }
 }

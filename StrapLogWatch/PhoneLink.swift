@@ -19,6 +19,7 @@ final class PhoneLink: NSObject {
     /// Called when the status, reachability or staleness may have changed (`StrapHeart`).
     @ObservationIgnored var onChange: (() -> Void)?
     @ObservationIgnored private var alarm = LinkAlarm()
+    @ObservationIgnored private var confirmation = MarkConfirmation()
     @ObservationIgnored private let face = ComplicationFeed()
     @ObservationIgnored private var isActivated = false
     @ObservationIgnored private var activationWaiters: [CheckedContinuation<Void, Never>] = []
@@ -59,6 +60,7 @@ final class PhoneLink: NSObject {
         } else {
             session.transferUserInfo(message)
         }
+        if command.isMark { confirmation.sent(markerCount: status?.markerCount ?? 0) }
         WristHaptics.sent()
     }
 
@@ -125,6 +127,7 @@ final class PhoneLink: NSObject {
         receivedAt = .now
         face.show(status, receivedAt: .now)
         if let pending, pending.failure == nil, pending.isSettled(by: status) { self.pending = nil }
+        if confirmation.landed(status) { WristHaptics.markerLanded() }
         checkAlarm()
         onChange?()
     }

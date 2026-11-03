@@ -51,6 +51,7 @@
 		5761A68DCF86142B6D373EC2 /* PacerToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */; };
 		589C2FBACBA698559BDF94A8 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = DA5F5BE64ED9A4978504D76C /* StrapLogCore */; };
 		5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1845081DF333E97F65F10E1 /* MarkerNoteSheet.swift */; };
+		650181B52A44B5D399E0D6AC /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
 		6BEBDF86C262F43F6EFD3C26 /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAB978AD358099256F0DC08 /* LinkStatus+Heart.swift */; };
 		6C43E074DA6058621E974A38 /* StrapLogWatchWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC895AFF529382BCBEFAB00 /* StrapLogWatchWidgetsBundle.swift */; };
 		6DA35C9709A4C8F43D2E2DF0 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
@@ -78,6 +79,7 @@
 		8D4E7B1777739736BD2722CE /* HeartLinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E316AE5160101E447A64C2 /* HeartLinkButton.swift */; };
 		8F87609FC672489A24D76EF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB90CBD1036662A389D1322E /* Assets.xcassets */; };
 		90111E755328A951120E8279 /* LinkAlertNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038379790F496348954FEBCE /* LinkAlertNotifier.swift */; };
+		92215478398C73BA1545D27C /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
 		9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795ABEAC013BD867F90236B6 /* MetricsHero.swift */; };
 		94BD242404C96B643FA0E1BE /* AcknowledgementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EADFB81C6A3756F6E1EBA9 /* AcknowledgementTests.swift */; };
 		96D0C84D3367B546A2BCEC20 /* LicenseTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2120FB2743A69DFC480CA39 /* LicenseTextView.swift */; };
@@ -95,6 +97,7 @@
 		AFF2CDF21B9A7D40E3D7942E /* Zip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 77C5FFEF83BEA25D84A23C34 /* Zip.txt */; };
 		B13308E245F3000E48BD7071 /* WatchStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */; };
 		B4359F4349CAF3B9FA54AB4C /* StrapHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */; };
+		B526440ACD8350BE13748209 /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
 		B72877446400D2803528FE01 /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
 		B74E44AFBF645F8ABA175172 /* LiveStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB838F79AB96531AB2A91409 /* LiveStatusView.swift */; };
 		B7A3DFFBEE518D95F4228D7C /* GuideChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D775AA540707DFBAE113F86 /* GuideChapterView.swift */; };
@@ -214,6 +217,7 @@
 		051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingLiveActivity.swift; sourceTree = "<group>"; };
 		0D5B311291D9A08A22F87556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerLandedEffect.swift; sourceTree = "<group>"; };
 		0F900B418F2433FFA87A91B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideParserTests.swift; sourceTree = "<group>"; };
 		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
@@ -426,6 +430,7 @@
 				59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */,
 				1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */,
 				3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */,
+				0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */,
 				EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */,
 				99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */,
 			);
@@ -1077,6 +1082,7 @@
 				856DE7E85732BDA83E912FA8 /* LiveRecordingAttributes.swift in Sources */,
 				A9779F70A7B9DFC9FC05C910 /* MarkFromLiveActivityIntent.swift in Sources */,
 				F3B2104627C475AAB7781FE2 /* MarkerBar.swift in Sources */,
+				650181B52A44B5D399E0D6AC /* MarkerLandedEffect.swift in Sources */,
 				5ADE7E81A352AA296995A3D8 /* MarkerNoteSheet.swift in Sources */,
 				4F637DA8DADE2E47F6F788F7 /* MarkerPresetEditor.swift in Sources */,
 				9454F20C899D82754F6FDD66 /* MetricsHero.swift in Sources */,
@@ -1123,6 +1129,7 @@
 				7EE381DDBD4E2FE0A5283C57 /* LiveRecordingAttributes.swift in Sources */,
 				B74E44AFBF645F8ABA175172 /* LiveStatusView.swift in Sources */,
 				F9999657D1FEAB36BD02E535 /* MarkFromLiveActivityIntent.swift in Sources */,
+				92215478398C73BA1545D27C /* MarkerLandedEffect.swift in Sources */,
 				2D35B8EDAD390F74B7F54858 /* RecordingLiveActivity.swift in Sources */,
 				41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */,
 				0B9A7EA7B4FE42E702EB8589 /* StopFromLiveActivityIntent.swift in Sources */,
@@ -1138,6 +1145,7 @@
 				741423D438C24F3CCFAD35DC /* ComplicationFeed.swift in Sources */,
 				7B7BAC34E23DC4E2BC5AFA3F /* LiveMarkedLine.swift in Sources */,
 				1BCEC5BF7206F1D05BD345D0 /* MarkNextIntent.swift in Sources */,
+				B526440ACD8350BE13748209 /* MarkerLandedEffect.swift in Sources */,
 				7EBEE88F4CCE77E73AA02DE4 /* PhoneLink.swift in Sources */,
 				73E73B3A14755CDE4330D713 /* StrapHeart.swift in Sources */,
 				B4359F4349CAF3B9FA54AB4C /* StrapHeartView.swift in Sources */,
