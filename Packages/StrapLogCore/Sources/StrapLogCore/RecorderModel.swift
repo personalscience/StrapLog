@@ -40,6 +40,11 @@ public final class RecorderModel {
     public private(set) var ecgOn: Bool
     /// The last few seconds of live ECG, while it streams; empty otherwise.
     public private(set) var ecg = EcgTrace()
+    /// Whether the pacer screen shows the breath measured by the strap's accelerometer against
+    /// the pacer (`setBreath`), remembered in `PacerSettings.breathKey`.
+    public private(set) var breathOn: Bool
+    /// The measured breath while the pacer screen shows it; nil otherwise.
+    public private(set) var breath: BreathReading?
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     /// The recording that just stopped, for Home's summary card; cleared by the next Start.
@@ -91,6 +96,8 @@ public final class RecorderModel {
     private let pacerClock: PacerClock?
     /// Whether the app is on screen; the ECG never streams in the background.
     private var inForeground = true
+    /// Follows the breath against the running pacer while `breathWanted`.
+    private var breathTracker: BreathTracker?
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
@@ -116,6 +123,7 @@ public final class RecorderModel {
         let markerPresets = MarkerPresets.load(from: defaults)
         self.markerPresets = markerPresets
         self.ecgOn = defaults.bool(forKey: PacerSettings.ecgKey)
+        self.breathOn = defaults.bool(forKey: PacerSettings.breathKey)
         self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
                                         markerPresets: markerPresets)
     }
@@ -133,8 +141,7 @@ public final class RecorderModel {
     /// Feeds `source` into the session until it finishes. Runs for the app's lifetime.
     public func consume(_ source: some HeartSource) async {
         self.source = source
-        source.setMotionStreaming(isRecording)
-        updateECGStreaming()
+        updateStreams()
         for await event in source.events() {
             // Display only, a couple of times a second: nothing to record, snapshot or stop for.
             if case .ecg = event.payload {
@@ -163,9 +170,9 @@ public final class RecorderModel {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         await perform {
             let id = try await session.start(activity, name: trimmed, plan: plan)
-            source?.setMotionStreaming(true)
             lastFinished = nil
             try loadActive(id)
+            updateBreathTracking()
             if let pacer { try await session.logPacerStart(pacer) }
             try refreshRecordings()
         }
@@ -268,6 +275,7 @@ public final class RecorderModel {
         pacer = started
         showPacerScreen(true)
         pacerClock?.run(started)
+        updateBreathTracking()
         guard isRecording else { return }
         await perform { try await session.logPacerStart(started) }
     }
@@ -276,6 +284,7 @@ public final class RecorderModel {
         guard pacer != nil else { return }
         pacer = nil
         pacerClock?.stop()
+        updateBreathTracking()
         guard isRecording else { return }
         await perform { try await session.logPacerStop() }
     }
@@ -284,7 +293,7 @@ public final class RecorderModel {
     /// Home or Recording; only `stopPacer` stops it.
     public func showPacerScreen(_ shown: Bool) {
         pacerScreenShown = shown
-        updateECGStreaming()
+        updateStreams()
     }
 
     /// Turns the pacer screen's live ECG and beat pulse on or off, and remembers it.
@@ -294,12 +303,19 @@ public final class RecorderModel {
         updateECGStreaming()
     }
 
+    /// Turns the pacer screen's measured breath on or off, and remembers it.
+    public func setBreath(_ on: Bool) {
+        breathOn = on
+        defaults.set(on, forKey: PacerSettings.breathKey)
+        updateBreathTracking()
+    }
+
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
     /// since the app may not come back to the foreground before it is killed.
     /// Coming to the foreground also imports snapshots missing from the database.
     public func appPhase(_ phase: AppPhase) async {
         inForeground = phase == .foreground
-        updateECGStreaming()
+        updateStreams()
         await perform {
             try await session.appPhase(phase)
             guard phase == .background, isRecording else { return }
@@ -450,9 +466,9 @@ public final class RecorderModel {
         await perform {
             let directory = await exports.url()
             let rec = try await session.stop(because: reason, snapshotInto: directory)
-            source?.setMotionStreaming(false)
             lastSnapshot = directory.appendingPathComponent(Snapshot.fileName(for: rec))
             activeRecording = nil
+            updateBreathTracking()
             markers = []
             live = LiveMetrics()
             lastBeatAtMs = nil
@@ -491,6 +507,8 @@ public final class RecorderModel {
             link = .disconnected
             heartRate = nil
             ecg = EcgTrace()
+            // The tracker starts afresh by itself after the gap (`BreathTracker.gapMs`).
+            breath = nil
         case .battery(let percent):
             battery = percent
         case .firmware(let version):
@@ -500,8 +518,8 @@ public final class RecorderModel {
         case .bluetooth(let poweredOn):
             if !poweredOn { link = .bluetoothOff; heartRate = nil }
             else if link == .bluetoothOff { link = .searching }
-        case .motion:
-            break
+        case .motion(let samples):
+            if breathTracker != nil { breath = breathTracker?.add(receivedAtMs: event.atMs, samples: samples) }
         case .ecg(let samples):
             // A batch already in flight when the stream was turned off is dropped.
             if ecgWanted { ecg.add(samples, receivedAtMs: event.atMs) }
@@ -551,6 +569,25 @@ public final class RecorderModel {
     private func updateECGStreaming() {
         if !ecgWanted { ecg = EcgTrace() }
         source?.setECGStreaming(ecgWanted)
+    }
+
+    /// The measured breath, like the ECG, is followed only while someone can see it.
+    private var breathWanted: Bool { pacer != nil && pacerScreenShown && breathOn && inForeground }
+
+    /// Starts or drops the breath tracker; the strap streams motion while recording or tracking.
+    private func updateBreathTracking() {
+        if breathWanted, let pacer {
+            if breathTracker == nil { breathTracker = BreathTracker(pacer: pacer) }
+        } else {
+            breathTracker = nil
+            breath = nil
+        }
+        source?.setMotionStreaming(isRecording || breathWanted)
+    }
+
+    private func updateStreams() {
+        updateECGStreaming()
+        updateBreathTracking()
     }
 
     private func publishStatus() {

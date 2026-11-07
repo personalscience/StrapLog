@@ -216,6 +216,46 @@ struct RecorderModelTests {
         #expect(relaunched.ecgOn, "remembered")
     }
 
+    @Test("measured breath: motion streams with the pacer screen, breath on and the app in front; never written idle")
+    func breathSwitch() async throws {
+        let defaults = try #require(UserDefaults(suiteName: "breathSwitch-\(UUID())"))
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        let spy = HeartSourceSpy(FakeHeartSource(clock: clock, script: []))
+        await model.consume(spy)
+        model.setBreath(true)
+        #expect(spy.calls == [false, false], "not without a pacer")
+
+        let t0 = clock.nowMs()
+        await model.startPacer(breathsPerMinute: 6)
+        #expect(spy.calls.last == true)
+        let chest = SyntheticChest(lung: { t in (1 - cos(2 * .pi * Double(t - t0 - 500) / 10_000)) / 2 })
+        var script: [FakeHeartSource.Step] = []
+        var start = t0
+        for n in chest.notifications(fromMs: t0, toMs: t0 + 30_000) {
+            script += [.wait(ms: n.atMs - start), .emit(.motion(samples: n.samples))]
+            start = n.atMs
+        }
+        let source = HeartSourceSpy(FakeHeartSource(clock: clock, script: script))
+        await model.consume(source)
+        #expect(source.calls == [true])
+        #expect(model.breath?.volume != nil)
+        #expect(try strings("SELECT COUNT(*) FROM motion") == ["0"], "display only while idle")
+
+        await model.appPhase(.background)
+        #expect(source.calls.last == false)
+        #expect(model.breath == nil)
+        await model.appPhase(.foreground)
+        #expect(source.calls.last == true)
+        await model.start(name: "paced")
+        model.setBreath(false)
+        #expect(source.calls.last == true, "a recording keeps motion on")
+        await model.stopPacer()
+        await model.stop()
+        #expect(source.calls.last == false)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        #expect(!relaunched.breathOn, "remembered")
+    }
+
     @Test("errors surface in errorMessage instead of throwing")
     func errorsSurface() async {
         await model.marker(label: "a")

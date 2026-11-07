@@ -436,6 +436,8 @@ Tap the **wind** button at the top of the screen to open the pacer screen and br
 
 **Heartbeat (ECG)** shows the strap's live ECG under the pacer, with a dot on each beat and a line at each turn of the breath (teal in, indigo out). The flower pulses on each beat too, so you can start a breath on a beat. The ECG is for watching only: it isn't saved in the recording. The strap streams it only while the pacer screen is open with the app in front, which uses a little more strap battery. It shows a second or so late, because the strap sends ECG in batches.
 
+**My breath** makes the flower follow your own breathing, read from the strap's motion sensor as your chest rises and falls. A dashed ring shows where the pacer wants you, so you can see whether you're ahead, behind or in step. For the first 20 seconds or so it shows "Finding your breath…" while it learns which way your chest moves, so follow the pacer closely at the start. After half a minute, **In step** shows how closely your breathing has followed the pacer over the last minute. Movement drowns out the breath: if you shift or turn, it asks you to hold still and then finds your breath again. Like the ECG, it works only with the pacer screen open and the app in front, and it uses a little more strap battery.
+
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 
 Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.

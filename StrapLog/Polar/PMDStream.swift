@@ -2,7 +2,7 @@ import PolarBleSdk
 
 /// The strap's online (PMD) streams the app uses, named once for the SDK's two vocabularies.
 enum PMDStream: CaseIterable {
-    /// Accelerometer, while recording.
+    /// Accelerometer, while recording or showing the measured breath.
     case motion
     /// ECG, while the pacer screen shows it.
     case ecg

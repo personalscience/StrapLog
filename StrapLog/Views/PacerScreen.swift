@@ -17,7 +17,14 @@ struct PacerScreen: View {
         ScrollView {
             VStack(spacing: 20) {
                 if let pacer = model.pacer {
-                    BreathingPacerView(pacer: pacer, pulse: model.ecgOn ? model.ecg.pulse : nil)
+                    BreathingPacerView(pacer: pacer, pulse: model.ecgOn ? model.ecg.pulse : nil,
+                                       measured: model.breathOn ? model.breath?.volume : nil)
+                    if model.breathOn {
+                        Text(breathCaption)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("breathCaption")
+                    }
                     Text(model.heartRate.map { "\($0) bpm" } ?? "-- bpm")
                         .font(.callout.monospacedDigit())
                         .foregroundStyle(.secondary)
@@ -69,9 +76,19 @@ struct PacerScreen: View {
                     Text("The strap's live ECG, with a pulse on each beat")
                 }
                 .accessibilityIdentifier("pacerECG")
+                Toggle(isOn: .init(get: { model.breathOn }, set: { model.setBreath($0) })) {
+                    Text("My breath")
+                    Text("The flower follows your breathing, read by the strap; the dashed ring is the pacer")
+                }
+                .accessibilityIdentifier("pacerBreath")
             }
             .padding()
         }
+    }
+
+    private var breathCaption: String {
+        if let breath = model.breath { return breath.caption }
+        return model.link.isConnected ? "Waiting for the strap…" : "Your breath needs the strap connected"
     }
 
     private var ratio: Binding<BreathRatio> {
