@@ -25,11 +25,13 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     private let defaults: UserDefaults
     private let continuation = Mutex<AsyncStream<SensorEvent>.Continuation?>(nil)
     private let searchTask = Mutex<Task<Void, Never>?>(nil)
-    /// The device whose online streaming (PMD) is ready, or nil while disconnected.
-    private let streamingDevice = Mutex<String?>(nil)
-    /// The PMD streams the model wants; each (re)starts whenever streaming becomes ready.
+    /// The connected strap, or nil while disconnected.
+    private let device = Mutex<String?>(nil)
+    /// The PMD streams the model wants; each (re)starts on connection, on `bleSdkFeatureReady`,
+    /// and whenever its watchdog finds it dead or silent.
     private let wanted = Mutex<Set<PMDStream>>([])
     private let streamTasks = Mutex<[PMDStream: Task<Void, Never>]>([:])
+    private let watchdogs = Mutex<[PMDStream: StreamWatchdog]>([:])
     private let heartFilter = Mutex(DuplicateHeartFilter())
     /// The strap `forgetDevice` dropped: its disconnect is expected, so it is not reported.
     private let forgotten = Mutex<String?>(nil)
@@ -101,12 +103,34 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     /// Acts only on a change, so asking again for what is already wanted never restarts a stream.
     private func setStreaming(_ stream: PMDStream, _ on: Bool) {
         let changed = wanted.withLock { on ? $0.insert(stream).inserted : $0.remove(stream) != nil }
-        guard changed, let id = streamingDevice.withLock({ $0 }) else { return }
+        guard changed, let id = device.withLock({ $0 }) else { return }
         if on { start(stream, id) } else { stop(stream, id) }
     }
 
+    /// Restarts every wanted stream its watchdog finds dead or silent. Rides on HR notifications.
+    private func heal(_ id: String) {
+        let now = clock.nowMs()
+        for stream in wanted.withLock({ $0 }) {
+            let due: Int? = watchdogs.withLock { dogs in
+                var dog = dogs[stream] ?? StreamWatchdog()
+                guard dog.restartDue(atMs: now) else { return nil }
+                defer { dogs[stream] = dog }
+                return dog.attempted(atMs: now)
+            }
+            guard let generation = due else { continue }
+            Self.log.notice("\(String(describing: stream), privacy: .public) stream silent; restarting")
+            // A stalled attempt may never finish, so the restart does not wait for it.
+            start(stream, id, generation: generation, afterPrevious: false)
+        }
+    }
+
     private func start(_ stream: PMDStream, _ id: String) {
-        run(stream) { [api] in
+        let generation = watchdogs.withLock { $0[stream, default: StreamWatchdog()].attempted(atMs: clock.nowMs()) }
+        start(stream, id, generation: generation, afterPrevious: true)
+    }
+
+    private func start(_ stream: PMDStream, _ id: String, generation: Int, afterPrevious: Bool) {
+        run(stream, afterPrevious: afterPrevious) { [api] in
             // A stream left running (by a killed process, say) makes a new start fail; clear it.
             try? await api.stopStreaming(id, type: stream.measurement)
             do {
@@ -114,6 +138,7 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
                 switch stream {
                 case .motion:
                     for try await batch in api.startAccStreaming(id, settings: try Self.accSettings(from: available)) {
+                        self.delivered(stream)
                         self.emit(.motion(samples: batch.map {
                             AccSample(deviceNs: $0.timeStamp, x: Int($0.x), y: Int($0.y), z: Int($0.z))
                         }))
@@ -121,29 +146,42 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
                 case .ecg:
                     // The H10 offers one setting: 130 Hz, 14 bit.
                     for try await batch in api.startEcgStreaming(id, settings: available.maxSettings()) {
+                        self.delivered(stream)
                         self.emit(.ecg(samples: batch.map { EcgSample(deviceNs: $0.timeStamp, microvolts: Int($0.voltage)) }))
                     }
                 }
+                if !Task.isCancelled { Self.log.error("\(String(describing: stream), privacy: .public) stream finished") }
             } catch {
-                if !Task.isCancelled { Self.log.error("\(String(describing: stream)) stream ended: \(String(describing: error))") }
+                if !Task.isCancelled {
+                    Self.log.error("\(String(describing: stream), privacy: .public) stream ended: \(String(describing: error), privacy: .public)")
+                }
             }
+            let now = self.clock.nowMs()
+            self.watchdogs.withLock { $0[stream]?.ended(generation: generation, atMs: now) }
         }
+    }
+
+    private func delivered(_ stream: PMDStream) {
+        let now = clock.nowMs()
+        watchdogs.withLock { $0[stream]?.received(atMs: now) }
     }
 
     /// The SDK requires ACC and ECG to be stopped explicitly (KnownIssues: an H10 left streaming
     /// stays on until its battery dies); cancelling the task alone is not enough.
     private func stop(_ stream: PMDStream, _ id: String) {
-        run(stream) { [api] in try? await api.stopStreaming(id, type: stream.measurement) }
+        _ = watchdogs.withLock { $0.removeValue(forKey: stream) }
+        run(stream, afterPrevious: true) { [api] in try? await api.stopStreaming(id, type: stream.measurement) }
     }
 
-    /// Cancels `stream`'s previous task and runs `body` once it has finished, so a stop sent
-    /// just before a start can never land after it and kill the new stream.
-    private func run(_ stream: PMDStream, _ body: @escaping @Sendable () async -> Void) {
+    /// Cancels `stream`'s previous task and runs `body`, by default once that task has finished,
+    /// so a stop sent just before a start can never land after it and kill the new stream.
+    private func run(_ stream: PMDStream, afterPrevious: Bool, _ body: @escaping @Sendable () async -> Void) {
         streamTasks.withLock { tasks in
             let previous = tasks[stream]
             previous?.cancel()
+            let waitFor = afterPrevious ? previous : nil
             tasks[stream] = Task {
-                await previous?.value
+                await waitFor?.value
                 await body()
             }
         }
@@ -175,16 +213,20 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
 extension PolarHeartSource: PolarBleApiObserver {
     func deviceConnecting(_ identifier: PolarDeviceInfo) {}
 
+    /// Remembers the strap so the watchdog can start wanted streams even if `bleSdkFeatureReady`
+    /// never comes; a start sent before PMD is ready fails and is retried.
     func deviceConnected(_ identifier: PolarDeviceInfo) {
+        device.withLock { $0 = identifier.deviceId }
         emit(.connected(deviceId: identifier.deviceId, firmware: nil))
     }
 
     func deviceDisconnected(_ identifier: PolarDeviceInfo, info: PolarBleDisconnectInfo) {
-        streamingDevice.withLock { $0 = nil }
+        device.withLock { $0 = nil }
         streamTasks.withLock { tasks in
             for task in tasks.values { task.cancel() }
             tasks = [:]
         }
+        watchdogs.withLock { $0 = [:] }
         let expected = forgotten.withLock { id in
             defer { if id == identifier.deviceId { id = nil } }
             return id == identifier.deviceId
@@ -199,7 +241,7 @@ extension PolarHeartSource: PolarBleApiDeviceFeaturesObserver {
     /// case a killed process left them running on the strap.
     func bleSdkFeatureReady(_ identifier: String, feature: PolarBleSdkFeature) {
         guard feature == .feature_polar_online_streaming else { return }
-        streamingDevice.withLock { $0 = identifier }
+        device.withLock { $0 = identifier }
         let wanted = self.wanted.withLock { $0 }
         for stream in PMDStream.allCases {
             if wanted.contains(stream) { start(stream, identifier) } else { stop(stream, identifier) }
@@ -212,6 +254,7 @@ extension PolarHeartSource: PolarBleApiDeviceHrObserver {
     func hrValueReceived(_ identifier: String,
                          data: (hr: UInt8, rrs: [Int], rrsMs: [Int], contact: Bool, contactSupported: Bool)) {
         emit(.heartRate(bpm: Int(data.hr), contact: data.contactSupported ? data.contact : nil, rr1024: data.rrs))
+        heal(identifier)
     }
 }
 
