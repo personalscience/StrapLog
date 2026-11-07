@@ -43,5 +43,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// strap ends PMD streams when the link drops anyway; a later start clears a leftover stream.
     func applicationWillTerminate(_ application: UIApplication) {
         source?.setMotionStreaming(false)
+        source?.setECGStreaming(false)
     }
 }

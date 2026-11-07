@@ -357,6 +357,9 @@ public actor RecordingSession {
             guard let id = recordingId else { return }
             try log(poweredOn ? .bleOn : .bleOff, note: nil, recordingId: id, atMs: event.atMs)
 
+        case .ecg:
+            break
+
         case .motion(let samples):
             guard let id = recordingId, let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples),
                   !seconds.isEmpty else { return }

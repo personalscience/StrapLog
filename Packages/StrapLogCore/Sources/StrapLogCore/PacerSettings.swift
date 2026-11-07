@@ -8,6 +8,8 @@ public enum PacerSettings {
     public static let ratioKey = "pacerBreathRatio"
     /// Whether the pacer plays its tones (`PacerCueSink`); off unless the user turns it on.
     public static let soundKey = "pacerSound"
+    /// Whether the pacer screen streams the live ECG and pulses on its beats; off by default.
+    public static let ecgKey = "pacerECG"
 
     /// The saved inhale:exhale ratio; missing or unknown values read as the default.
     public static func ratio(_ stored: String?) -> BreathRatio {

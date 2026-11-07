@@ -13,6 +13,9 @@ public struct SensorEvent: Sendable, Equatable {
         case bluetooth(poweredOn: Bool)
         /// One accelerometer notification, oldest sample first. Streamed only while recording.
         case motion(samples: [AccSample])
+        /// One ECG notification, oldest sample first. Streamed only while the pacer screen
+        /// shows it, and never written: display only.
+        case ecg(samples: [EcgSample])
     }
 
     /// Unix epoch ms UTC at which the phone received it.

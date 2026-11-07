@@ -5,4 +5,8 @@ public enum LinkStatus: Sendable, Equatable {
     case connected(deviceId: String)
     case disconnected
     case bluetoothOff
+
+    public var isConnected: Bool {
+        if case .connected = self { true } else { false }
+    }
 }

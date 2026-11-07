@@ -117,7 +117,7 @@ struct RecorderModelLiveTests {
     func pacerWhileIdle() async throws {
         await model.startPacer(breathsPerMinute: 5)
         #expect(model.pacer == BreathingPacer(breathsPerMinute: 5, startedAtMs: clock.nowMs()))
-        #expect(model.pacerPanelShown)
+        #expect(model.pacerScreenShown)
         await model.startPacer(breathsPerMinute: 6)
         await model.stopPacer()
         #expect(model.pacer == nil)
@@ -189,26 +189,34 @@ struct RecorderModelLiveTests {
         #expect(cues.stops == 2)
     }
 
-    @Test("hiding the pacer panel stops the cues; stopping an idle pacer says nothing")
-    func hidePanelStopsCues() async throws {
+    @Test("stopping an idle pacer says nothing; stopping a running one tells the sink once")
+    func stopCues() async throws {
         let (model, cues, sleeper) = try cueingModel(limit: 0)
         await model.stopPacer()
         #expect(cues.stops == 0)
         await model.startPacer(breathsPerMinute: 6)
         await sleeper.waitUntilParked()
-        await model.showPacerPanel(false)
+        await model.stopPacer()
         #expect(cues.stops == 1)
     }
 
-    @Test("hiding the pacer panel stops the pacer")
-    func hidePanel() async throws {
-        await model.showPacerPanel(true)
-        #expect(model.pacerPanelShown && model.pacer == nil)
+    @Test("leaving the pacer screen keeps the pacer and its cues running; Start shows the screen")
+    func hideScreenKeepsPacer() async throws {
+        model.showPacerScreen(true)
+        #expect(model.pacerScreenShown && model.pacer == nil)
         await model.start(name: "breathe")
         await model.startPacer(breathsPerMinute: 6)
-        await model.showPacerPanel(false)
-        #expect(!model.pacerPanelShown && model.pacer == nil)
-        #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "pacer_start", "pacer_stop"])
+        model.showPacerScreen(false)
+        #expect(!model.pacerScreenShown && model.pacer != nil)
+        #expect(try strings("SELECT kind FROM event ORDER BY id") == ["start", "pacer_start"])
+        await model.startPacer(breathsPerMinute: 5)
+        #expect(model.pacerScreenShown)
+
+        let (cueing, cues, sleeper) = try cueingModel(limit: 0)
+        await cueing.startPacer(breathsPerMinute: 6)
+        await sleeper.waitUntilParked()
+        cueing.showPacerScreen(false)
+        #expect(cues.stops == 0)
     }
 
     @Test("a saved pacer ratio falls back to the default")

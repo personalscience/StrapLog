@@ -81,10 +81,13 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 Not yet submitted for review.
 
 <!-- listing:whatsnew -->
-• Pacer sound: optional tones at each turn of the breath, so you can follow with the phone locked or in a pocket. Off by default. They play alongside your music.
+• The pacer has a screen of its own: tap the wind button to go back and forth while it keeps running.
+• Pacer sound: an optional bell at each turn of the breath that fades as you breathe, so you can follow with the phone locked or in a pocket. Off by default. It plays alongside your music.
+• Heartbeat: see the strap's live ECG with the breath's turns marked, and a pulse on each beat to start a breath on.
 • Inhale:exhale ratio: 1:1, 4:6 or 1:2.
 • New Breathing activity. Tap "Record this session" on the pacer to start recording without breaking the breath.
 • Recordings now store exactly what was paced: rate, inhale, exhale and start time.
+• Stopping a recording now offers Save, Save and share, or Delete.
 <!-- /listing -->
 
 ## What's New (1.1)

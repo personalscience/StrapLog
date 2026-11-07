@@ -31,6 +31,7 @@ struct PacerClockTests {
         let (cues, _, pacerClock) = await run(pacer, limit: 2)
         #expect(cues.cues == [.init(atMs: t0, inhaling: true), .init(atMs: t0 + 4_000, inhaling: false),
                               .init(atMs: t0 + 10_000, inhaling: true)])
+        #expect(cues.lengths == [4_000, 6_000, 4_000], "each cue carries its half's full length")
         pacerClock.stop()
     }
 

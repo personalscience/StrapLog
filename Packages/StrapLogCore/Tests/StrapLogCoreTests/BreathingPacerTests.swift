@@ -103,6 +103,14 @@ struct BreathingPacerTests {
         #expect(early.atMs == 1_000_000 && early.inhaling)
     }
 
+    @Test("transitions lists the turns in a window, ends included only on the right")
+    func transitionsInWindow() {
+        let turns = pacer.transitions(afterMs: 1_005_000, throughMs: 1_020_000)
+        #expect(turns.map(\.atMs) == [1_010_000, 1_015_000, 1_020_000])
+        #expect(turns.map(\.inhaling) == [true, false, true])
+        #expect(pacer.transitions(afterMs: 1_001_000, throughMs: 1_004_999).isEmpty)
+    }
+
     @Test("turns alternate at every rate and ratio, even where the period is not whole ms", arguments: BreathRatio.allCases)
     func turnsAlternate(ratio: BreathRatio) {
         var rate = BreathingPacer.rates.lowerBound

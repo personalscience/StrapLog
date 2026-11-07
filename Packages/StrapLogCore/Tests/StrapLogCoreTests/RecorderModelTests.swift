@@ -128,6 +128,38 @@ struct RecorderModelTests {
         #expect(try strings("SELECT COUNT(*) FROM beat", in: DatabaseQueue(path: url.path)) == ["1"])
     }
 
+    @Test("Stop and share exports, then asks for the share sheet with that export")
+    func stopAndShare() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        await model.start(name: "share")
+        await play([hr([1024])])
+        await model.stop(.share)
+        let url = try #require(model.shareRequest)
+        #expect(url == model.lastSnapshot)
+        #expect(FileManager.default.fileExists(atPath: url.path))
+        #expect(model.lastFinished?.recording.name == "share")
+        model.shareHandled()
+        #expect(model.shareRequest == nil)
+    }
+
+    @Test("Stop and delete leaves no recording, no export and nothing to share")
+    func stopAndDiscard() async throws {
+        defer { try? FileManager.default.removeItem(at: dir) }
+        await model.start(name: "keep")
+        await model.stop()
+        clock.advance(byMs: 60_000)
+        await model.start(name: "oops")
+        await play([hr([1024])])
+        await model.stop(.discard)
+        #expect(model.errorMessage == nil)
+        #expect(!model.isRecording)
+        #expect(model.recordings.map(\.name) == ["keep"])
+        #expect(model.lastFinished == nil && model.shareRequest == nil && model.lastSnapshot == nil)
+        #expect(try strings("SELECT COUNT(*) FROM beat") == ["0"])
+        let files = try FileManager.default.contentsOfDirectory(atPath: dir.path).filter { $0.hasSuffix(".sqlite") }
+        #expect(files.count == 1 && !files[0].contains("oops"))
+    }
+
     @Test("launch resumes an unfinished recording with its beat count")
     func launchResumes() async throws {
         await model.start(name: "overnight")
@@ -158,6 +190,30 @@ struct RecorderModelTests {
         let source = HeartSourceSpy(FakeHeartSource(clock: clock, script: []))
         await relaunched.consume(source)
         #expect(source.calls == [true])
+    }
+
+    @Test("ECG streams only with the pacer screen shown, ECG on and the app in front; off clears the trace")
+    func ecgSwitch() async throws {
+        let defaults = try #require(UserDefaults(suiteName: "ecgSwitch-\(UUID())"))
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        let ecg = SyntheticECG(rrMs: EcgTests.rr)
+        let source = HeartSourceSpy(FakeHeartSource(clock: clock, script: [.emit(.ecg(samples: Array(ecg.samples[0..<73])))]))
+        await model.consume(source)
+        #expect(source.ecgCalls == [false])
+        #expect(model.ecg.isEmpty, "ECG nobody asked for is dropped")
+        model.setECG(true)
+        #expect(source.ecgCalls.last == false, "not without the pacer screen")
+        model.showPacerScreen(true)
+        #expect(source.ecgCalls.last == true)
+        await model.appPhase(.background)
+        #expect(source.ecgCalls.last == false)
+        await model.appPhase(.foreground)
+        #expect(source.ecgCalls.last == true)
+        model.showPacerScreen(false)
+        #expect(source.ecgCalls.last == false)
+        #expect(model.ecg.isEmpty)
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        #expect(relaunched.ecgOn, "remembered")
     }
 
     @Test("errors surface in errorMessage instead of throwing")

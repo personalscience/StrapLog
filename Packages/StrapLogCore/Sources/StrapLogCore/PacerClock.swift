@@ -21,14 +21,14 @@ public final class PacerClock {
         task?.cancel()
         task = Task { [clock, sleeper, sink] in
             var next = pacer.nextTransition(afterMs: clock.nowMs())
-            sink.cue(inhaling: !next.inhaling)
+            sink.cue(inhaling: !next.inhaling, lengthMs: pacer.lengthMs(inhaling: !next.inhaling))
             while true {
                 await sleeper.sleep(forMs: next.atMs - clock.nowMs())
                 if Task.isCancelled { return }
                 let now = clock.nowMs()
                 guard now >= next.atMs else { continue }
                 next = pacer.nextTransition(afterMs: now)
-                sink.cue(inhaling: !next.inhaling)
+                sink.cue(inhaling: !next.inhaling, lengthMs: pacer.lengthMs(inhaling: !next.inhaling))
             }
         }
     }

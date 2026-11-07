@@ -33,12 +33,20 @@ public final class RecorderModel {
     /// The running breathing pacer, or nil. It runs with or without a recording; only a
     /// recording's `pacer_start`/`pacer_stop` events are saved.
     public private(set) var pacer: BreathingPacer?
-    /// Whether Home and Recording show the pacer panel (`showPacerPanel`).
-    public private(set) var pacerPanelShown = false
+    /// Whether the pacer screen is shown in place of Home or Recording (`showPacerScreen`).
+    public private(set) var pacerScreenShown = false
+    /// Whether the pacer screen shows the live ECG and pulses on its beats (`setECG`), remembered
+    /// in `PacerSettings.ecgKey`. The strap streams ECG only while that screen is on screen.
+    public private(set) var ecgOn: Bool
+    /// The last few seconds of live ECG, while it streams; empty otherwise.
+    public private(set) var ecg = EcgTrace()
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     /// The recording that just stopped, for Home's summary card; cleared by the next Start.
     public private(set) var lastFinished: RecordingDetail?
+    /// An export the user asked to share as they stopped (`StopChoice.share`); the app shows
+    /// the share sheet while it is set and calls `shareHandled()` when that closes.
+    public private(set) var shareRequest: URL?
     public private(set) var errorMessage: String?
     /// The user's marker bars, one per activity.
     public private(set) var markerPresets: MarkerPresets
@@ -81,6 +89,8 @@ public final class RecorderModel {
     private var source: (any HeartSource)?
     /// Plays the pacer's turns while it runs, or nil with nothing to play them on.
     private let pacerClock: PacerClock?
+    /// Whether the app is on screen; the ECG never streams in the background.
+    private var inForeground = true
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
@@ -105,6 +115,7 @@ public final class RecorderModel {
         self.pacerClock = cues.map { PacerClock(clock: clock, sleeper: sleeper, sink: $0) }
         let markerPresets = MarkerPresets.load(from: defaults)
         self.markerPresets = markerPresets
+        self.ecgOn = defaults.bool(forKey: PacerSettings.ecgKey)
         self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
                                         markerPresets: markerPresets)
     }
@@ -123,7 +134,13 @@ public final class RecorderModel {
     public func consume(_ source: some HeartSource) async {
         self.source = source
         source.setMotionStreaming(isRecording)
+        updateECGStreaming()
         for await event in source.events() {
+            // Display only, a couple of times a second: nothing to record, snapshot or stop for.
+            if case .ecg = event.payload {
+                apply(event)
+                continue
+            }
             await perform {
                 try await session.ingest(event)
                 guard case .heartRate = event.payload,
@@ -155,8 +172,24 @@ public final class RecorderModel {
         publishStatus()
     }
 
-    public func stop() async {
+    /// Stops the recording and exports it; `.share` then asks for the share sheet, and
+    /// `.discard` deletes it again (rows and export), leaving no `lastFinished`.
+    public func stop(_ choice: StopChoice = .save) async {
         await finish(because: nil)
+        guard let finished = lastFinished else { return }
+        switch choice {
+        case .save:
+            break
+        case .share:
+            shareRequest = lastSnapshot
+        case .discard:
+            lastFinished = nil
+            await delete(id: finished.id)
+        }
+    }
+
+    public func shareHandled() {
+        shareRequest = nil
     }
 
     /// Forgets the current strap so the next one found becomes the user's strap. Refused while
@@ -233,7 +266,7 @@ public final class RecorderModel {
         await stopPacer()
         let started = BreathingPacer(breathsPerMinute: breathsPerMinute, ratio: ratio, startedAtMs: clock.nowMs())
         pacer = started
-        pacerPanelShown = true
+        showPacerScreen(true)
         pacerClock?.run(started)
         guard isRecording else { return }
         await perform { try await session.logPacerStart(started) }
@@ -247,16 +280,26 @@ public final class RecorderModel {
         await perform { try await session.logPacerStop() }
     }
 
-    /// Shows or hides the pacer panel; hiding it stops a running pacer.
-    public func showPacerPanel(_ shown: Bool) async {
-        pacerPanelShown = shown
-        if !shown { await stopPacer() }
+    /// Shows or hides the pacer screen. A running pacer keeps running (and cueing) behind
+    /// Home or Recording; only `stopPacer` stops it.
+    public func showPacerScreen(_ shown: Bool) {
+        pacerScreenShown = shown
+        updateECGStreaming()
+    }
+
+    /// Turns the pacer screen's live ECG and beat pulse on or off, and remembers it.
+    public func setECG(_ on: Bool) {
+        ecgOn = on
+        defaults.set(on, forKey: PacerSettings.ecgKey)
+        updateECGStreaming()
     }
 
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
     /// since the app may not come back to the foreground before it is killed.
     /// Coming to the foreground also imports snapshots missing from the database.
     public func appPhase(_ phase: AppPhase) async {
+        inForeground = phase == .foreground
+        updateECGStreaming()
         await perform {
             try await session.appPhase(phase)
             guard phase == .background, isRecording else { return }
@@ -283,8 +326,12 @@ public final class RecorderModel {
     /// Deletes a finished recording and its snapshot file from every export folder, and
     /// drops it from each folder's `index.json`.
     public func delete(_ summary: RecordingSummary) async {
+        await delete(id: summary.id)
+    }
+
+    private func delete(id: Int64) async {
         await perform {
-            let rec = try await session.delete(summary.id)
+            let rec = try await session.delete(id)
             let name = Snapshot.fileName(for: rec)
             for directory in await exports.all() {
                 let url = directory.appendingPathComponent(name)
@@ -443,6 +490,7 @@ public final class RecorderModel {
         case .disconnected:
             link = .disconnected
             heartRate = nil
+            ecg = EcgTrace()
         case .battery(let percent):
             battery = percent
         case .firmware(let version):
@@ -454,6 +502,9 @@ public final class RecorderModel {
             else if link == .bluetoothOff { link = .searching }
         case .motion:
             break
+        case .ecg(let samples):
+            // A batch already in flight when the stream was turned off is dropped.
+            if ecgWanted { ecg.add(samples, receivedAtMs: event.atMs) }
         }
     }
 
@@ -491,6 +542,15 @@ public final class RecorderModel {
             await session.use(edited)
         }
         publishStatus()
+    }
+
+    /// The strap streams ECG only while someone can see it: the pacer screen, ECG on, app in
+    /// front. The H10 keeps a stream it was never told to stop running until its battery dies.
+    private var ecgWanted: Bool { pacerScreenShown && ecgOn && inForeground }
+
+    private func updateECGStreaming() {
+        if !ecgWanted { ecg = EcgTrace() }
+        source?.setECGStreaming(ecgWanted)
     }
 
     private func publishStatus() {

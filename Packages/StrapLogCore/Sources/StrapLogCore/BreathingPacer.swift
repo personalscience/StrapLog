@@ -24,6 +24,9 @@ public struct BreathingPacer: Sendable, Equatable {
     public var inhaleMs: Double { periodMs * ratio.inhaleFraction }
     public var exhaleMs: Double { periodMs - inhaleMs }
 
+    /// The full length of the inhale, or of the exhale.
+    public func lengthMs(inhaling: Bool) -> Double { inhaling ? inhaleMs : exhaleMs }
+
     /// What the file records about this pacer.
     public var stamp: PacerStamp {
         PacerStamp(breathsPerMinute: breathsPerMinute, inhaleS: inhaleMs / 1000, exhaleS: exhaleMs / 1000,
@@ -47,6 +50,18 @@ public struct BreathingPacer: Sendable, Equatable {
             if exhale > afterMs { return (exhale, false) }
             breath += 1
         }
+    }
+
+    /// Every turn after `fromMs` up to and including `toMs`, oldest first: where the ECG strip
+    /// draws its inhale and exhale lines.
+    public func transitions(afterMs fromMs: Int64, throughMs toMs: Int64) -> [(atMs: Int64, inhaling: Bool)] {
+        var out: [(atMs: Int64, inhaling: Bool)] = []
+        var next = nextTransition(afterMs: fromMs)
+        while next.atMs <= toMs {
+            out.append(next)
+            next = nextTransition(afterMs: next.atMs)
+        }
+        return out
     }
 
     /// Where in the breath the pacer is at `atMs`. Times before the start read as the start.

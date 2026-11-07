@@ -174,22 +174,27 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "the pacer is in the toolbar while idle")
         toggle.tap()
         let start = app.buttons["pacerStart"]
-        XCTAssertTrue(app.scroll(to: start))
+        XCTAssertTrue(start.waitForExistence(timeout: 5), "the pacer has a screen of its own")
         start.tap()
         let instruction = app.staticTexts["pacerInstruction"]
         XCTAssertTrue(instruction.waitForExistence(timeout: 5))
         XCTAssertTrue(instruction.label.hasPrefix("Breathe"))
 
+        toggle.tap()
+        XCTAssertFalse(instruction.exists, "the wind button goes back to Home")
         app.segmentedControls["activityPicker"].buttons["Other"].tap()
         let record = app.buttons["startButton"]
         XCTAssertTrue(app.scroll(to: record))
         record.tap()
         XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.scroll(to: instruction), "the pacer keeps running into the recording")
+        toggle.tap()
+        XCTAssertTrue(instruction.waitForExistence(timeout: 5), "the pacer kept running into the recording")
         let stop = app.buttons["pacerStop"]
         XCTAssertTrue(stop.label.contains("6.0/min"))
         stop.tap()
         XCTAssertTrue(start.waitForExistence(timeout: 5))
+        toggle.tap()
+        XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5), "back to the recording")
     }
 
     @MainActor
@@ -202,14 +207,39 @@ final class ReplaySmokeTests: XCTestCase {
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.tap()
         let start = app.buttons["pacerStart"]
-        XCTAssertTrue(app.scroll(to: start))
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
         start.tap()
         let record = app.buttons["pacerRecord"]
         XCTAssertTrue(app.scroll(to: record))
         record.tap()
-        XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5))
+        XCTAssertTrue(record.waitForNonExistence(timeout: 5), "no second recording can start from the pacer")
         XCTAssertTrue(app.buttons["pacerStop"].exists, "the pacer keeps running into the recording")
-        XCTAssertFalse(record.exists, "no second recording can start from the pacer")
+        toggle.tap()
+        XCTAssertTrue(app.buttons["stopButton"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testStopAndDeleteLeavesNothing() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-replay", "resting", "-speed", "20", "-freshDatabase"]
+        app.launch()
+        app.segmentedControls["activityPicker"].buttons["Other"].tap()
+        app.buttons["startButton"].tap()
+        let stop = app.buttons["stopButton"]
+        XCTAssertTrue(stop.waitForExistence(timeout: 10))
+        sleep(2)
+        XCTAssertTrue(app.scroll(to: stop))
+        stop.tap()
+        let delete = app.buttons["confirmStopDelete"].firstMatch
+        XCTAssertTrue(delete.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["confirmStopShare"].firstMatch.exists)
+        delete.tap()
+        let discard = app.buttons["confirmDiscard"].firstMatch
+        XCTAssertTrue(discard.waitForExistence(timeout: 5), "Delete asks a second time")
+        discard.tap()
+        XCTAssertTrue(app.buttons["startButton"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["lastFinished"].exists)
+        XCTAssertFalse(app.staticTexts["lastSnapshot"].exists)
     }
 
     @MainActor

@@ -2,11 +2,12 @@ import StrapLogCore
 import SwiftUI
 
 /// Live screen while recording: HR and α1 up top, the trend chart, markers in the thumb zone,
-/// then the pacer (when its panel is shown) and Stop. Overnight presets add a line saying how the night will end. In landscape the numbers sit left of the chart. Diagnostics live in the
+/// then Stop. Overnight presets add a line saying how the night will end. In landscape the numbers sit left of the chart. Diagnostics live in the
 /// device sheet behind the toolbar heart.
 struct RecordingView: View {
     let model: RecorderModel
     @State private var confirmingStop = false
+    @State private var confirmingDiscard = false
     @SceneStorage("chartViewport") private var viewport = ChartViewport()
     @Environment(\.verticalSizeClass) private var verticalSizeClass
 
@@ -33,18 +34,28 @@ struct RecordingView: View {
                         chart(nowMs: nowMs, height: 200)
                     }
                     MarkerBar(model: model, nowMs: nowMs)
-                    if model.pacerPanelShown {
-                        PacerSection(model: model)
-                    }
                     controls
                 }
                 .padding()
             }
         }
-        .confirmationDialog("Stop this recording and export it?", isPresented: $confirmingStop,
-                            titleVisibility: .visible) {
-            Button("Stop and export", role: .destructive) { Task { await model.stop() } }
+        .confirmationDialog("Stop this recording?", isPresented: $confirmingStop, titleVisibility: .visible) {
+            Button("Save") { Task { await model.stop(.save) } }
                 .accessibilityIdentifier("confirmStop")
+            Button("Save and share") { Task { await model.stop(.share) } }
+                .accessibilityIdentifier("confirmStopShare")
+            Button("Delete", role: .destructive) { confirmingDiscard = true }
+                .accessibilityIdentifier("confirmStopDelete")
+            Button("Keep recording", role: .cancel) {}
+        } message: {
+            Text("Save exports it to iCloud Drive.")
+        }
+        .alert("Delete this recording?", isPresented: $confirmingDiscard) {
+            Button("Delete", role: .destructive) { Task { await model.stop(.discard) } }
+                .accessibilityIdentifier("confirmDiscard")
+            Button("Keep recording", role: .cancel) {}
+        } message: {
+            Text("Stops it and removes its beats from this iPhone. Nothing is exported. This cannot be undone.")
         }
     }
 

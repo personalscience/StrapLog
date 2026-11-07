@@ -5,6 +5,9 @@ public protocol HeartSource: Sendable {
     /// Turns the accelerometer stream on or off. The model asks for it only while recording,
     /// so an idle connection costs the strap no extra battery. Sources without one ignore it.
     func setMotionStreaming(_ on: Bool)
+    /// Turns the ECG stream on or off. The model asks for it only while the pacer screen shows
+    /// it in the foreground. Sources without one ignore it.
+    func setECGStreaming(_ on: Bool)
     /// Drops the remembered strap and searches for one again, taking the first found. Sources
     /// without a remembered device ignore it.
     func forgetDevice()
@@ -12,6 +15,7 @@ public protocol HeartSource: Sendable {
 
 extension HeartSource {
     public func setMotionStreaming(_ on: Bool) {}
+    public func setECGStreaming(_ on: Bool) {}
     public func forgetDevice() {}
 
     /// Feed every event into `session` until the source finishes.

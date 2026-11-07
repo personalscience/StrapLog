@@ -33,15 +33,16 @@ final class AppStoreScreenshots: XCTestCase {
 
         addNote("slow breathing", in: app)
         let toggle = app.buttons["pacerToggle"]
-        XCTAssertTrue(app.scroll(to: toggle))
+        XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         toggle.tap()
         let start = app.buttons["pacerStart"]
-        XCTAssertTrue(app.scroll(to: start))
+        XCTAssertTrue(start.waitForExistence(timeout: 5))
         start.tap()
         XCTAssertTrue(app.staticTexts["pacerInstruction"].waitForExistence(timeout: 5))
         sleep(3)
         snap("04-pacer", app)
         app.buttons["pacerStop"].tap()
+        toggle.tap()
 
         let stop = app.buttons["stopButton"]
         XCTAssertTrue(app.scroll(to: stop))

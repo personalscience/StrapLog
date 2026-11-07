@@ -1,7 +1,8 @@
 import StrapLogCore
 import SwiftUI
 
-/// Home while idle, Recording while a recording is open (including one resumed at launch).
+/// Home while idle, Recording while a recording is open (including one resumed at launch), and
+/// the pacer screen over either while the toolbar's wind button has it shown.
 struct RootView: View {
     let model: RecorderModel
     @State private var showingHelp = false
@@ -10,7 +11,9 @@ struct RootView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if model.isRecording {
+                if model.pacerScreenShown {
+                    PacerScreen(model: model)
+                } else if model.isRecording {
                     RecordingView(model: model)
                 } else {
                     HomeView(model: model)
@@ -37,6 +40,12 @@ struct RootView: View {
         .sheet(isPresented: $showingHelp) { HelpView(book: Guide.book) }
         .sheet(isPresented: $showingDevice) {
             DeviceSheet(model: model).presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: .init(get: { model.shareRequest != nil }, set: { if !$0 { model.shareHandled() } })) {
+            if let url = model.shareRequest {
+                ShareSheet(url: url) { model.shareHandled() }
+                    .presentationDetents([.medium, .large])
+            }
         }
         .alert("Something went wrong", isPresented: .init(get: { model.errorMessage != nil },
                                                           set: { if !$0 { model.dismissError() } })) {

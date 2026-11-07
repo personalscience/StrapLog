@@ -27,8 +27,9 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     private let searchTask = Mutex<Task<Void, Never>?>(nil)
     /// The device whose online streaming (PMD) is ready, or nil while disconnected.
     private let streamingDevice = Mutex<String?>(nil)
-    private let motionWanted = Mutex(false)
-    private let motionTask = Mutex<Task<Void, Never>?>(nil)
+    /// The PMD streams the model wants; each (re)starts whenever streaming becomes ready.
+    private let wanted = Mutex<Set<PMDStream>>([])
+    private let streamTasks = Mutex<[PMDStream: Task<Void, Never>]>([:])
     private let heartFilter = Mutex(DuplicateHeartFilter())
     /// The strap `forgetDevice` dropped: its disconnect is expected, so it is not reported.
     private let forgotten = Mutex<String?>(nil)
@@ -93,34 +94,59 @@ final class PolarHeartSource: NSObject, HeartSource, @unchecked Sendable {
     }
 
     /// Wanted state survives reconnects: the stream (re)starts whenever streaming becomes ready.
-    func setMotionStreaming(_ on: Bool) {
-        motionWanted.withLock { $0 = on }
-        guard let id = streamingDevice.withLock({ $0 }) else { return }
-        if on { startMotion(id) } else { stopMotion(id) }
+    func setMotionStreaming(_ on: Bool) { setStreaming(.motion, on) }
+
+    func setECGStreaming(_ on: Bool) { setStreaming(.ecg, on) }
+
+    /// Acts only on a change, so asking again for what is already wanted never restarts a stream.
+    private func setStreaming(_ stream: PMDStream, _ on: Bool) {
+        let changed = wanted.withLock { on ? $0.insert(stream).inserted : $0.remove(stream) != nil }
+        guard changed, let id = streamingDevice.withLock({ $0 }) else { return }
+        if on { start(stream, id) } else { stop(stream, id) }
     }
 
-    private func startMotion(_ id: String) {
-        let task = Task { [api] in
+    private func start(_ stream: PMDStream, _ id: String) {
+        run(stream) { [api] in
             // A stream left running (by a killed process, say) makes a new start fail; clear it.
-            try? await api.stopStreaming(id, type: .acc)
+            try? await api.stopStreaming(id, type: stream.measurement)
             do {
-                let available = try await api.requestStreamSettings(id, feature: .acc)
-                for try await batch in api.startAccStreaming(id, settings: try Self.accSettings(from: available)) {
-                    self.emit(.motion(samples: batch.map {
-                        AccSample(deviceNs: $0.timeStamp, x: Int($0.x), y: Int($0.y), z: Int($0.z))
-                    }))
+                let available = try await api.requestStreamSettings(id, feature: stream.feature)
+                switch stream {
+                case .motion:
+                    for try await batch in api.startAccStreaming(id, settings: try Self.accSettings(from: available)) {
+                        self.emit(.motion(samples: batch.map {
+                            AccSample(deviceNs: $0.timeStamp, x: Int($0.x), y: Int($0.y), z: Int($0.z))
+                        }))
+                    }
+                case .ecg:
+                    // The H10 offers one setting: 130 Hz, 14 bit.
+                    for try await batch in api.startEcgStreaming(id, settings: available.maxSettings()) {
+                        self.emit(.ecg(samples: batch.map { EcgSample(deviceNs: $0.timeStamp, microvolts: Int($0.voltage)) }))
+                    }
                 }
             } catch {
-                if !Task.isCancelled { Self.log.error("ACC stream ended: \(String(describing: error))") }
+                if !Task.isCancelled { Self.log.error("\(String(describing: stream)) stream ended: \(String(describing: error))") }
             }
         }
-        motionTask.withLock { $0?.cancel(); $0 = task }
     }
 
-    /// The SDK requires ACC to be stopped explicitly (KnownIssues); cancelling alone is not enough.
-    private func stopMotion(_ id: String) {
-        motionTask.withLock { $0?.cancel(); $0 = nil }
-        Task { [api] in try? await api.stopStreaming(id, type: .acc) }
+    /// The SDK requires ACC and ECG to be stopped explicitly (KnownIssues: an H10 left streaming
+    /// stays on until its battery dies); cancelling the task alone is not enough.
+    private func stop(_ stream: PMDStream, _ id: String) {
+        run(stream) { [api] in try? await api.stopStreaming(id, type: stream.measurement) }
+    }
+
+    /// Cancels `stream`'s previous task and runs `body` once it has finished, so a stop sent
+    /// just before a start can never land after it and kill the new stream.
+    private func run(_ stream: PMDStream, _ body: @escaping @Sendable () async -> Void) {
+        streamTasks.withLock { tasks in
+            let previous = tasks[stream]
+            previous?.cancel()
+            tasks[stream] = Task {
+                await previous?.value
+                await body()
+            }
+        }
     }
 
     /// 25 Hz and 8 G when offered (the H10 offers both), else the nearest; other settings at max.
@@ -155,7 +181,10 @@ extension PolarHeartSource: PolarBleApiObserver {
 
     func deviceDisconnected(_ identifier: PolarDeviceInfo, info: PolarBleDisconnectInfo) {
         streamingDevice.withLock { $0 = nil }
-        motionTask.withLock { $0?.cancel(); $0 = nil }
+        streamTasks.withLock { tasks in
+            for task in tasks.values { task.cancel() }
+            tasks = [:]
+        }
         let expected = forgotten.withLock { id in
             defer { if id == identifier.deviceId { id = nil } }
             return id == identifier.deviceId
@@ -166,11 +195,15 @@ extension PolarHeartSource: PolarBleApiObserver {
 }
 
 extension PolarHeartSource: PolarBleApiDeviceFeaturesObserver {
-    /// After every (re)connection: resume the ACC stream if a recording wants it.
+    /// After every (re)connection: resume the streams that are wanted, and stop the others in
+    /// case a killed process left them running on the strap.
     func bleSdkFeatureReady(_ identifier: String, feature: PolarBleSdkFeature) {
         guard feature == .feature_polar_online_streaming else { return }
         streamingDevice.withLock { $0 = identifier }
-        if motionWanted.withLock({ $0 }) { startMotion(identifier) }
+        let wanted = self.wanted.withLock { $0 }
+        for stream in PMDStream.allCases {
+            if wanted.contains(stream) { start(stream, identifier) } else { stop(stream, identifier) }
+        }
     }
 }
 
