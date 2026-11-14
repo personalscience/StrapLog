@@ -89,8 +89,21 @@ public enum Schema {
         UPDATE meta SET value = '3' WHERE key = 'schema_version';
         """
 
+    /// Raw PPG from an optical sensor (BaroLog's armband), one row per reading. StrapLog's H10
+    /// has no PPG, so its recordings leave the table empty.
+    public static let v4 = """
+        CREATE TABLE ppg(
+          recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+          received_at_ms INTEGER NOT NULL,
+          counter INTEGER NOT NULL,
+          value INTEGER NOT NULL,
+          PRIMARY KEY(recording_id, received_at_ms, counter)
+        ) WITHOUT ROWID;
+        UPDATE meta SET value = '4' WHERE key = 'schema_version';
+        """
+
     /// Migrations in order; `docs/SCHEMA.md` holds one SQL block per entry.
-    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3)]
+    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3), ("v4", v4)]
 
     public static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()

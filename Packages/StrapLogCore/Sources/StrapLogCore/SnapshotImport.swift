@@ -127,6 +127,9 @@ public enum SnapshotImport {
             INSERT INTO main.motion(recording_id, second_ms, rms_mg, gx_mg, gy_mg, gz_mg, n)
             SELECT :new, second_ms, rms_mg, gx_mg, gy_mg, gz_mg, n
             FROM snap.motion WHERE recording_id = :old;
+            INSERT INTO main.ppg(recording_id, received_at_ms, counter, value)
+            SELECT :new, received_at_ms, counter, value
+            FROM snap.ppg WHERE recording_id = :old;
             """, arguments: args)
         if rec.endedAtMs == nil {
             let last = try RecordingSession.lastActivityMs(newId, db: db) ?? rec.startedAtMs

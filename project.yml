@@ -24,6 +24,8 @@ packages:
     path: Packages/HRVKit
   StrapLogCore:
     path: Packages/StrapLogCore
+  ChileafKit:
+    path: Packages/ChileafKit
   PolarBleSdk:
     url: https://github.com/polarofficial/polar-ble-sdk.git
     majorVersion: 8.4.0
@@ -34,6 +36,8 @@ targets:
     platform: iOS
     sources:
       - path: StrapLog
+      # Device-agnostic screens, formats and pacer audio, also compiled into BaroLog.
+      - path: AppShared
       # Live Activity attributes, intents and colours, also compiled into StrapLogWidgets.
       - path: Shared
       # Replay fixture for the simulator and UI tests (`-replay resting`).
@@ -93,6 +97,53 @@ targets:
         com.apple.developer.ubiquity-container-identifiers: [iCloud.com.personalscience.straplog]
         # Link alerts (LinkAlertNotifier) may break through a Sleep Focus.
         com.apple.developer.usernotifications.time-sensitive: true
+
+  # The BaroShift armband (Chileaf CL831) through the same Core: no Polar SDK, Watch, widgets
+  # or Live Activity. Its only device code is BaroLog/Armband, read-only toward the band.
+  BaroLog:
+    type: application
+    platform: iOS
+    sources:
+      - path: BaroLog
+      - path: AppShared
+      # Device-agnostic colours and marker visuals the shared views use (as StrapLogWatch does).
+      - path: Shared/Alpha1Band+Color.swift
+      - path: Shared/LiveMarkedLine.swift
+      - path: Shared/MarkerLandedEffect.swift
+      - path: Tests/fixtures/resting.json
+        buildPhase: resources
+    dependencies:
+      - package: HRVKit
+      - package: StrapLogCore
+      - package: ChileafKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.barolog
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+      configs:
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: resting.json
+    postBuildScripts:
+      - name: Stamp build
+        script: '"$SRCROOT/tools/stamp_build.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+    info:
+      path: BaroLog/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: BaroLog
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+        NSBluetoothAlwaysUsageDescription: BaroLog connects to your BaroShift armband to record heart rate, beat intervals, PPG and motion.
+        UIBackgroundModes: [bluetooth-central, audio]
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
 
   StrapLogWidgets:
     type: app-extension
@@ -235,3 +286,7 @@ schemes:
     build:
       targets:
         StrapLogWatch: all
+  BaroLog:
+    build:
+      targets:
+        BaroLog: all

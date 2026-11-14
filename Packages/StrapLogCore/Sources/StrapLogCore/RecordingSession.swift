@@ -28,6 +28,8 @@ public actor RecordingSession {
     private var plan: OvernightPlan?
     /// Posture of the active overnight recording, rebuilt from scratch after a relaunch.
     private var posture = PostureTracker()
+    /// Whether the sensor's axes can tell lying from upright (`SensorPlacement`).
+    private var tracksPosture = true
     /// When the active overnight recording's resting reading began, restored after a relaunch.
     private var restingStartMs: Int64?
     private let uprightStopMs: Int64
@@ -288,6 +290,11 @@ public actor RecordingSession {
         self.markerPresets = markerPresets
     }
 
+    /// Takes what the connected sensor can do: an arm sensor logs no posture, so no upright stop.
+    public func use(_ capabilities: SensorCapabilities) {
+        tracksPosture = capabilities.placement == .chest
+    }
+
     // MARK: Sensor events
 
     public func ingest(_ event: SensorEvent) throws {
@@ -360,10 +367,20 @@ public actor RecordingSession {
         case .ecg:
             break
 
+        case .ppg(let samples):
+            guard let id = recordingId, !samples.isEmpty else { return }
+            try database.writer.write { db in
+                let insert = try db.cachedStatement(
+                    sql: "INSERT OR IGNORE INTO ppg(recording_id, received_at_ms, counter, value) VALUES (?, ?, ?, ?)")
+                for s in samples {
+                    try insert.execute(arguments: [id, s.receivedAtMs, s.counter, s.value])
+                }
+            }
+
         case .motion(let samples):
             guard let id = recordingId, let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples),
                   !seconds.isEmpty else { return }
-            let changes = plan == nil ? [] : posture.add(seconds)
+            let changes = plan == nil || !tracksPosture ? [] : posture.add(seconds)
             try database.writer.write { db in
                 try MotionSecond.save(seconds, db: db)
                 for change in changes {

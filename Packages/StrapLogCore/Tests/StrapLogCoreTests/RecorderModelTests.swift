@@ -216,6 +216,19 @@ struct RecorderModelTests {
         #expect(relaunched.ecgOn, "remembered")
     }
 
+    @Test("a sensor without ECG is never asked for it, and the pacer screen hides it, even with ECG remembered on")
+    func ecgWithoutCapability() async throws {
+        let defaults = try #require(UserDefaults(suiteName: "ecgNone-\(UUID())"))
+        defaults.set(true, forKey: PacerSettings.ecgKey)
+        let model = RecorderModel(database: database, exports: ExportFolder(local: dir), clock: clock, defaults: defaults)
+        let source = HeartSourceSpy(FakeHeartSource(clock: clock, script: []), capabilities: SensorCapabilities(ecg: false))
+        await model.consume(source)
+        model.showPacerScreen(true)
+        #expect(model.ecgOn, "the preference survives for a sensor that has ECG")
+        #expect(!model.ecgShown)
+        #expect(source.ecgCalls.allSatisfy { !$0 })
+    }
+
     @Test("measured breath: motion streams with the pacer screen, breath on and the app in front; never written idle")
     func breathSwitch() async throws {
         let defaults = try #require(UserDefaults(suiteName: "breathSwitch-\(UUID())"))

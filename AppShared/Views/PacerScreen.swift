@@ -17,7 +17,7 @@ struct PacerScreen: View {
         ScrollView {
             VStack(spacing: 20) {
                 if let pacer = model.pacer {
-                    BreathingPacerView(pacer: pacer, pulse: model.ecgOn ? model.ecg.pulse : nil,
+                    BreathingPacerView(pacer: pacer, pulse: model.ecgShown ? model.ecg.pulse : nil,
                                        measured: model.breathOn ? model.breath?.volume : nil)
                     if model.breathOn {
                         Text(breathCaption)
@@ -58,9 +58,9 @@ struct PacerScreen: View {
                     .buttonStyle(.borderedProminent)
                     .accessibilityIdentifier("pacerStart")
                 }
-                if model.ecgOn {
+                if model.ecgShown {
                     if model.ecg.isEmpty {
-                        Text(model.link.isConnected ? "Waiting for ECG…" : "ECG needs the strap connected")
+                        Text(model.link.isConnected ? "Waiting for ECG…" : "ECG needs the \(AppBrand.current.device) connected")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, minHeight: 110)
@@ -71,14 +71,16 @@ struct PacerScreen: View {
                 }
                 Toggle("Sound", isOn: $soundOn)
                     .accessibilityIdentifier("pacerSound")
-                Toggle(isOn: .init(get: { model.ecgOn }, set: { model.setECG($0) })) {
-                    Text("Heartbeat (ECG)")
-                    Text("The strap's live ECG, with a pulse on each beat")
+                if model.capabilities.ecg {
+                    Toggle(isOn: .init(get: { model.ecgOn }, set: { model.setECG($0) })) {
+                        Text("Heartbeat (ECG)")
+                        Text("The \(AppBrand.current.device)'s live ECG, with a pulse on each beat")
+                    }
+                    .accessibilityIdentifier("pacerECG")
                 }
-                .accessibilityIdentifier("pacerECG")
                 Toggle(isOn: .init(get: { model.breathOn }, set: { model.setBreath($0) })) {
                     Text("My breath")
-                    Text("The flower follows your breathing, read by the strap; the dashed ring is the pacer")
+                    Text("The flower follows your breathing, read by the \(AppBrand.current.device); the dashed ring is the pacer")
                 }
                 .accessibilityIdentifier("pacerBreath")
             }
@@ -88,7 +90,7 @@ struct PacerScreen: View {
 
     private var breathCaption: String {
         if let breath = model.breath { return breath.caption }
-        return model.link.isConnected ? "Waiting for the strap…" : "Your breath needs the strap connected"
+        return model.link.isConnected ? "Waiting for the \(AppBrand.current.device)…" : "Your breath needs the \(AppBrand.current.device) connected"
     }
 
     private var ratio: Binding<BreathRatio> {

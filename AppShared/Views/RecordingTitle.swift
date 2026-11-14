@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// Toolbar centre: a red recording dot, elapsed time and the session name; `StrapLog` when idle.
+/// Toolbar centre: a red recording dot, elapsed time and the session name; the app's name when idle.
 struct RecordingTitle: View {
     let recording: Recording?
 
@@ -19,7 +19,7 @@ struct RecordingTitle: View {
                 .accessibilityIdentifier("recordingTitle")
             }
         } else {
-            Text("StrapLog").font(.headline)
+            Text(AppBrand.current.appName).font(.headline)
         }
     }
 }

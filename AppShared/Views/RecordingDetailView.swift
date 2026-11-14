@@ -86,7 +86,7 @@ struct RecordingDetailView: View {
                 .disabled(busy)
                 .accessibilityIdentifier("detailExport")
             }
-            Section("Strap") {
+            Section(AppBrand.current.deviceTitle) {
                 LabeledContent("Device ID", value: Formats.text(rec.deviceId))
                 LabeledContent("Firmware", value: Formats.text(rec.firmware))
                 LabeledContent("Battery", value: Formats.batteryRange(start: rec.batteryStart, end: rec.batteryEnd))

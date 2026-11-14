@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// Strap and recording diagnostics, off the main screen.
+/// Sensor and recording diagnostics, off the main screen.
 struct DeviceSheet: View {
     let model: RecorderModel
     @Environment(\.dismiss) private var dismiss
@@ -21,12 +21,12 @@ struct DeviceSheet: View {
                         LabeledContent("Battery", value: Formats.battery(model.battery))
                         LabeledContent("Contact", value: model.contact.map(Formats.contact) ?? "--")
                     } header: {
-                        Text("Strap")
+                        Text(AppBrand.current.deviceTitle)
                     } footer: {
                         if let hint = Formats.strapHint(model.link) { Text(hint) }
                     }
                     Section {
-                        Button("Use a Different Strap", role: .destructive) { model.forgetStrap() }
+                        Button("Use a Different \(AppBrand.current.deviceTitle)", role: .destructive) { model.forgetStrap() }
                             .disabled(model.isRecording)
                             .accessibilityIdentifier("forgetStrap")
                     } footer: {
@@ -55,7 +55,7 @@ struct DeviceSheet: View {
                     }
                 }
             }
-            .navigationTitle("Strap")
+            .navigationTitle(AppBrand.current.deviceTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

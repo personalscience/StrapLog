@@ -5,6 +5,8 @@ import SwiftUI
 /// the pacer screen over either while the toolbar's wind button has it shown.
 struct RootView: View {
     let model: RecorderModel
+    /// The app's guide, shown from the toolbar; nil hides the button.
+    var help: (() -> AnyView)?
     @State private var showingHelp = false
     @State private var showingDevice = false
 
@@ -31,13 +33,15 @@ struct RootView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     PacerToggle(model: model)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Guide", systemImage: "questionmark.circle") { showingHelp = true }
-                        .accessibilityIdentifier("helpButton")
+                if help != nil {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Guide", systemImage: "questionmark.circle") { showingHelp = true }
+                            .accessibilityIdentifier("helpButton")
+                    }
                 }
             }
         }
-        .sheet(isPresented: $showingHelp) { HelpView(book: Guide.book) }
+        .sheet(isPresented: $showingHelp) { help?() }
         .sheet(isPresented: $showingDevice) {
             DeviceSheet(model: model).presentationDetents([.medium, .large])
         }

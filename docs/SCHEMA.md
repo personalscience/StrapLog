@@ -92,6 +92,21 @@ ALTER TABLE event ADD COLUMN label TEXT;
 UPDATE meta SET value = '3' WHERE key = 'schema_version';
 ```
 
+### v4: raw PPG (BaroLog, straplog-ydg.3)
+
+BaroLog records the BaroShift armband (Chileaf CL831), whose optical sensor sends raw PPG at about 32 Hz. One row per reading, `WITHOUT ROWID` like `motion`. StrapLog's H10 has no PPG, so its recordings leave the table empty and readers that ignore it lose nothing.
+
+```sql
+CREATE TABLE ppg(
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  received_at_ms INTEGER NOT NULL,
+  counter INTEGER NOT NULL,
+  value INTEGER NOT NULL,
+  PRIMARY KEY(recording_id, received_at_ms, counter)
+) WITHOUT ROWID;
+UPDATE meta SET value = '4' WHERE key = 'schema_version';
+```
+
 ## Columns that need explaining
 
 - `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
@@ -104,8 +119,9 @@ UPDATE meta SET value = '3' WHERE key = 'schema_version';
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
 - `recording.context` for overnight presets (`sleep`) holds the auto-stop plan, `{"wake_at_ms": <epoch ms UTC>}` (`OvernightPlan`), or NULL with no wake time.
 - `recording.name`: typed on Home, or `<activity> <local date>` (`ActivityPreset.defaultName`, e.g. `sleep 2026-10-16`) when left blank.
-- `meta`: `format = straplog`, `schema_version = 3`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
-- `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the RMS of |a| − 1000 mg over the second: ~0 when still, larger with movement. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop.
+- `meta`: `format = straplog`, `schema_version = 4`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
+- `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the RMS of |a| − 1000 mg over the second: ~0 when still, larger with movement. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop. From BaroLog's armband (`SensorPlacement.arm`): about 51 Hz, raw counts scaled at an inferred 4096 counts/g, and no `posture` events (arm axes cannot tell lying from upright).
+- `ppg` (BaroLog only): one row per raw PPG reading, written only while recording. `received_at_ms` is the phone's receipt of the packet (one reading per packet, about 32 Hz; several can share a millisecond). `counter` is the sensor's packet counter, 0–255, stepping by one: re-sent packets are dropped before storage (`PpgDeduper`), so a jump of more than one is lost packets. `value` is the raw reading, a signed 16-bit number with no unit; 32767 means off the skin.
 
 ## Files
 

@@ -38,6 +38,10 @@ public final class RecorderModel {
     /// Whether the pacer screen shows the live ECG and pulses on its beats (`setECG`), remembered
     /// in `PacerSettings.ecgKey`. The strap streams ECG only while that screen is on screen.
     public private(set) var ecgOn: Bool
+    /// What the connected source can stream; set when `consume` starts.
+    public private(set) var capabilities = SensorCapabilities()
+    /// Whether the pacer screen shows ECG: asked for, and the sensor has it.
+    public var ecgShown: Bool { capabilities.ecg && ecgOn }
     /// The last few seconds of live ECG, while it streams; empty otherwise.
     public private(set) var ecg = EcgTrace()
     /// Whether the pacer screen shows the breath measured by the strap's accelerometer against
@@ -141,6 +145,8 @@ public final class RecorderModel {
     /// Feeds `source` into the session until it finishes. Runs for the app's lifetime.
     public func consume(_ source: some HeartSource) async {
         self.source = source
+        capabilities = source.capabilities
+        await session.use(capabilities)
         updateStreams()
         for await event in source.events() {
             // Display only, a couple of times a second: nothing to record, snapshot or stop for.
@@ -520,6 +526,8 @@ public final class RecorderModel {
             else if link == .bluetoothOff { link = .searching }
         case .motion(let samples):
             if breathTracker != nil { breath = breathTracker?.add(receivedAtMs: event.atMs, samples: samples) }
+        case .ppg:
+            break
         case .ecg(let samples):
             // A batch already in flight when the stream was turned off is dropped.
             if ecgWanted { ecg.add(samples, receivedAtMs: event.atMs) }
@@ -564,7 +572,7 @@ public final class RecorderModel {
 
     /// The strap streams ECG only while someone can see it: the pacer screen, ECG on, app in
     /// front. The H10 keeps a stream it was never told to stop running until its battery dies.
-    private var ecgWanted: Bool { pacerScreenShown && ecgOn && inForeground }
+    private var ecgWanted: Bool { pacerScreenShown && ecgShown && inForeground }
 
     private func updateECGStreaming() {
         if !ecgWanted { ecg = EcgTrace() }

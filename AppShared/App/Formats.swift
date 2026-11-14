@@ -29,8 +29,8 @@ enum Formats {
 
     static func link(_ status: LinkStatus) -> String {
         switch status {
-        case .searching: "Searching for strap…"
-        case .connected(let id): "Strap \(id)"
+        case .searching: "Searching for \(AppBrand.current.device)…"
+        case .connected(let id): "\(AppBrand.current.deviceTitle) \(id)"
         case .disconnected: "Disconnected — reconnecting"
         case .bluetoothOff: "Bluetooth is off"
         }
@@ -75,12 +75,12 @@ enum Formats {
         return m < 60 ? "\(m) min" : String(format: "%d h %02d min", m / 60, m % 60)
     }
 
-    /// Where Files shows an export: the iCloud container's Documents is iCloud Drive → StrapLog;
-    /// the local fallback is Documents/StrapLog.
-    static func exportLocation(_ url: URL) -> String {
+    /// Where Files shows an export: the iCloud container's Documents is iCloud Drive → <app>;
+    /// the local fallback is Documents/<app>.
+    static func exportLocation(_ url: URL, app: String = AppBrand.current.appName) -> String {
         url.path.contains("/Mobile Documents/")
-            ? "Files → iCloud Drive → StrapLog → \(url.lastPathComponent)"
-            : "Files → On My iPhone → StrapLog → StrapLog/\(url.lastPathComponent)"
+            ? "Files → iCloud Drive → \(app) → \(url.lastPathComponent)"
+            : "Files → On My iPhone → \(app) → \(app)/\(url.lastPathComponent)"
     }
 
     // MARK: Overnight
@@ -154,21 +154,20 @@ enum Formats {
         start == end ? battery(start) : "\(battery(start)) → \(battery(end))"
     }
 
-    /// The H10's printed ID while connected, or `--`.
-    /// Under the strap details: what to check while no strap is linked.
+    /// Under the device details: what to check while nothing is linked.
     static func strapHint(_ status: LinkStatus) -> String? {
         switch status {
         case .connected: nil
         case .bluetoothOff: "Turn Bluetooth on in Control Center."
-        case .searching, .disconnected: "Wear the strap with wet electrodes: it is off until it touches skin."
+        case .searching, .disconnected: AppBrand.current.wearHint
         }
     }
 
-    /// Under the switch-strap button.
-    static func switchStrapFooter(recording: Bool) -> String {
+    /// Under the switch-device button.
+    static func switchStrapFooter(recording: Bool, brand: AppBrand = .current) -> String {
         recording
-            ? "Stop recording to switch straps."
-            : "StrapLog forgets this strap and connects to the next one it finds. Take the old strap off first."
+            ? "Stop recording to switch \(brand.device)s."
+            : "\(brand.appName) forgets this \(brand.device) and connects to the next one it finds. Take the old \(brand.device) off first."
     }
 
     static func deviceId(_ status: LinkStatus) -> String {

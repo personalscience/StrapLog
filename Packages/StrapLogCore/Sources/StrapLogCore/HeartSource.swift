@@ -2,6 +2,8 @@
 /// Only `StrapLog/Polar/` knows about the SDK; everything else sees this.
 public protocol HeartSource: Sendable {
     func events() -> AsyncStream<SensorEvent>
+    /// What the sensor streams beyond HR and RR; fixed for the source's lifetime.
+    var capabilities: SensorCapabilities { get }
     /// Turns the accelerometer stream on or off. The model asks for it only while recording or
     /// while the pacer screen shows the measured breath, so an idle connection costs the strap
     /// no extra battery. Sources without one ignore it.
@@ -15,6 +17,7 @@ public protocol HeartSource: Sendable {
 }
 
 extension HeartSource {
+    public var capabilities: SensorCapabilities { SensorCapabilities() }
     public func setMotionStreaming(_ on: Bool) {}
     public func setECGStreaming(_ on: Bool) {}
     public func forgetDevice() {}

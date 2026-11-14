@@ -8,6 +8,8 @@ Personal iOS app (sideloaded, team `4RZ2RJUXC8`) that logs per-beat RR intervals
 xcodegen generate                                   # after any project.yml or file-tree change
 (cd Packages/HRVKit && swift test)                  # pure algorithms, macOS, seconds
 (cd Packages/StrapLogCore && swift test)            # model, schema, session, macOS
+(cd Packages/ChileafKit && swift test)              # armband decoders + translator, macOS
+xcodebuild -scheme BaroLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build   # BaroLog app
 (cd ~/dev/straplog-py && uv run --group dev pytest -q)  # straplog Python package + CLI (separate repo)
 xcodebuild test -scheme StrapLog -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/dd
 xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build
@@ -24,7 +26,10 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 |---|---|---|
 | Algorithms (RR cleaning, RMSSD, DFA α1) | `Packages/HRVKit` | constants mirror `~/dev/skills/straplog-skills/skills/h10-session/scripts/analyze_h10.py` |
 | Domain, GRDB schema, `RecordingSession` | `Packages/StrapLogCore` | `docs/SCHEMA.md` before touching migrations |
-| App: Polar adapter, SwiftUI, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
+| StrapLog app: Polar adapter, Watch link, Live Activity, intents, guide, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
+| Screens, formats and pacer audio shared by both apps | `AppShared/` | `AppShared/App/AppBrand.swift`: each app sets `AppBrand.current`; no product or device names here |
+| BaroLog: second app, BaroShift armband (Chileaf CL831) through the same Core | `BaroLog/` | plan `~/.claude/plans/cuddly-chasing-parrot.md`, epic `straplog-ydg` |
+| Armband bytes → `SensorEvent`s (2A37, vendor frames, PPG, dedupe, batching) | `Packages/ChileafKit` | `ArmbandTranslator.swift`; capture notes in `~/dev/baroshift/CLAUDE.md` |
 | Watch app (remote display/controller over WatchConnectivity) | `StrapLogWatch/`, `StrapLog/Watch/` | wire format is `WatchPayload` in Core; the phone stays the only recorder |
 | Python reader + `straplog` CLI | `~/dev/straplog-py` (separate repo) | the HRV skills depend on it; keep `straplog.db`'s API stable |
 | Tests and fixtures | `*Tests/`, `Tests/fixtures/` | `docs/TESTING.md` |
@@ -33,7 +38,8 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 
 ## Rules that the tree does not tell you
 
-- Only `StrapLog/Polar/` may `import PolarBleSdk`; everything else talks to `HeartSource`. Keeps the SDK swappable for a raw CoreBluetooth client.
+- Only `StrapLog/Polar/` may `import PolarBleSdk`; everything else talks to `HeartSource`. Keeps the SDK swappable for a raw CoreBluetooth client. Likewise only `BaroLog/Armband/` imports CoreBluetooth for the armband.
+- BaroLog is read-only toward the armband: never write to it. Its command characteristic `aae28f02` takes shutdown and factory reset (Chileaf SDK). `ChileafKit`'s `ReadOnlyTests` fails on any `writeValue(` in `ArmbandHeartSource.swift`.
 - Packages stay macOS-buildable (no UIKit, no SDK) so all logic is testable with `swift test` and no Bluetooth.
 - Packages are Swift 6 language mode; the app target is Swift 5 mode with complete strict-concurrency checking, because the SDK's tuple typealiases are not `Sendable`.
 - Times in the DB are Unix epoch ms UTC plus `tz_offset_s`. HRV Logger stored local time as UTC; never repeat that.

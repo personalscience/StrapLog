@@ -17,6 +17,9 @@ public struct SensorEvent: Sendable, Equatable {
         /// One ECG notification, oldest sample first. Streamed only while the pacer screen
         /// shows it, and never written: display only.
         case ecg(samples: [EcgSample])
+        /// Raw PPG readings, oldest first, each with its own receive time. Streamed with motion
+        /// (`setMotionStreaming`); written only while recording, to `ppg`.
+        case ppg(samples: [PpgSample])
     }
 
     /// Unix epoch ms UTC at which the phone received it.
