@@ -17,4 +17,9 @@ public enum BeatTiming {
         }
         return out
     }
+
+    /// The notification's beats, oldest first, each with its `endTimesMs` end time.
+    public static func beats(receivedAtMs: Int64, rr1024: [Int]) -> [TimedBeat] {
+        zip(rr1024, endTimesMs(receivedAtMs: receivedAtMs, rr1024: rr1024)).map { TimedBeat(rr1024: $0, tEndMs: $1) }
+    }
 }

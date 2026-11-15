@@ -509,14 +509,13 @@ public final class RecorderModel {
         case .heartRate(let bpm, let contact, let rr1024):
             heartRate = bpm
             self.contact = contact
+            let beats = BeatTiming.beats(receivedAtMs: event.atMs, rr1024: rr1024)
             guard isRecording else { return }
             if let last = lastHeardAtMs { longestGapMs = max(longestGapMs, event.atMs - last) }
             lastHeardAtMs = event.atMs
-            if !rr1024.isEmpty { lastBeatAtMs = event.atMs }
-            beatCount += rr1024.count
-            for (rr, end) in zip(rr1024, BeatTiming.endTimesMs(receivedAtMs: event.atMs, rr1024: rr1024)) {
-                live.add(tEndMs: end, rrMs: BeatTiming.ms(fromRR1024: rr))
-            }
+            if !beats.isEmpty { lastBeatAtMs = event.atMs }
+            beatCount += beats.count
+            for beat in beats { live.add(tEndMs: beat.tEndMs, rrMs: beat.rrMs) }
         case .connected(let deviceId, let firmware):
             link = .connected(deviceId: deviceId)
             if let firmware { self.firmware = firmware }

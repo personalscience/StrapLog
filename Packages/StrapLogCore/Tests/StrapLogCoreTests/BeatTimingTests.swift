@@ -31,4 +31,14 @@ struct BeatTimingTests {
         // later sums: 0, 700 (683.59 ms → 684), 1300 (1269.53 → 1270)
         #expect(BeatTiming.endTimesMs(receivedAtMs: 10_000, rr1024: [500, 600, 700]) == [8_730, 9_316, 10_000])
     }
+
+    @Test("beats pair each RR with its end time, oldest first")
+    func beats() {
+        let rr = [500, 600, 700]
+        let beats = BeatTiming.beats(receivedAtMs: 10_000, rr1024: rr)
+        #expect(beats.map(\.rr1024) == rr)
+        #expect(beats.map(\.tEndMs) == BeatTiming.endTimesMs(receivedAtMs: 10_000, rr1024: rr))
+        #expect(beats.map(\.rrMs) == rr.map(BeatTiming.ms(fromRR1024:)))
+        #expect(BeatTiming.beats(receivedAtMs: 10_000, rr1024: []).isEmpty)
+    }
 }

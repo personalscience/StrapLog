@@ -3,17 +3,15 @@ import SwiftUI
 
 /// The pacer on a screen of its own, shown in place of Home or Recording while
 /// `RecorderModel.pacerScreenShown`; the toolbar's wind button goes back and forth, and a
-/// running pacer keeps going behind the other screens. Pick a rate and ratio and start it, or
-/// follow it and stop it. The rate and ratio are remembered (`PacerSettings`). With Heartbeat
-/// on, the strap streams its ECG while this screen is up, shown as a strip with the breath's
-/// turns marked, and the flower pulses on each beat. With a `training` runner (ArmLog), the
-/// Training panel sits on top, and while a run is going the runner alone starts and stops the
-/// pacer and the recording.
+/// running pacer keeps going behind the other screens. It composes `PacerSetupView` (pick a rate
+/// and ratio and start) or `PacerRunningView` (follow it and stop it) with the panels and
+/// toggles. With Heartbeat on, the strap streams its ECG while this screen is up, shown as a
+/// strip with the breath's turns marked, and the flower pulses on each beat. With a `training`
+/// runner (ArmLog), the Training panel sits on top, and while a run is going the runner alone
+/// starts and stops the pacer and the recording.
 struct PacerScreen: View {
     let model: RecorderModel
     var training: TrainingRunner?
-    @AppStorage(PacerSettings.rateKey) private var savedRate = BreathingPacer.defaultRate
-    @AppStorage(PacerSettings.ratioKey) private var savedRatio = BreathRatio.default.rawValue
     @AppStorage(PacerSettings.soundKey) private var soundOn = false
 
     var body: some View {
@@ -21,48 +19,9 @@ struct PacerScreen: View {
             VStack(spacing: 20) {
                 if let training { TrainingPanel(runner: training) }
                 if let pacer = model.pacer {
-                    BreathingPacerView(pacer: pacer, pulse: model.ecgShown ? model.ecg.pulse : nil,
-                                       measured: model.breathOn ? model.breath?.volume : nil)
-                    if model.breathOn {
-                        Text(breathCaption)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .accessibilityIdentifier("breathCaption")
-                    }
-                    Text(model.heartRate.map { "\($0) bpm" } ?? "-- bpm")
-                        .font(.callout.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .accessibilityIdentifier("pacerHeartRate")
-                    if !trainingRuns {
-                        Button("Stop pacer (\(pacer.rateText))", systemImage: "stop.fill") {
-                            Task { await model.stopPacer() }
-                        }
-                        .buttonStyle(.bordered)
-                        .accessibilityIdentifier("pacerStop")
-                    }
-                    if !model.isRecording && !trainingRuns {
-                        Button("Record this session", systemImage: "record.circle") {
-                            Task { await model.start(.breathing, name: "") }
-                        }
-                        .buttonStyle(.bordered)
-                        .accessibilityIdentifier("pacerRecord")
-                    }
+                    PacerRunningView(model: model, pacer: pacer, trainingRuns: trainingRuns)
                 } else if !trainingRuns {
-                    Stepper(value: rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
-                        Text(Formats.rate(rate.wrappedValue)).monospacedDigit()
-                    }
-                    Picker("Inhale to exhale", selection: ratio) {
-                        ForEach(BreathRatio.allCases, id: \.self) { Text($0.title).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
-                    .accessibilityIdentifier("pacerRatio")
-                    Button {
-                        Task { await model.startPacer(breathsPerMinute: rate.wrappedValue, ratio: ratio.wrappedValue) }
-                    } label: {
-                        Label("Start pacer", systemImage: "wind").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityIdentifier("pacerStart")
+                    PacerSetupView(model: model)
                 }
                 if model.ecgShown {
                     if model.ecg.isEmpty {
@@ -95,17 +54,4 @@ struct PacerScreen: View {
     }
 
     private var trainingRuns: Bool { training?.isRunning == true }
-
-    private var breathCaption: String {
-        if let breath = model.breath { return breath.caption }
-        return model.link.isConnected ? "Waiting for the \(AppBrand.current.device)…" : "Your breath needs the \(AppBrand.current.device) connected"
-    }
-
-    private var ratio: Binding<BreathRatio> {
-        Binding(get: { PacerSettings.ratio(savedRatio) }, set: { savedRatio = $0.rawValue })
-    }
-
-    private var rate: Binding<Double> {
-        Binding(get: { PacerSettings.rate(savedRate) }, set: { savedRate = $0 })
-    }
 }

@@ -311,9 +311,9 @@ public actor RecordingSession {
                 var n = HeartNotification(recordingId: id, receivedAtMs: event.atMs, hrBpm: bpm,
                                           contact: contact, nRR: rr1024.count)
                 try n.insert(db)
-                let ends = BeatTiming.endTimesMs(receivedAtMs: event.atMs, rr1024: rr1024)
-                for (i, rr) in rr1024.enumerated() {
-                    var beat = Beat(recordingId: id, notificationId: n.id!, idx: i, rr1024: rr, tEndMsEst: ends[i])
+                for (i, timed) in BeatTiming.beats(receivedAtMs: event.atMs, rr1024: rr1024).enumerated() {
+                    var beat = Beat(recordingId: id, notificationId: n.id!, idx: i, rr1024: timed.rr1024,
+                                    tEndMsEst: timed.tEndMs)
                     try beat.insert(db)
                 }
             }

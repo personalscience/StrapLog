@@ -66,6 +66,31 @@ public struct BreathingPacer: Sendable, Equatable {
         return out
     }
 
+    /// When breath `index` begins (its inhale), to the whole ms, rounded as `nextTransition` rounds.
+    /// Breath 0 begins at `startedAtMs`; negative indices are the breaths the pacer would have
+    /// run before it started.
+    public func breathStartMs(_ index: Int) -> Int64 {
+        startedAtMs + Int64((Double(index) * periodMs).rounded())
+    }
+
+    /// The breath `atMs` falls in: the largest index whose `breathStartMs` is at or before it.
+    /// Negative before `startedAtMs`.
+    public func breathIndex(atMs: Int64) -> Int {
+        var index = Int((Double(atMs - startedAtMs) / periodMs).rounded(.down))
+        while breathStartMs(index) > atMs { index -= 1 }
+        while breathStartMs(index + 1) <= atMs { index += 1 }
+        return index
+    }
+
+    /// The breath wave (`phase.volume`, 0 empty to 1 full) sampled every `stepMs` from `fromMs`
+    /// up to and including `toMs`: the band a chart draws behind a trace.
+    public func volumes(fromMs: Int64, throughMs toMs: Int64, stepMs: Int64) -> [TrendPoint] {
+        precondition(stepMs > 0, "volumes needs a positive step")
+        return stride(from: fromMs, through: toMs, by: Int64.Stride(stepMs)).map {
+            TrendPoint(atMs: $0, value: phase(atMs: $0).volume)
+        }
+    }
+
     /// Where in the breath the pacer is at `atMs`. Times before the start read as the start.
     public func phase(atMs: Int64) -> BreathPhase {
         let elapsed = Double(max(0, atMs - startedAtMs))
