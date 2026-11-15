@@ -40,6 +40,13 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
     private var motionCharacteristicsFound: [CBCharacteristic] = []
     /// The band `forgetDevice` dropped: its disconnect is expected, so it is not reported.
     private var forgotten: UUID?
+    /// The band dropped for HR silence: its disconnect was already reported.
+    private var silenced: UUID?
+    private var heartRateCharacteristic: CBCharacteristic?
+    private var watchdog = HeartRateWatchdog()
+    /// Checks for HR silence while connected. A timer, not a ride on notifications, because a
+    /// stall leaves no notifications to ride on (straplog-ydg.6).
+    private var watchdogTimer: DispatchSourceTimer?
 
     init(clock: any WallClock = SystemClock(), defaults: UserDefaults = .standard) {
         self.clock = clock
@@ -71,6 +78,7 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
             self.defaults.removeObject(forKey: Self.deviceIdKey)
             if let p = self.peripheral {
                 self.forgotten = p.identifier
+                self.stopWatchdog()
                 self.central.cancelPeripheralConnection(p)
                 self.peripheral = nil
             }
@@ -112,10 +120,55 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
     }
 
     private func didConnect(_ p: CBPeripheral) {
+        Self.log.notice("connected \(p.identifier, privacy: .public)")
         translator.connected()
         motionCharacteristicsFound = []
+        heartRateCharacteristic = nil
         emit(.connected(deviceId: p.name ?? p.identifier.uuidString, firmware: nil))
         p.discoverServices(Self.services)
+        startWatchdog()
+    }
+
+    // MARK: HR-silence watchdog (on `queue`)
+
+    private func startWatchdog() {
+        stopWatchdog()
+        watchdog.started(atMs: clock.nowMs())
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + 5, repeating: 5, leeway: .seconds(1))
+        timer.setEventHandler { [weak self] in self?.checkWatchdog() }
+        timer.resume()
+        watchdogTimer = timer
+    }
+
+    private func stopWatchdog() {
+        watchdogTimer?.cancel()
+        watchdogTimer = nil
+        watchdog.reset()
+    }
+
+    private func checkWatchdog() {
+        guard let p = peripheral, p.state == .connected else { return }
+        switch watchdog.check(atMs: clock.nowMs()) {
+        case .none:
+            break
+        case .resubscribe:
+            if let c = heartRateCharacteristic {
+                Self.log.notice("HR silent: resubscribing")
+                p.setNotifyValue(false, for: c)
+                p.setNotifyValue(true, for: c)
+            } else {
+                Self.log.notice("HR silent, never subscribed: rediscovering services")
+                p.discoverServices(Self.services)
+            }
+        case .reconnect:
+            Self.log.notice("HR still silent: reconnecting")
+            stopWatchdog()
+            emit(translator.flush())
+            emit(.disconnected(reason: "HR silent"))
+            silenced = p.identifier
+            central.cancelPeripheralConnection(p)
+        }
     }
 
     private func applyMotionSubscriptions() {
@@ -139,6 +192,7 @@ extension ArmbandHeartSource: CBCentralManagerDelegate {
             emit(.bluetooth(poweredOn: true))
             if let p = peripheral { attach(p) } else { connect() }
         case .poweredOff:
+            stopWatchdog()
             emit(translator.flush())
             emit(.bluetooth(poweredOn: false))
         default:
@@ -166,24 +220,50 @@ extension ArmbandHeartSource: CBCentralManagerDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didFailToConnect p: CBPeripheral, error: Error?) {
+        Self.log.notice("connect failed: \(error?.localizedDescription ?? "unknown", privacy: .public)")
         emit(.disconnected(reason: "connect failed: \(error?.localizedDescription ?? "unknown")"))
         if p.identifier == peripheral?.identifier { central.connect(p) }
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral p: CBPeripheral, error: Error?) {
+        Self.log.notice("disconnected: \(error?.localizedDescription ?? "no error", privacy: .public)")
+        stopWatchdog()
         emit(translator.flush())
         if forgotten == p.identifier {
             forgotten = nil
             return
         }
-        emit(.disconnected(reason: error?.localizedDescription))
+        if silenced == p.identifier {
+            silenced = nil
+        } else {
+            emit(.disconnected(reason: error?.localizedDescription))
+        }
         // Reconnect whenever the band comes back in range or onto the arm.
         if p.identifier == peripheral?.identifier { central.connect(p) }
     }
 }
 
 extension ArmbandHeartSource: CBPeripheralDelegate {
+    /// The band's GATT table changed under us (another app's command can do this); iOS drops the
+    /// invalidated services' subscriptions silently, so rediscover and resubscribe.
+    func peripheral(_ p: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+        let uuids = invalidatedServices.map(\.uuid)
+        Self.log.notice("services modified: \(uuids.map(\.uuidString).joined(separator: ","), privacy: .public)")
+        motionCharacteristicsFound.removeAll { c in uuids.contains { $0 == c.service?.uuid } }
+        if uuids.contains(Self.heartRate) { heartRateCharacteristic = nil }
+        p.discoverServices(uuids.isEmpty ? Self.services : uuids)
+    }
+
+    func peripheral(_ p: CBPeripheral, didUpdateNotificationStateFor c: CBCharacteristic, error: Error?) {
+        if let error {
+            Self.log.notice("notify \(c.uuid.uuidString, privacy: .public) failed: \(error.localizedDescription, privacy: .public)")
+        } else {
+            Self.log.debug("notify \(c.uuid.uuidString, privacy: .public) = \(c.isNotifying)")
+        }
+    }
+
     func peripheral(_ p: CBPeripheral, didDiscoverServices error: Error?) {
+        if let error { Self.log.notice("service discovery failed: \(error.localizedDescription, privacy: .public)") }
         for service in p.services ?? [] { p.discoverCharacteristics(nil, for: service) }
     }
 
@@ -191,13 +271,16 @@ extension ArmbandHeartSource: CBPeripheralDelegate {
         for c in service.characteristics ?? [] {
             switch c.uuid.uuidString {
             case ChileafGATT.heartRateMeasurement:
+                heartRateCharacteristic = c
                 p.setNotifyValue(true, for: c)
+                watchdog.started(atMs: clock.nowMs())
             case ChileafGATT.batteryLevel:
                 p.readValue(for: c)
                 if c.properties.contains(.notify) { p.setNotifyValue(true, for: c) }
             case ChileafGATT.firmwareRevision, ChileafGATT.serialNumber:
                 p.readValue(for: c)
             case _ where Self.motionCharacteristics.contains(c.uuid):
+                motionCharacteristicsFound.removeAll { $0.uuid == c.uuid }
                 motionCharacteristicsFound.append(c)
                 if motionWanted { p.setNotifyValue(true, for: c) }
             default:
@@ -207,11 +290,16 @@ extension ArmbandHeartSource: CBPeripheralDelegate {
     }
 
     func peripheral(_ p: CBPeripheral, didUpdateValueFor c: CBCharacteristic, error: Error?) {
-        guard error == nil, let data = c.value else { return }
+        if let error {
+            Self.log.notice("value \(c.uuid.uuidString, privacy: .public) error: \(error.localizedDescription, privacy: .public)")
+            return
+        }
+        guard let data = c.value else { return }
         let bytes = [UInt8](data)
         let now = clock.nowMs()
         switch c.uuid.uuidString {
         case ChileafGATT.heartRateMeasurement:
+            watchdog.received(atMs: now)
             emit(translator.heartRate(bytes, atMs: now))
         case ChileafGATT.vendorFrames:
             emit(translator.vendorFrame(bytes, atMs: now))
