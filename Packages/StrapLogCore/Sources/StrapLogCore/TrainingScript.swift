@@ -4,11 +4,18 @@
 public struct TrainingScript: Sendable, Equatable {
     public let name: String
     public let version: Int
+    /// The name of the recording a run starts.
+    public let recordingName: String
+    /// Whether the run's recording keeps every accelerometer sample (`acc`), for replaying the
+    /// breath tracker; only the armband scripts need it.
+    public let rawMotion: Bool
     public let steps: [TrainingStep]
 
-    public init(name: String, version: Int, steps: [TrainingStep]) {
+    public init(name: String, version: Int, recordingName: String, rawMotion: Bool, steps: [TrainingStep]) {
         self.name = name
         self.version = version
+        self.recordingName = recordingName
+        self.rawMotion = rawMotion
         self.steps = steps
     }
 
@@ -33,7 +40,8 @@ public struct TrainingScript: Sendable, Equatable {
 
     /// The breath-tracker calibration protocol, ~19 min: each paced step is a cold-started
     /// tracker's transient plus at least one full 60 s window, and at least 8 breaths.
-    public static let calibration = TrainingScript(name: "calibration", version: 1, steps: [
+    public static let calibration = TrainingScript(name: "calibration", version: 1, recordingName: "breath calibration",
+                                                rawMotion: true, steps: [
         intro("Training session. Rest both arms on the armrests and keep still. Breathe naturally; I'll tell you each step."),
         .quiet("settle", say: "Breathe naturally.", seconds: 90),
         .paced("follow_6", say: "Follow the chimes, six breaths a minute.", rate: 6, seconds: 180),
@@ -58,7 +66,8 @@ public struct TrainingScript: Sendable, Equatable {
     ])
 
     /// A 2-minute device check: hear the voice, try one hold after the out-breath.
-    public static let rehearsal = TrainingScript(name: "rehearsal", version: 1, steps: [
+    public static let rehearsal = TrainingScript(name: "rehearsal", version: 1, recordingName: "breath calibration",
+                                              rawMotion: true, steps: [
         intro("Rehearsal. Keep still and breathe naturally."),
         .quiet("settle", say: "Breathe naturally.", seconds: 20),
         .paced("follow_6", say: "Follow the chimes, six breaths a minute.", rate: 6, seconds: 40, lines: [
@@ -68,6 +77,20 @@ public struct TrainingScript: Sendable, Equatable {
         .paced("recover_1", say: "Breathe.", rate: 6, seconds: 30, leadInMs: 0),
     ])
 
-    /// Scripts offered in the app, in menu order.
-    public static let all = [calibration, rehearsal]
+    /// The resonance finder (straplog-9fr.7), ~13 min on the strap: 2 min at each rate from 7
+    /// down to 4.5 /min in 0.5 steps, each a whole number of breaths. Afterwards the recording's
+    /// pacer runs are ranked by median swing (`ResonanceRanking`) on its detail screen.
+    public static let resonance = TrainingScript(name: "resonance", version: 1, recordingName: "resonance finder",
+                                                 rawMotion: false, steps: [
+        intro("Resonance finder. Sit still and follow the chimes. The rate slows every two minutes."),
+        .paced("follow_7", say: "Seven breaths a minute.", rate: 7, seconds: 120),
+        .paced("follow_6.5", say: "Six and a half.", rate: 6.5, seconds: 120),
+        .paced("follow_6", say: "Six.", rate: 6, seconds: 120),
+        .paced("follow_5.5", say: "Five and a half.", rate: 5.5, seconds: 120),
+        .paced("follow_5", say: "Five.", rate: 5, seconds: 120),
+        .paced("follow_4.5", say: "Four and a half, the slowest.", rate: 4.5, seconds: 120),
+    ])
+
+    /// Every script, for the rules in `TrainingScriptTests`; each app offers its own list.
+    public static let all = [calibration, rehearsal, resonance]
 }

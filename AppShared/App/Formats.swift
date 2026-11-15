@@ -309,6 +309,17 @@ enum Formats {
         }
     }
 
+    /// The resonance finder's answer, e.g. `Largest swing at 5.5/min`.
+    static func resonanceBest(_ ranking: ResonanceRanking) -> String {
+        String(format: "Largest swing at %.1f/min", ranking.best.rate)
+    }
+
+    /// One ranked rate, e.g. `5.5/min · swing 12.3 bpm · sync 88%`.
+    static func resonanceEntry(_ entry: ResonanceRanking.Entry) -> String {
+        String(format: "%.1f/min · swing %.1f bpm · sync %d%%", entry.rate, entry.swing,
+               Int((max(0, entry.sync) * 100).rounded()))
+    }
+
     /// The panel's status line while it has no fit yet; nil once it has one.
     static func rsaWaiting(_ reading: RSAReading?, connected: Bool, device: String) -> String? {
         guard let reading else {

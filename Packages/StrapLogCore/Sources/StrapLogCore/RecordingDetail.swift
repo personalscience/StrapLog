@@ -8,6 +8,8 @@ public struct RecordingDetail: Sendable {
     public var summary: SessionSummary
     /// One per pacer run, oldest first; empty when the pacer never ran.
     public var rsa: [RSASummary]
+    /// The pacer rates ranked by swing; nil with fewer than two rates (`ResonanceRanking`).
+    public var resonance: ResonanceRanking? { ResonanceRanking(rsa) }
     /// The beats replayed through the live analysis, so the detail chart draws what the
     /// recording screen drew. Keeps the whole recording, however long.
     public var live: LiveMetrics

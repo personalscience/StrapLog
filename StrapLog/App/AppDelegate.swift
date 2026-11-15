@@ -13,12 +13,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     let launcher: Result<Launcher, Error>
     private let source: (any HeartSource)?
     private let watch: WatchLink?
+    /// Training mode's runner, once the database is open.
+    let training: TrainingSlot?
 
     override init() {
         let dependencies = Result { try AppDependencies() }
         launcher = dependencies.map { Launcher(source: $0.source, openModel: $0.openModel) }
         source = try? dependencies.get().source
         watch = try? dependencies.get().watch
+        training = try? dependencies.get().training
         super.init()
     }
 

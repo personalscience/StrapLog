@@ -9,7 +9,7 @@ import SwiftUI
 /// strip with the breath's turns marked, and the flower pulses on each beat. With Heart follows
 /// breath on (a sensor with beat-accurate RR), `RSAPanel` shows HR against the breath and the
 /// flower shrinks to make room. With a `training`
-/// runner (ArmLog), the Training panel sits on top, and while a run is going the runner alone
+/// runner, the Training panel sits on top, and while a run is going the runner alone
 /// starts and stops the pacer and the recording.
 struct PacerScreen: View {
     let model: RecorderModel

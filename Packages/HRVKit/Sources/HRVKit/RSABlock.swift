@@ -47,7 +47,7 @@ public struct RSABlock: Sendable, Equatable {
     /// Float slack when a boundary lands exactly on `fromS` or `toS`.
     static let slack = 1e-9
 
-    static func median(_ values: [Double]) -> Double? {
+    public static func median(_ values: [Double]) -> Double? {
         guard !values.isEmpty else { return nil }
         let s = values.sorted(), m = s.count / 2
         return s.count.isMultiple(of: 2) ? (s[m - 1] + s[m]) / 2 : s[m]

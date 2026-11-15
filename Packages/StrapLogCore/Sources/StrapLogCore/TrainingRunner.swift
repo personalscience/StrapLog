@@ -7,8 +7,9 @@ import Observation
 /// A sleeping task like `PacerClock`, for the same reason: a silent step or a hold has no BLE
 /// notification to ride on (ArmLog's third exception, with `PacerClock` and the armband watchdog).
 ///
-/// - Owns its recording: refuses to start while one is open or the armband is not connected,
-///   starts a `breathing` recording that keeps raw accelerometer samples, and stops and saves it.
+/// - Owns its recording: refuses to start while one is open or the sensor is not connected,
+///   starts a `breathing` recording named by the script (keeping raw accelerometer samples if the
+///   script asks), and stops and saves it.
 /// - Relative timing, never skip: each step runs its full length from when it really started; a
 ///   late wake makes what follows late. A paced step ends at the first in-breath turn at or after
 ///   its planned end (stopping `turnGuardMs` before it, so no inhale chime sounds), so a late step
@@ -29,14 +30,17 @@ public final class TrainingRunner {
 
     public var isRunning: Bool { script != nil }
 
+    /// The scripts this app offers, in menu order.
+    public let scripts: [TrainingScript]
+
     private let model: RecorderModel
+    /// Said when the sensor is not connected, e.g. `Armband not connected.`
+    private let notConnected: String
     private let voice: any TrainingVoice
     private let clock: any WallClock
     private let sleeper: any PacerSleeper
     private var task: Task<Void, Never>?
 
-    /// The name of the recording a run starts.
-    public static let recordingName = "breath calibration"
     /// The longest single sleep, so a recording stopped elsewhere is noticed within it.
     public static let pollMs: Int64 = 2_000
     /// How long before an in-breath turn a paced step stops its pacer.
@@ -44,9 +48,12 @@ public final class TrainingRunner {
     /// A mid-step line later than this is dropped rather than said out of place.
     public static let staleLineMs: Int64 = 3_000
 
-    public init(model: RecorderModel, voice: any TrainingVoice, clock: any WallClock = SystemClock(),
-                sleeper: any PacerSleeper = TaskSleeper()) {
+    /// `device` is the sensor's noun, lower case (`armband`, `strap`), for what the voice says.
+    public init(model: RecorderModel, voice: any TrainingVoice, device: String, scripts: [TrainingScript],
+                clock: any WallClock = SystemClock(), sleeper: any PacerSleeper = TaskSleeper()) {
         self.model = model
+        self.scripts = scripts
+        notConnected = device.prefix(1).uppercased() + device.dropFirst() + " not connected."
         self.voice = voice
         self.clock = clock
         self.sleeper = sleeper
@@ -89,8 +96,8 @@ public final class TrainingRunner {
             task = nil
         }
         if model.isRecording { return refuse("A recording is already open. Stop it first.") }
-        if !model.link.isConnected { return refuse("Armband not connected.") }
-        await model.start(.breathing, name: Self.recordingName, rawMotion: true)
+        if !model.link.isConnected { return refuse(notConnected) }
+        await model.start(.breathing, name: script.recordingName, rawMotion: script.rawMotion)
         guard let id = model.activeRecording?.id else { return refuse("Could not start the recording.") }
         do {
             for (i, step) in script.steps.enumerated() {
@@ -128,7 +135,7 @@ public final class TrainingRunner {
         let startMs = clock.nowMs()
         self.step = step
         stepEndsAtMs = startMs + step.totalMs
-        if !model.link.isConnected { voice.say("Armband not connected.") }
+        if !model.link.isConnected { voice.say(notConnected) }
         voice.say(step.say)
         await model.marker(label: step.label, note: note)
         guard let rate = step.pacerRate else {

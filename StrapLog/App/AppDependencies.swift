@@ -10,6 +10,8 @@ struct AppDependencies {
     let source: any HeartSource
     let openModel: @MainActor () throws -> RecorderModel
     let watch = WatchLink()
+    /// Training mode's runner (the resonance finder), filled in by `openModel`.
+    let training = TrainingSlot()
 
     init(options: LaunchOptions = LaunchOptions()) throws {
         let dbURL: URL
@@ -39,9 +41,15 @@ struct AppDependencies {
         // UI tests run with a fresh database; the notification prompt would cover their taps.
         let displays: [any LiveStatusDisplay] = options.freshDatabase
             ? [LiveActivityDisplay(), watch] : [LiveActivityDisplay(), watch, LinkAlertNotifier()]
-        openModel = { [defaults] in
-            RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, display: LiveStatusFanOut(displays), cues: PacerSounds(rig: AudioRig()))
+        openModel = { [defaults, training] in
+            // One rig for the chimes and the training voice, so a run keeps one engine alive.
+            let rig = AudioRig()
+            let sounds = PacerSounds(rig: rig)
+            let model = RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
+                                      defaults: defaults, display: LiveStatusFanOut(displays), cues: sounds)
+            training.runner = TrainingRunner(model: model, voice: SpokenTraining(rig: rig, sounds: sounds),
+                                             device: AppBrand.current.device, scripts: [.resonance])
+            return model
         }
 
         if let fixture = options.replayFixture {

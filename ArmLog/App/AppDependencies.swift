@@ -35,7 +35,9 @@ struct AppDependencies {
             let sounds = PacerSounds(rig: rig)
             let model = RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
                                       defaults: defaults, display: LiveActivityDisplay(), cues: sounds)
-            training.runner = TrainingRunner(model: model, voice: SpokenTraining(rig: rig, sounds: sounds))
+            training.runner = TrainingRunner(model: model, voice: SpokenTraining(rig: rig, sounds: sounds),
+                                             device: AppBrand.current.device,
+                                             scripts: [.calibration, .rehearsal])
             return model
         }
 

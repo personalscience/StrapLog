@@ -35,6 +35,18 @@ struct RecordingDetailView: View {
                            nowMs: detail.endMs, viewport: $viewport, defaultSpan: .all, followLabel: "End")
                     .padding(.vertical, 4)
             }
+            if model.capabilities.beatToBeat, let ranking = detail.resonance {
+                Section("Resonance") {
+                    Text(Formats.resonanceBest(ranking)).font(.subheadline.bold())
+                        .accessibilityIdentifier("resonanceBest")
+                    ForEach(ranking.entries.indices, id: \.self) { i in
+                        Text(Formats.resonanceEntry(ranking.entries[i]))
+                            .font(.footnote.monospacedDigit())
+                            .fontWeight(i == 0 ? .semibold : .regular)
+                            .accessibilityIdentifier("resonanceRate-\(i)")
+                    }
+                }
+            }
             if model.capabilities.beatToBeat && !detail.rsa.isEmpty {
                 Section("Heart follows breath") {
                     ForEach(detail.rsa.indices, id: \.self) { i in

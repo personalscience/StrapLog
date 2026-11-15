@@ -449,7 +449,7 @@ Swing and sync appear after four full breaths and follow your breathing about fo
 
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 
-Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.
+Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. The **resonance finder** at the top of the pacer screen looks for yours, hands-free: with the strap connected and no recording open, tap **resonance · 13 min**, close your eyes, and follow the chimes. A voice steps the pacer from 7 breaths a minute down to 4.5, half a breath at a time, 2 minutes each, and StrapLog records the whole run and saves it. Open the recording afterwards: **Resonance** ranks the rates by swing, and the one at the top is your rate for that day. Run it again on another day; your rate should come out within half a breath a minute.
 
 The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. While the pacer runs with no recording open, **Record this session** starts a **Breathing** recording without interrupting the breath. The recording stores the rate, the inhale and exhale lengths and the moment the pacer started, so your analysis knows exactly what was paced. Only **Stop pacer** stops it.
 

@@ -12,7 +12,8 @@ struct StrapLogApp: App {
             case .success(let launcher):
                 Group {
                     if let model = launcher.model {
-                        RootView(model: model, help: { AnyView(HelpView(book: Guide.book)) })
+                        RootView(model: model, help: { AnyView(HelpView(book: Guide.book)) },
+                                 training: appDelegate.training?.runner)
                             .onChange(of: scenePhase, initial: true) { _, phase in
                                 guard let phase = AppPhase(phase) else { return }
                                 Task { await model.appPhase(phase) }

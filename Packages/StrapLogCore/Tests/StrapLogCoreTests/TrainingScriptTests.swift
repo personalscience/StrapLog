@@ -64,6 +64,17 @@ struct TrainingScriptTests {
         #expect(TrainingScript.calibration.stamp == "calibration v1")
         #expect(TrainingScript.rehearsal.totalMs <= 150_000)
     }
+
+    @Test("resonance: 7 down to 4.5 /min in 0.5 steps, 2 min each, on the strap without raw motion")
+    func resonance() {
+        let paced = TrainingScript.resonance.steps.filter { $0.pacerRate != nil }
+        #expect(paced.map(\.pacerRate) == [7, 6.5, 6, 5.5, 5, 4.5])
+        #expect(paced.allSatisfy { $0.durationMs == 120_000 })
+        #expect(TrainingScript.resonance.steps.count == paced.count + 1, "intro, then only paced steps")
+        #expect(!TrainingScript.resonance.rawMotion)
+        #expect(TrainingScript.resonance.recordingName == "resonance finder")
+        #expect(abs(Double(TrainingScript.resonance.totalMs) / 60_000 - 12.8) < 0.1)
+    }
 }
 
 extension TrainingScript: CustomTestStringConvertible {

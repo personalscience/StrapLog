@@ -22,7 +22,7 @@ struct TrainingRunnerTests {
     }
 
     func run(_ script: TrainingScript, sleeper: HookSleeper? = nil) async -> TrainingRunner {
-        let runner = TrainingRunner(model: model, voice: voice, clock: clock,
+        let runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock,
                                     sleeper: sleeper ?? HookSleeper(clock: clock))
         runner.start(script)
         #expect(runner.isRunning)
@@ -80,7 +80,7 @@ struct TrainingRunnerTests {
         #expect(clock.nowMs() - start == script.totalMs - paced * TrainingRunner.turnGuardMs, "on time, nothing drifts")
 
         let rec = try #require(try read { try Recording.fetchOne($0) })
-        #expect(rec.name == TrainingRunner.recordingName)
+        #expect(rec.name == script.recordingName)
         #expect(rec.activity == ActivityPreset.breathing.id)
         #expect(rec.endedAtMs != nil)
         #expect(model.lastFinished?.id == rec.id)
@@ -93,11 +93,27 @@ struct TrainingRunnerTests {
         #expect(runner.outcome == "Saved.")
     }
 
+    @Test("the resonance finder steps 7 down to 4.5 /min, each run whole breaths, in a recording named for it")
+    func resonance() async throws {
+        await connect()
+        let script = TrainingScript.resonance
+        let runner = await run(script)
+        #expect(try markers().map(\.label) == script.steps.map(\.label) + ["end"])
+        let stamps = try events().filter { $0.kind == .pacerStart }.compactMap { $0.note.flatMap(PacerStamp.init(note:)) }
+        #expect(stamps.map(\.breathsPerMinute) == [7, 6.5, 6, 5.5, 5, 4.5])
+        for (step, _, t0, stop) in try pacedSpans(script) {
+            #expect(stop == t0 + step.durationMs - TrainingRunner.turnGuardMs, "\(step.label)")
+        }
+        let rec = try #require(try read { try Recording.fetchOne($0) })
+        #expect(rec.name == "resonance finder")
+        #expect(runner.outcome == "Saved.")
+    }
+
     @Test("the run keeps raw accelerometer samples; an ordinary recording afterwards does not")
     func rawMotion() async throws {
         await connect()
         let still = (0..<51).map { AccSample(deviceNs: UInt64($0) * 19_600_000, x: 0, y: 0, z: 1000) }
-        let runner = TrainingRunner(model: model, voice: voice, clock: clock, sleeper: HookSleeper(clock: clock, hooks: [
+        let runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock, sleeper: HookSleeper(clock: clock, hooks: [
             3: { [model, clock] in
                 await model.consume(FakeHeartSource(clock: clock, script: [.emit(.motion(samples: still))]))
             },
@@ -133,7 +149,7 @@ struct TrainingRunnerTests {
     @Test("a mid-step line whose moment passed more than 3 s ago is dropped")
     func staleLine() async throws {
         await connect()
-        let script = TrainingScript(name: "t", version: 1, steps: [
+        let script = TrainingScript(name: "t", version: 1, recordingName: "t", rawMotion: false, steps: [
             .quiet("training", say: "Go.", seconds: 10, lines: [TrainingLine(afterMs: 5_000, text: "Halfway.")]),
         ])
         // Sleeps: 2 s, 2 s, then 1 s to the line, which overshoots by 4 s.
@@ -164,7 +180,7 @@ struct TrainingRunnerTests {
     @Test("a lost armband mid-run is said at the next step; the run carries on")
     func disconnectMidRun() async throws {
         await connect()
-        let runner = TrainingRunner(model: model, voice: voice, clock: clock, sleeper: HookSleeper(clock: clock, hooks: [
+        let runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock, sleeper: HookSleeper(clock: clock, hooks: [
             1: { [model, clock] in
                 await model.consume(FakeHeartSource(clock: clock, script: [.emit(.disconnected(reason: nil))]))
             },
@@ -180,7 +196,7 @@ struct TrainingRunnerTests {
         await connect()
         var runner: TrainingRunner?
         let sleeper = HookSleeper(clock: clock, hooks: [40: { @MainActor in runner?.cancel() }])
-        runner = TrainingRunner(model: model, voice: voice, clock: clock, sleeper: sleeper)
+        runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock, sleeper: sleeper)
         runner?.start(.calibration)
         await runner?.finished()
 
@@ -229,7 +245,7 @@ struct TrainingRunnerTests {
             0: { @MainActor [clock] in seen.values.append((runner?.step?.label, runner?.secondsLeft(atMs: clock.nowMs()))) },
             1: { @MainActor [clock] in seen.values.append((runner?.step?.label, runner?.secondsLeft(atMs: clock.nowMs()))) },
         ])
-        runner = TrainingRunner(model: model, voice: voice, clock: clock, sleeper: sleeper)
+        runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock, sleeper: sleeper)
         #expect(runner?.secondsLeft(atMs: 0) == nil)
         runner?.start(.rehearsal)
         await runner?.finished()
