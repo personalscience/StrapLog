@@ -40,6 +40,13 @@ struct MotionReducerTests {
         #expect(s.gzMg == 1000)
     }
 
+    @Test("a sensor that reads 0.94 g at rest (the armband) still reads 0 when still")
+    func offScale() throws {
+        var r = MotionReducer(recordingId: 1)
+        _ = r.add(receivedAtMs: received(25), samples: acc(25) { _ in (0, 940, 0) })
+        #expect(try flushed(&r).rmsMg == 0, "not 60 mg, as |a| − 1 g would give")
+    }
+
     @Test("tilted 45° and still: rms 0, gravity split between x and z")
     func tilted() throws {
         var r = MotionReducer(recordingId: 1)

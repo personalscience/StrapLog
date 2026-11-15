@@ -2,7 +2,6 @@
 /// wall-clock second, so a night costs ~29 k small rows instead of ~720 k samples.
 /// Pure and incremental: feed batches as they arrive, `flush` the partial last second on Stop.
 public struct MotionReducer: Sendable {
-    public static let gravityMg = 1000.0
     /// Sample spacing assumed when a batch's device timestamps are missing or not increasing.
     public static let nominalPeriodMs = 40.0
 

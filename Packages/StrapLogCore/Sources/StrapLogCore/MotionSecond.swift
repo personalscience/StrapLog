@@ -9,7 +9,10 @@ public struct MotionSecond: Codable, Sendable, Equatable, FetchableRecord, Persi
     public var recordingId: Int64
     /// Start of the second, Unix epoch ms UTC (a multiple of 1000).
     public var secondMs: Int64
-    /// RMS of |a| − 1 g over the second: 0 when still, larger with movement.
+    /// RMS of |a| around its own mean over the second (its standard deviation): 0 when still,
+    /// larger with movement. Measured around the second's mean rather than an assumed 1 g, so a
+    /// sensor whose scale is off (the armband reads 0.94–0.98 g at rest) still reads 0 when
+    /// still. Rows written before 2026-11-15 used |a| − 1 g (`docs/SCHEMA.md`).
     public var rmsMg: Double
     /// Mean acceleration per axis: the gravity vector, so posture.
     public var gxMg: Double
@@ -28,7 +31,8 @@ public struct MotionSecond: Codable, Sendable, Equatable, FetchableRecord, Persi
         self.n = n
     }
 
-    /// The same second with `other`'s samples pooled in, as if reduced together (up to rounding).
+    /// The same second with `other`'s samples pooled in, as if reduced together (up to rounding,
+    /// and ignoring any difference between the halves' mean |a|, which is not stored).
     /// Needed when a second is split, e.g. by a relaunch that restarts the reducer mid-second.
     public func merged(with other: MotionSecond) -> MotionSecond {
         let total = Double(n + other.n)

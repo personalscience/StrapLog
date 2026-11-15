@@ -18,7 +18,7 @@ public final class RecorderModel {
     public private(set) var temperature: TemperatureReading?
     /// The last seconds of raw PPG and its pulse amplitude, from a sensor that streams it.
     public private(set) var ppg = PpgTrace()
-    /// How much the sensor moved in the last whole second: RMS of |a| − 1 g in mg (as
+    /// How much the sensor moved in the last whole second: spread of |a| in mg (as
     /// `motion.rms_mg`); nil before the first second completes.
     public private(set) var movementMg: Double?
     /// Reduces live accelerometer batches to seconds for `movementMg`; never saved.
