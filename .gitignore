@@ -29,3 +29,4 @@ __pycache__/
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
+tools/BreathReplay/Package.resolved

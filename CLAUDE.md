@@ -16,6 +16,7 @@ xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath
 tools/release.sh [--upload]                         # App Store archive + export (clean tree; build = commit count)
 tools/screenshots.sh                                # 6.9" App Store PNGs → build/screenshots/ (~4 min real-time replay)
 tools/guide_images.py                               # Guide illustrations from build/screenshots → app assets + site/straplog/img/guide
+uv run tools/arm_breath_replay.py ARM.sqlite CHEST.sqlite OUT   # replay acc/motion through the real BreathTracker (tools/BreathReplay)
 tools/check_listing.py                              # docs/APPSTORE.md lengths + no-Polar-marks rule
 tools/publish_site.sh                               # build docs page (Guide.md → site/straplog/) + deploy
 ```
