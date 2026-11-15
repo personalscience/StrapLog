@@ -9,9 +9,14 @@ struct PacerRunningView: View {
     let pacer: BreathingPacer
     let trainingRuns: Bool
 
+    private static let diameter: CGFloat = 280
+    /// With the RSA panel below, so flower, numbers and trace fit one screen.
+    private static let smallDiameter: CGFloat = 170
+
     var body: some View {
         BreathingPacerView(pacer: pacer, pulse: model.ecgShown ? model.ecg.pulse : nil,
-                           measured: model.breathOn ? model.breath?.volume : nil)
+                           measured: model.breathOn ? model.breath?.volume : nil,
+                           diameter: model.rsaShown ? Self.smallDiameter : Self.diameter)
         if model.breathOn {
             Text(breathCaption)
                 .font(.footnote)

@@ -40,8 +40,11 @@ targets:
       - path: AppShared
       # Live Activity attributes, intents and colours, also compiled into StrapLogWidgets.
       - path: Shared
-      # Replay fixture for the simulator and UI tests (`-replay resting`).
+      # Replay fixtures for the simulator and UI tests (`-replay resting`; `-replay rsa-6 -speed 1`
+      # with the pacer at 6/min for Heart follows breath, tools/slice_rsa_fixture.py).
       - path: Tests/fixtures/resting.json
+        buildPhase: resources
+      - path: Tests/fixtures/rsa-6.json
         buildPhase: resources
     dependencies:
       - package: HRVKit
@@ -59,9 +62,9 @@ targets:
         # tools/stamp_build.sh reads .git, outside any declarable input list.
         ENABLE_USER_SCRIPT_SANDBOXING: NO
       configs:
-        # Release ignores -replay (LaunchOptions), so the fixture would be dead weight.
+        # Release ignores -replay (LaunchOptions), so the fixtures would be dead weight.
         Release:
-          EXCLUDED_SOURCE_FILE_NAMES: resting.json
+          EXCLUDED_SOURCE_FILE_NAMES: resting.json rsa-6.json
     postBuildScripts:
       - name: Stamp build
         script: '"$SRCROOT/tools/stamp_build.sh"'

@@ -12,4 +12,13 @@ public struct CosinorFit: Sendable, Equatable {
     public let peakFraction: Double
     /// HR samples in the window.
     public let n: Int
+
+    public init(mean: Double, slope: Double, swing: Double, sync: Double, peakFraction: Double, n: Int) {
+        self.mean = mean
+        self.slope = slope
+        self.swing = swing
+        self.sync = sync
+        self.peakFraction = peakFraction
+        self.n = n
+    }
 }

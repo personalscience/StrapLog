@@ -16,6 +16,17 @@ public struct RSAReading: Sendable, Equatable {
     /// True until `RSATracker.warmUpBreaths` whole breaths have closed.
     public let warmingUp: Bool
 
+    /// Smallest bar scale for the per-breath swings (bpm), so a calm run does not fill the bars.
+    public static let minBarTopBpm = 10.0
+
+    /// The top of the per-breath bars: the largest swing shown, at least `minBarTopBpm`, whole bpm.
+    public var barTopBpm: Double {
+        max(Self.minBarTopBpm, (breaths.compactMap(\.swing).max() ?? 0).rounded(.up))
+    }
+
+    /// Where the fitted peak sits against the target; nil without a fit.
+    public var judgement: RSAJudgement? { fit.map(RSAJudgement.init) }
+
     public init(atMs: Int64, trace: [TrendPoint], breaths: [BreathSwing], fit: CosinorFit?, warmingUp: Bool) {
         self.atMs = atMs
         self.trace = trace

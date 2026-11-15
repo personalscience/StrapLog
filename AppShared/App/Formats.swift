@@ -1,4 +1,5 @@
 import Foundation
+import HRVKit
 import StrapLogCore
 
 /// Display strings, kept out of the views so they can be unit-tested.
@@ -258,5 +259,36 @@ enum Formats {
         let rate = step.pacerRate.map { String(format: " · %.1f/min", $0) } ?? ""
         let left = secondsLeft.map { " · \(elapsed(ms: Int64($0) * 1000)) left" } ?? ""
         return step.label + rate + left
+    }
+
+    // MARK: Heart follows breath (RSA)
+
+    /// The fitted 4-breath swing, e.g. `8.6 bpm`; a dash before the first fit.
+    static func rsaSwing(_ fit: CosinorFit?) -> String {
+        fit.map { String(format: "%.1f bpm", $0.swing) } ?? "— bpm"
+    }
+
+    /// Sync as a percentage, e.g. `88%`; a dash before the first fit.
+    static func rsaSync(_ fit: CosinorFit?) -> String {
+        fit.map { "\(Int((max(0, $0.sync) * 100).rounded()))%" } ?? "—"
+    }
+
+    /// Where HR peaks against the pacer's turn from in to out, e.g.
+    /// `HR peaks 1.0 s into the out-breath` or `HR peaks 0.5 s before the out-breath`.
+    static func rsaPeak(_ fit: CosinorFit, pacer: BreathingPacer) -> String {
+        var d = fit.peakFraction - pacer.ratio.inhaleFraction
+        d -= d.rounded()   // to [-0.5, 0.5] of a breath from the turn
+        let seconds = String(format: "%.1f s", abs(d) * pacer.periodMs / 1000)
+        return d >= 0 ? "HR peaks \(seconds) into the out-breath" : "HR peaks \(seconds) before the out-breath"
+    }
+
+    /// The panel's status line while it has no fit yet; nil once it has one.
+    static func rsaWaiting(_ reading: RSAReading?, connected: Bool, device: String) -> String? {
+        guard let reading else {
+            return connected ? "Waiting for heartbeats…" : "Needs the \(device) connected"
+        }
+        guard reading.fit == nil else { return nil }
+        return reading.warmingUp ? "Follow the pacer: the trace fills as you breathe"
+            : "Swing and sync after \(RSADefaults.windowBreaths) full breaths"
     }
 }

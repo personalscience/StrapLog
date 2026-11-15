@@ -1,4 +1,5 @@
 import Foundation
+import HRVKit
 import StrapLogCore
 import Testing
 @testable import StrapLog
@@ -161,5 +162,35 @@ struct FormatsTests {
         #expect(Formats.trainingStep(follow, secondsLeft: 83) == "follow_6 · 6.0/min · 1:23 left")
         #expect(Formats.trainingStep(.quiet("hold_1", say: "", seconds: 30), secondsLeft: 20) == "hold_1 · 0:20 left")
         #expect(Formats.trainingStep(nil, secondsLeft: nil) == "Starting…")
+    }
+
+    @Test("RSA: swing and sync with dashes before a fit; peak against the turn to out")
+    func rsa() {
+        let fit = CosinorFit(mean: 60, slope: 0, swing: 8.56, sync: 0.876, peakFraction: 0.6, n: 40)
+        #expect(Formats.rsaSwing(fit) == "8.6 bpm")
+        #expect(Formats.rsaSwing(nil) == "— bpm")
+        #expect(Formats.rsaSync(fit) == "88%")
+        #expect(Formats.rsaSync(nil) == "—")
+        let six = BreathingPacer(breathsPerMinute: 6, startedAtMs: 0)
+        #expect(Formats.rsaPeak(fit, pacer: six) == "HR peaks 1.0 s into the out-breath")
+        let early = CosinorFit(mean: 60, slope: 0, swing: 8, sync: 0.8, peakFraction: 0.45, n: 40)
+        #expect(Formats.rsaPeak(early, pacer: six) == "HR peaks 0.5 s before the out-breath")
+        let wrapped = CosinorFit(mean: 60, slope: 0, swing: 8, sync: 0.8, peakFraction: 0.05, n: 40)
+        #expect(Formats.rsaPeak(wrapped, pacer: six) == "HR peaks 4.5 s before the out-breath")
+        let fourSix = BreathingPacer(breathsPerMinute: 6, ratio: .fourSix, startedAtMs: 0)
+        #expect(Formats.rsaPeak(fit, pacer: fourSix) == "HR peaks 2.0 s into the out-breath")
+    }
+
+    @Test("RSA waiting line: before beats, warming up, before the first fit, then none")
+    func rsaWaiting() {
+        #expect(Formats.rsaWaiting(nil, connected: false, device: "H10") == "Needs the H10 connected")
+        #expect(Formats.rsaWaiting(nil, connected: true, device: "H10") == "Waiting for heartbeats…")
+        let warming = RSAReading(atMs: 0, trace: [], breaths: [], fit: nil, warmingUp: true)
+        #expect(Formats.rsaWaiting(warming, connected: true, device: "H10") == "Follow the pacer: the trace fills as you breathe")
+        let warm = RSAReading(atMs: 0, trace: [], breaths: [], fit: nil, warmingUp: false)
+        #expect(Formats.rsaWaiting(warm, connected: true, device: "H10") == "Swing and sync after 4 full breaths")
+        let fit = CosinorFit(mean: 60, slope: 0, swing: 8, sync: 0.8, peakFraction: 0.6, n: 40)
+        #expect(Formats.rsaWaiting(RSAReading(atMs: 0, trace: [], breaths: [], fit: fit, warmingUp: false),
+                                   connected: true, device: "H10") == nil)
     }
 }

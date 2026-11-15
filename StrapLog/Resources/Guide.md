@@ -438,6 +438,15 @@ Tap the **wind** button at the top of the screen to open the pacer screen and br
 
 **My breath** makes the flower follow your own breathing, read from the strap's motion sensor as your chest rises and falls. A dashed ring shows where the pacer wants you, so you can see whether you're ahead, behind or in step. For the first 20 seconds or so it shows "Finding your breath…" while it learns which way your chest moves, so follow the pacer closely at the start. After half a minute, **In step** shows how closely your breathing has followed the pacer over the last minute. Movement drowns out the breath: if you shift or turn, it asks you to hold still and then finds your breath again. Like the ECG, it works only with the pacer screen open and the app in front, and it uses a little more strap battery.
 
+**Heart follows breath** shows how your heart rate rises as you breathe in and falls as you breathe out (*respiratory sinus arrhythmia*), the swing that slow, resonance breathing aims to make as large as it can. The flower shrinks to make room for a chart of the last minute of heart rate, one dot per beat, over the pacer's breath (shaded: full lungs at the top). Below it:
+
+- **Swing**: how far your heart rate rises and falls with the breath over the last four breaths, in beats per minute. Push this one up.
+- **Sync**: how much of your heart rate's movement keeps time with the pacer. High when your heart follows the breath; low when you hold your breath, breathe at another pace, or ignore the chimes.
+- **Where HR peaks**, against the turn from in to out. Green when it peaks about a tenth of a breath after the turn (1 second at 6 per minute), amber when near, red when far off, grey when sync is too low to judge.
+- One bar per breath: that breath's highest minus lowest heart rate. A gap means too few clean beats to measure.
+
+Swing and sync appear after four full breaths and follow your breathing about four breaths behind. They start afresh each time you change the rate. Nothing here is saved; the recording keeps every beat, so your analysis can work it out again.
+
 Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
 
 Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. To find yours, try a few rates for 2–3 minutes each on different days. The rate that gives the biggest, smoothest RR waves (highest SDNN) is yours.

@@ -179,3 +179,30 @@ struct RSATraceScaleTests {
         #expect(wide.fraction(47) == 0 && wide.fraction(83) == 1)
     }
 }
+
+@Suite("RSAJudgement")
+struct RSAJudgementTests {
+    func fit(peak: Double, sync: Double = 0.8) -> CosinorFit {
+        CosinorFit(mean: 60, slope: 0, swing: 8, sync: sync, peakFraction: peak, n: 40)
+    }
+
+    @Test("green within 0.1 breath of 0.6, amber within 0.2, red beyond, grey with no sync; wraps round the breath")
+    func bands() {
+        #expect(RSAJudgement(fit(peak: 0.6)) == .onTarget)
+        #expect(RSAJudgement(fit(peak: 0.69)) == .onTarget)
+        #expect(RSAJudgement(fit(peak: 0.45)) == .near)
+        #expect(RSAJudgement(fit(peak: 0.85)) == .off)
+        #expect(RSAJudgement(fit(peak: 0.1)) == .off)
+        #expect(RSAJudgement(fit(peak: 0.6, sync: 0.29)) == .noRhythm)
+    }
+
+    @Test("bar scale: at least 10 bpm, else the largest swing rounded up")
+    func barTop() {
+        let quiet = RSAReading(atMs: 0, trace: [], breaths: [], fit: nil, warmingUp: true)
+        #expect(quiet.barTopBpm == 10)
+        #expect(quiet.judgement == nil)
+        let samples = [60.0, 72.3, 61, 62].enumerated().map { TimedSample(t: Double($0.offset), value: $0.element) }
+        let big = RSAReading(atMs: 0, trace: [], breaths: [BreathSwing(samples, startS: 0, endS: 4)], fit: nil, warmingUp: true)
+        #expect(big.barTopBpm == 13)
+    }
+}
