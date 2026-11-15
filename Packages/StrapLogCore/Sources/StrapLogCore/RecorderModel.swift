@@ -78,7 +78,7 @@ public final class RecorderModel {
     /// Notifications keep arriving but none has carried a beat for `beatGapAfterMs`: the strap
     /// is linked but not reading. Checked as notifications arrive (there is no timer); a strap
     /// that goes fully quiet shows as unlinked or stale instead.
-    private var hasBeatGap: Bool {
+    public var hasBeatGap: Bool {
         guard let lastBeatAtMs, let lastHeardAtMs else { return false }
         return lastHeardAtMs - lastBeatAtMs >= Self.beatGapAfterMs
     }

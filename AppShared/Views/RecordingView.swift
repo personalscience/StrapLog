@@ -60,9 +60,17 @@ struct RecordingView: View {
     }
 
     private func chart(nowMs: Int64, height: CGFloat) -> some View {
-        TrendChart(live: model.live, markers: model.markers,
-                   startedAtMs: model.activeRecording?.startedAtMs ?? nowMs, nowMs: nowMs,
-                   viewport: $viewport, height: height)
+        VStack(alignment: .leading, spacing: 4) {
+            TrendChart(live: model.live, markers: model.markers,
+                       startedAtMs: model.activeRecording?.startedAtMs ?? nowMs, nowMs: nowMs,
+                       viewport: $viewport, height: height)
+            if model.hasBeatGap {
+                Label(Formats.noBeats(device: AppBrand.current.device), systemImage: "waveform.path.ecg")
+                    .font(.footnote)
+                    .foregroundStyle(.orange)
+                    .accessibilityIdentifier("noBeats")
+            }
+        }
     }
 
     private var controls: some View {

@@ -22,6 +22,11 @@ enum Formats {
         return "\(last.markerText) · \(ago) s ago · \(count) marker\(count == 1 ? "" : "s")"
     }
 
+    /// Under the chart while notifications arrive without beats (`RecorderModel.hasBeatGap`).
+    static func noBeats(device: String) -> String {
+        "No beats for \(RecorderModel.beatGapAfterMs / 1000) s: the \(device) may be moving or loose."
+    }
+
     /// A marker label as a button title: `lights_out` → `lights out`.
     static func markerButton(_ label: String) -> String {
         LiveStatus.markerTitle(label)

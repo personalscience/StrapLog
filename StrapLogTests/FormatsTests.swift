@@ -13,6 +13,11 @@ struct FormatsTests {
         #expect(Formats.elapsed(ms: -5_000) == "0:00")
     }
 
+    @Test("no-beats line names the device and the 10 s threshold")
+    func noBeats() {
+        #expect(Formats.noBeats(device: "armband") == "No beats for 10 s: the armband may be moving or loose.")
+    }
+
     @Test("gap in seconds with one decimal")
     func gap() {
         #expect(Formats.gap(ms: 4_000) == "4.0 s")
