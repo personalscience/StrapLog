@@ -12,6 +12,8 @@ public enum PacerSettings {
     public static let ecgKey = "pacerECG"
     /// Whether the pacer screen shows the breath measured by the strap (`BreathTracker`); off by default.
     public static let breathKey = "pacerBreath"
+    /// Whether the pacer screen shows heart rate following the breath (`RSATracker`); off by default.
+    public static let rsaKey = "pacerRSA"
 
     /// The saved inhale:exhale ratio; missing or unknown values read as the default.
     public static func ratio(_ stored: String?) -> BreathRatio {

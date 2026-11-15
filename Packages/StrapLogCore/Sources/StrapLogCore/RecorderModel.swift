@@ -58,6 +58,14 @@ public final class RecorderModel {
     public private(set) var breathOn: Bool
     /// The measured breath while the pacer screen shows it; nil otherwise.
     public private(set) var breath: BreathReading?
+    /// Whether the pacer screen shows heart rate following the breath (`setRSA`), remembered
+    /// in `PacerSettings.rsaKey`.
+    public private(set) var rsaOn: Bool
+    /// Whether the pacer screen shows RSA: asked for, and the sensor's RR is beat-accurate.
+    public var rsaShown: Bool { capabilities.beatToBeat && rsaOn }
+    /// Heart rate against the pacer's breath while the pacer screen shows it; nil otherwise.
+    /// Fed with or without a recording; never written to the database.
+    public private(set) var rsa: RSAReading?
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     /// The recording that just stopped, for Home's summary card; cleared by the next Start.
@@ -111,6 +119,8 @@ public final class RecorderModel {
     private var inForeground = true
     /// Follows the breath against the running pacer while `breathWanted`.
     private var breathTracker: BreathTracker?
+    /// Follows HR against the running pacer while `rsaWanted`.
+    private var rsaTracker: RSATracker?
 
     /// Default `snapshotEveryMs`: a crash or a dead phone mid-night loses at most 30 min of export.
     public static let defaultSnapshotEveryMs: Int64 = 30 * 60_000
@@ -137,6 +147,7 @@ public final class RecorderModel {
         self.markerPresets = markerPresets
         self.ecgOn = defaults.bool(forKey: PacerSettings.ecgKey)
         self.breathOn = defaults.bool(forKey: PacerSettings.breathKey)
+        self.rsaOn = defaults.bool(forKey: PacerSettings.rsaKey)
         self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
                                         markerPresets: markerPresets)
     }
@@ -293,6 +304,7 @@ public final class RecorderModel {
         showPacerScreen(true)
         pacerClock?.run(started)
         updateBreathTracking()
+        updateRSATracking()
         guard isRecording else { return }
         await perform { try await session.logPacerStart(started) }
     }
@@ -302,6 +314,7 @@ public final class RecorderModel {
         pacer = nil
         pacerClock?.stop()
         updateBreathTracking()
+        updateRSATracking()
         guard isRecording else { return }
         await perform { try await session.logPacerStop() }
     }
@@ -325,6 +338,13 @@ public final class RecorderModel {
         breathOn = on
         defaults.set(on, forKey: PacerSettings.breathKey)
         updateBreathTracking()
+    }
+
+    /// Turns the pacer screen's heart-rate-follows-breath panel on or off, and remembers it.
+    public func setRSA(_ on: Bool) {
+        rsaOn = on
+        defaults.set(on, forKey: PacerSettings.rsaKey)
+        updateRSATracking()
     }
 
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
@@ -510,6 +530,7 @@ public final class RecorderModel {
             heartRate = bpm
             self.contact = contact
             let beats = BeatTiming.beats(receivedAtMs: event.atMs, rr1024: rr1024)
+            if rsaTracker != nil { for beat in beats { rsa = rsaTracker?.add(tEndMs: beat.tEndMs, rrMs: beat.rrMs) } }
             guard isRecording else { return }
             if let last = lastHeardAtMs { longestGapMs = max(longestGapMs, event.atMs - last) }
             lastHeardAtMs = event.atMs
@@ -529,6 +550,7 @@ public final class RecorderModel {
             ecg = EcgTrace()
             // The tracker starts afresh by itself after the gap (`BreathTracker.gapMs`).
             breath = nil
+            restartRSATracking()
         case .battery(let percent):
             battery = percent
         case .firmware(let version):
@@ -610,9 +632,30 @@ public final class RecorderModel {
         source?.setMotionStreaming(isRecording || breathWanted)
     }
 
+    /// HR against the breath, like the ECG, is followed only while someone can see it.
+    private var rsaWanted: Bool { pacer != nil && pacerScreenShown && rsaShown && inForeground }
+
+    /// Starts or drops the RSA tracker. It needs no stream of its own: HR always streams.
+    private func updateRSATracking() {
+        if rsaWanted, let pacer {
+            if rsaTracker == nil { rsaTracker = RSATracker(pacer: pacer) }
+        } else {
+            rsaTracker = nil
+            rsa = nil
+        }
+    }
+
+    /// Forgets the beats so far: after a disconnect the next beats start a new trace.
+    private func restartRSATracking() {
+        rsaTracker = nil
+        rsa = nil
+        updateRSATracking()
+    }
+
     private func updateStreams() {
         updateECGStreaming()
         updateBreathTracking()
+        updateRSATracking()
     }
 
     private func publishStatus() {
