@@ -11,7 +11,7 @@ struct SchemaTests {
         _ = try StrapLogDatabase(queue)
         _ = try StrapLogDatabase(queue)
         let tables = try queue.read { try String.fetchAll($0, sql: "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'grdb_%' ORDER BY name") }
-        #expect(tables == ["beat", "event", "meta", "motion", "notification", "ppg", "recording", "temperature"])
+        #expect(tables == ["acc", "beat", "event", "meta", "motion", "notification", "ppg", "recording", "temperature"])
         let meta = try queue.read { try Int.fetchOne($0, sql: "SELECT COUNT(*) FROM meta") }
         #expect(meta == 2)
     }
@@ -36,7 +36,7 @@ struct SchemaTests {
         let db = try StrapLogDatabase.inMemory()
         let rows = try db.writer.read { try Row.fetchAll($0, sql: "SELECT key, value FROM meta ORDER BY key") }
         #expect(rows.map { $0["key"] as String } == ["format", "schema_version"])
-        #expect(rows.map { $0["value"] as String } == ["straplog", "5"])
+        #expect(rows.map { $0["value"] as String } == ["straplog", "6"])
     }
 
     @Test("motion is WITHOUT ROWID, so a night of it stays small")

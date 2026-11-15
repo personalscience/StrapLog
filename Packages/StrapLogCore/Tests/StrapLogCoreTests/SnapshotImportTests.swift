@@ -13,12 +13,13 @@ struct SnapshotImportTests {
                                startMs: Int64 = startMs) async throws -> (TestRig, Recording, URL) {
         let rig = try TestRig(database: .live(at: dir.appendingPathComponent("live-\(UUID())/live.sqlite")),
                               clock: FakeClock(startMs: startMs, tzOffsetS: -7 * 3600))
-        try await rig.session.start(.sleep, name: name)
+        try await rig.session.start(.sleep, name: name, rawMotion: true)
         try await rig.play([
             .emit(.connected(deviceId: "H10", firmware: "5.0")),
             .wait(ms: 1000), hr([1000]), .wait(ms: 1000), hr([700, 720]),
             ppg(8, fromMs: startMs + 2000, counter: 200),
             .emit(.temperature(TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365))),
+            motion(5),
         ])
         try await rig.session.marker(label: "a")
         let out = dir.appendingPathComponent("export")
@@ -53,7 +54,7 @@ struct SnapshotImportTests {
         #expect(ids == [rec.id!])
         let copy = try read(fresh) { try Recording.fetchOne($0, key: rec.id!) }
         #expect(copy == rec)
-        for table in ["notification", "beat", "event", "motion", "ppg", "temperature"] {
+        for table in ["notification", "beat", "event", "motion", "ppg", "temperature", "acc"] {
             let sql = "SELECT * FROM \(table) ORDER BY 1, 2"
             #expect(try rows(fresh, sql) == rows(rig.database, sql), "\(table)")
         }

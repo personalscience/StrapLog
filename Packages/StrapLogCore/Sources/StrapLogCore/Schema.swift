@@ -116,8 +116,24 @@ public enum Schema {
         UPDATE meta SET value = '5' WHERE key = 'schema_version';
         """
 
+    /// Raw accelerometer samples, one row each, written only for a recording started with
+    /// `rawMotion` (ArmLog's training runs). `idx` numbers the recording's samples from 0, since
+    /// clamped sample times can repeat.
+    public static let v6 = """
+        CREATE TABLE acc(
+          recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+          idx INTEGER NOT NULL,
+          at_ms INTEGER NOT NULL,
+          x_mg INTEGER NOT NULL,
+          y_mg INTEGER NOT NULL,
+          z_mg INTEGER NOT NULL,
+          PRIMARY KEY(recording_id, idx)
+        ) WITHOUT ROWID;
+        UPDATE meta SET value = '6' WHERE key = 'schema_version';
+        """
+
     /// Migrations in order; `docs/SCHEMA.md` holds one SQL block per entry.
-    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3), ("v4", v4), ("v5", v5)]
+    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3), ("v4", v4), ("v5", v5), ("v6", v6)]
 
     public static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()

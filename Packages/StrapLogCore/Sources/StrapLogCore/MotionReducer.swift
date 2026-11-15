@@ -17,10 +17,23 @@ public struct MotionReducer: Sendable {
 
     /// Adds one notification's samples; returns the seconds they completed, oldest first.
     public mutating func add(receivedAtMs: Int64, samples: [AccSample]) -> [MotionSecond] {
-        var done: [MotionSecond] = []
-        for (sample, t) in zip(samples, Self.timesMs(receivedAtMs: receivedAtMs, samples: samples)) {
+        add(samples, atMs: place(receivedAtMs: receivedAtMs, samples: samples))
+    }
+
+    /// Wall-clock ms per sample (`timesMs`), clamped to be non-decreasing across batches.
+    /// Call once per batch, then hand the times to `add(_:atMs:)`.
+    public mutating func place(receivedAtMs: Int64, samples: [AccSample]) -> [Int64] {
+        Self.timesMs(receivedAtMs: receivedAtMs, samples: samples).map { t in
             let t = max(t, lastMs ?? t)
             lastMs = t
+            return t
+        }
+    }
+
+    /// Adds samples already placed by `place`; returns the seconds they completed, oldest first.
+    public mutating func add(_ samples: [AccSample], atMs times: [Int64]) -> [MotionSecond] {
+        var done: [MotionSecond] = []
+        for (sample, t) in zip(samples, times) {
             let second = t - ((t % 1000) + 1000) % 1000
             if let open = bucket, open.secondMs != second {
                 done.append(open.second(recordingId: recordingId))

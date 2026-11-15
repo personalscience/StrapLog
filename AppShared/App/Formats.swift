@@ -244,4 +244,19 @@ enum Formats {
     static func countdown(seconds: Double) -> String {
         String(Int(seconds.rounded(.up)))
     }
+
+    // MARK: Training
+
+    /// A script on its Start button, e.g. `calibration · 19 min`.
+    static func trainingScript(_ script: TrainingScript) -> String {
+        "\(script.name) · \(Int((Double(script.totalMs) / 60_000).rounded())) min"
+    }
+
+    /// The step in progress, e.g. `follow_6 · 6.0/min · 1:23 left`, or `Starting…` between steps.
+    static func trainingStep(_ step: TrainingStep?, secondsLeft: Int?) -> String {
+        guard let step else { return "Starting…" }
+        let rate = step.pacerRate.map { String(format: " · %.1f/min", $0) } ?? ""
+        let left = secondsLeft.map { " · \(elapsed(ms: Int64($0) * 1000)) left" } ?? ""
+        return step.label + rate + left
+    }
 }

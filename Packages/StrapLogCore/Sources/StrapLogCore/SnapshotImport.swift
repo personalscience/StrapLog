@@ -133,6 +133,9 @@ public enum SnapshotImport {
             INSERT INTO main.temperature(recording_id, received_at_ms, ambient_deci, skin_deci, body_deci)
             SELECT :new, received_at_ms, ambient_deci, skin_deci, body_deci
             FROM snap.temperature WHERE recording_id = :old;
+            INSERT INTO main.acc(recording_id, idx, at_ms, x_mg, y_mg, z_mg)
+            SELECT :new, idx, at_ms, x_mg, y_mg, z_mg
+            FROM snap.acc WHERE recording_id = :old;
             """, arguments: args)
         if rec.endedAtMs == nil {
             let last = try RecordingSession.lastActivityMs(newId, db: db) ?? rec.startedAtMs

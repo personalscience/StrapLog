@@ -180,11 +180,12 @@ public final class RecorderModel {
     }
 
     /// An empty or blank `name` becomes `activity.defaultName`. `plan` applies to `overnight` activities.
+    /// `rawMotion` keeps every accelerometer sample (`acc`), for training runs.
     public func start(_ activity: ActivityPreset = .other, name: String,
-                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil)) async {
+                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil), rawMotion: Bool = false) async {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         await perform {
-            let id = try await session.start(activity, name: trimmed, plan: plan)
+            let id = try await session.start(activity, name: trimmed, plan: plan, rawMotion: rawMotion)
             lastFinished = nil
             try loadActive(id)
             updateBreathTracking()

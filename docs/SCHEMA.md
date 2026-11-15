@@ -1,4 +1,4 @@
-# Schema (v5)
+# Schema (v6)
 
 Source of truth: `Schema.migrations` in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. Each `sql` block below is one migration, verbatim and in order; `SchemaTests.docsMatch` fails if they drift.
 
@@ -123,6 +123,23 @@ CREATE TABLE temperature(
 UPDATE meta SET value = '5' WHERE key = 'schema_version';
 ```
 
+### v6: raw accelerometer (ArmLog training, straplog-xz4.1)
+
+ArmLog's Training mode keeps every accelerometer sample, so a breath-tracker replay sees the same 51 Hz stream the live tracker does (the 1 Hz `motion` rows round away the arm's small breathing sway). Written only for recordings started with `rawMotion` (a training run's own recording, ~3 k rows a minute); every other recording leaves it empty.
+
+```sql
+CREATE TABLE acc(
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  idx INTEGER NOT NULL,
+  at_ms INTEGER NOT NULL,
+  x_mg INTEGER NOT NULL,
+  y_mg INTEGER NOT NULL,
+  z_mg INTEGER NOT NULL,
+  PRIMARY KEY(recording_id, idx)
+) WITHOUT ROWID;
+UPDATE meta SET value = '6' WHERE key = 'schema_version';
+```
+
 ## Columns that need explaining
 
 - `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
@@ -132,12 +149,14 @@ UPDATE meta SET value = '5' WHERE key = 'schema_version';
 - `recording.ended_at_ms` NULL ⇒ unfinished. A relaunch reattaches to the latest such recording (`relaunch` event) rather than starting a new one; `start` refuses while one exists. If its last event or notification is older than 6 h (`RecordingSession.defaultStaleAfterMs`), the relaunch instead closes it at that last activity with a `stop` noted `stale`.
 - `recording.device_id`/`firmware`: first values seen (`firmware` arrives over DIS a few seconds after connect). The strap's serial number is shown in the app but not stored. `battery_start`: last reading before or at start; `battery_end`: latest reading.
 - `event.kind` ∈ `start stop marker connect disconnect relaunch ble_off ble_on snapshot pacer_start pacer_stop low_battery foreground background posture` (`EventKind`). Markers carry a preset `label` (`ActivityPreset.markers`, defaults sleep `lights_out awake up`, breathing `settle start end`, other `a b c end`; the user can edit each bar, `MarkerPresets`), free text in `note`, or both (before v3 the label was in `note`); a note typed in the app is dated when its sheet was opened (tap of +, in builds after 1.2 (83)), so markers must be read by `at_ms`, not `id`; `connect` carries the device id; `disconnect` the reason, if any; `snapshot` the file name; `pacer_start` what was paced, `<rate>/min in<s> out<s> t0=<epoch ms>` (`in`/`out` reflect the chosen inhale:exhale ratio, 1:1, 4:6 or 1:2; e.g. `6.0/min in5.0 out5.0 t0=1762070400000`; `PacerStamp`), and is also written at a recording's start when the pacer was already running, so `t0` can precede the event's `at_ms`. The pacer is deterministic, so the note reconstructs every cue: inhale k at `t0 + k × 60000/rate`, its exhale `in` seconds later (`in`/`out` are rounded to 0.1 s; the rate is exact). Notes before 1.2 carry only `6.0/min`: equal halves, and `t0` is `at_ms`. This is `note` text, documented free form, so it takes no `schema_version` bump; `pacer_stop` is written when the user stops the pacer or the recording stops (the pacer itself keeps running); `low_battery` the strap's percent (once per recording, at ≤ 10 %). `foreground`/`background` are scene-phase changes while recording (none during a background-only restoration launch). `posture` (overnight presets only) is noted `upright` or `lying`: a change that held for 60 s, dated from its first second (`PostureTracker`; upright means |gx|/|g| ≥ 0.6, `Posture`). At the plan's wake time, unless already upright, the app logs a marker labelled `resting_start` and, 5 min later, `resting_end` just before the stop: the morning resting reading `hrv-resting` analyses (`OvernightPlan.restingMs`; a relaunch in between keeps the original start). A `stop` noted `wake_time` or `upright` ended itself (`AutoStop`): after that reading (or at once if upright at the wake time), or after 10 min upright following a confirmed `lying`; `stale` is described above; no note means the user tapped Stop. `snapshot` is written on Stop, every 30 min of recording, and on each move to the background.
+- ArmLog training runs (`TrainingRunner`, recording `breath calibration`, activity `breathing`) log one marker per script step, labelled by the step (`TrainingScript`: `training settle follow_6 follow_10 follow_4.5 follow_8 hold_1 recover_1 hold_2 recover_2 move after_move armpos`, then `end`; `aborted` if the run stopped early). The first marker, `training`, is noted with the script and version (`calibration v1`, `rehearsal v1`). A step's marker is logged when its spoken line starts; a paced step's truth is the `pacer_start` that follows (its `t0` is the marker plus the lead-in, 6 s, 10 s for `armpos`, 0 for `recover_*`), always 1:1. Paced steps stop their pacer 200 ms before an in-breath turn, i.e. at the end of an out-breath, so `hold_n` begins at its `pacer_stop`.
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
 - `recording.context` for overnight presets (`sleep`) holds the auto-stop plan, `{"wake_at_ms": <epoch ms UTC>}` (`OvernightPlan`), or NULL with no wake time.
 - `recording.name`: typed on Home, or `<activity> <local date>` (`ActivityPreset.defaultName`, e.g. `sleep 2026-10-16`) when left blank.
-- `meta`: `format = straplog`, `schema_version = 5`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
+- `meta`: `format = straplog`, `schema_version = 6`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
 - `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the spread (standard deviation) of |a| over the second: ~0 when still, larger with movement. It is measured around the second's own mean |a|, so a sensor whose scale is off still reads ~0 at rest. Builds up to 96 (before 2026-11-15) wrote the RMS of |a| − 1000 mg instead: the same for the H10, whose |a| is ~1 g at rest, but for the armband about 60 mg of offset at rest, since it reads 0.94–0.98 g depending on how the arm lies. Compare armband `rms_mg` across that change only by its changes, not its level. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop. From ArmLog's armband (`SensorPlacement.arm`): about 51 Hz, raw counts scaled at an inferred 4096 counts/g, and no `posture` events (arm axes cannot tell lying from upright).
 - `ppg` (ArmLog only): one row per raw PPG reading, written only while recording. `received_at_ms` is the phone's receipt of the packet (one reading per packet, about 32 Hz; several can share a millisecond). `counter` is the sensor's packet counter, 0–255, stepping by one: re-sent packets are dropped before storage (`PpgDeduper`), so a jump of more than one is lost packets. `value` is the raw reading, a signed 16-bit number with no unit; 32767 means off the skin.
+- `acc` (ArmLog training runs only): one row per raw accelerometer sample, in the sensor's axes, whole mg (the armband: about 51 Hz, raw counts scaled at 4096 counts/g, like `motion`). `idx` counts the recording's samples from 0 in arrival order; `at_ms` is placed exactly as for `motion` (`MotionReducer.place`: back from receipt by the device clock, clamped non-decreasing), so equal times occur and `idx` is the order. A relaunch mid-run stops the raw capture (the run does not survive it).
 - `temperature` (ArmLog only): degrees Celsius × 10, written only while recording. Which sensor each column comes from is inferred from captures, not documented by Chileaf: `ambient_deci` climbs slowly after the band goes on (23.0 → 26.2 °C over 3 min, 2026-11-03), `skin_deci` runs a few degrees above it on the arm (32.9 vs 31.4), and `body_deci` stays at 35–36.5 as if estimated from the other two. Treat `ambient` as the band's own housing, not room air.
 
 ## Files
@@ -149,4 +168,4 @@ UPDATE meta SET value = '5' WHERE key = 'schema_version';
 
 ## Invariants (`DBInvariants`)
 
-`n_rr == count(beat)` per notification · beat and notification share `recording_id` · `rr_ms == rr_1024 * 1000/1024` · `received_at_ms` non-decreasing per recording · exactly one `start` per recording, and one `stop` iff `ended_at_ms` is set.
+`n_rr == count(beat)` per notification · beat and notification share `recording_id` · `rr_ms == rr_1024 * 1000/1024` · `received_at_ms` non-decreasing per recording · `acc.at_ms` non-decreasing in `idx` order · exactly one `start` per recording, and one `stop` iff `ended_at_ms` is set.

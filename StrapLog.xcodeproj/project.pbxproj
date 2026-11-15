@@ -16,6 +16,7 @@
 		091D4C405879FA4559F77909 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */; };
 		0920575A6FA05BA45AE0997F /* XCUIElement+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */; };
 		09790EE3841FC10F5B218AC9 /* Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = E7B8219DAE56CD77848AE9A1 /* Guide.md */; };
+		09AEDCF129383F1A0D68E938 /* SpokenTraining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809CE64A972741CDF067E8FF /* SpokenTraining.swift */; };
 		0AB6EF16A1337E4AC86C3301 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		0B9A7EA7B4FE42E702EB8589 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		0D288779196B901901F86299 /* ComplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4967ABE8CB6D2377481FFCB /* ComplicationEntry.swift */; };
@@ -43,6 +44,7 @@
 		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
 		3C11B13ADFD74D4D22F21B8E /* GuideImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */; };
 		404BC5D1F0D64DDB88441F0E /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
+		406D00D6B9E5DC3330EA98F4 /* SpokenTraining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809CE64A972741CDF067E8FF /* SpokenTraining.swift */; };
 		4149814D6016F012B2B88DA1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		421C8A7938C653FC6DD78851 /* ArmLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E897E0F8F157C07061D8552E /* ArmLogApp.swift */; };
@@ -54,6 +56,7 @@
 		463379091EC69350292CF73D /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
 		4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF077986A9081AE0F646C2F1 /* StrapScanner.swift */; };
 		488E950BB6061D01D1A5E1EF /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */; };
+		4C653827F9845E4D6073F4B5 /* TrainingSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC058F5B27A349602CE5B29 /* TrainingSlot.swift */; };
 		518BE349F18B22124310932E /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		55B22B900FB1F84127A44341 /* LiveMetricLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2921990E24264C14F324C4DA /* LiveMetricLabel.swift */; };
 		562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */; };
@@ -155,6 +158,7 @@
 		BDC2471C14938D142F1F1100 /* GRDB.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8392FC46A8840630FEF60B78 /* GRDB.txt */; };
 		BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407BC12CED71B5822CEB173A /* AppDelegate.swift */; };
 		BFFB47C20EA7A8B13BB10788 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
+		C026D436F9EC214963A80AA3 /* AudioRig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D2B2D02A1A450F8B402871 /* AudioRig.swift */; };
 		C2D092CD4E5527B79EF660FA /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FBF1E5C56F455E61F86AF /* PacerTone.swift */; };
 		C3B4D9CA1BA0566708C65A28 /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
 		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
@@ -186,12 +190,15 @@
 		E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		E61CCC4AEC06D9871DD16A87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA2003C809D989DFEF440A25 /* Assets.xcassets */; };
 		E85B8867CBA455BF2B83B9B0 /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
+		E8AFB88BB7DFDBD700871A9E /* TrainingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A06136957807D6629598F84 /* TrainingPanel.swift */; };
 		E912A8BB437BB36C5B3A5424 /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FBF1E5C56F455E61F86AF /* PacerTone.swift */; };
 		EBDC5BB449B7ADD183C277C1 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		EDF8E341B85485AEE040F4D3 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 752221A3371BB6F53C1AA52D /* StrapLogCore */; };
 		EF03BFA9167258C364CD317E /* StrapLogWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 30C2069D2EA0F12DCCEE55C5 /* StrapLogWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EF7FCBDEA9CBEF538C17D17F /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0AD82BB1BD7BEE0BE7764 /* RecordingDetailView.swift */; };
+		F03AC454479E3E66DD071E8B /* TrainingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A06136957807D6629598F84 /* TrainingPanel.swift */; };
 		F0777A9C3E99C4E89B13C8FF /* RecordingTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */; };
+		F219B1DB31BE3EA4522E2C69 /* AudioRig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D2B2D02A1A450F8B402871 /* AudioRig.swift */; };
 		F3DDBB530E540BB4D4E5F8A7 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		F56FC13ED228BE6EF65A41C3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99BB88652BC9B8691BEE254 /* HomeView.swift */; };
 		F61E856651DAB369DC37F1A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7BEAD999EC45045C328A444 /* Assets.xcassets */; };
@@ -322,6 +329,7 @@
 		2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWidgetsBundle.swift; sourceTree = "<group>"; };
 		2DE03D2C9831BD11A2CB3177 /* LinkStatus+Heart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkStatus+Heart.swift"; sourceTree = "<group>"; };
 		2E1447D79697757325A04B08 /* StartRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartRecordingIntent.swift; sourceTree = "<group>"; };
+		2EC058F5B27A349602CE5B29 /* TrainingSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSlot.swift; sourceTree = "<group>"; };
 		2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarHeartSource.swift; sourceTree = "<group>"; };
 		30C2069D2EA0F12DCCEE55C5 /* StrapLogWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = StrapLogWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		31F2A712470E51A946333280 /* GuideChapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideChapter.swift; sourceTree = "<group>"; };
@@ -358,6 +366,7 @@
 		6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopRecordingIntent.swift; sourceTree = "<group>"; };
 		70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUIElement+Helpers.swift"; sourceTree = "<group>"; };
 		71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingComplication.swift; sourceTree = "<group>"; };
+		74D2B2D02A1A450F8B402871 /* AudioRig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRig.swift; sourceTree = "<group>"; };
 		76EEA423294C918C372D524D /* SessionSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryCard.swift; sourceTree = "<group>"; };
 		772CF86972B76494B36BE609 /* WristHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WristHaptics.swift; sourceTree = "<group>"; };
 		7742A3D1D8E7F99E663B782F /* AppBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBrand.swift; sourceTree = "<group>"; };
@@ -366,6 +375,7 @@
 		7908B02825ED3D224A620B6B /* Acknowledgement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Acknowledgement.swift; sourceTree = "<group>"; };
 		7B10FF783C74BC3306EFBEE8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7B6DC1C10916A1DD5AFF9C87 /* SwiftProtobuf.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftProtobuf.txt; sourceTree = "<group>"; };
+		809CE64A972741CDF067E8FF /* SpokenTraining.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokenTraining.swift; sourceTree = "<group>"; };
 		83464C2DAFA1D1D970D3C883 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8392FC46A8840630FEF60B78 /* GRDB.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = GRDB.txt; sourceTree = "<group>"; };
 		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -378,6 +388,7 @@
 		93109613355B501AC6E485DB /* PolarBleSdk.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PolarBleSdk.txt; sourceTree = "<group>"; };
 		99332494B44CF002893B4096 /* WatchLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLink.swift; sourceTree = "<group>"; };
 		99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopFromLiveActivityIntent.swift; sourceTree = "<group>"; };
+		9A06136957807D6629598F84 /* TrainingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingPanel.swift; sourceTree = "<group>"; };
 		9A3D129946274C578A7B89AB /* SensorStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorStrip.swift; sourceTree = "<group>"; };
 		9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandOutcome+Dialog.swift"; sourceTree = "<group>"; };
 		9DF7FA80EAC7B480C0B167AC /* BreathingPacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPacerView.swift; sourceTree = "<group>"; };
@@ -612,6 +623,7 @@
 				D57D72A25324487C412F4120 /* AppDelegate.swift */,
 				FD67D8720A0ED9CF8BB578B7 /* AppDependencies.swift */,
 				E897E0F8F157C07061D8552E /* ArmLogApp.swift */,
+				2EC058F5B27A349602CE5B29 /* TrainingSlot.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -752,6 +764,7 @@
 				9A3D129946274C578A7B89AB /* SensorStrip.swift */,
 				76EEA423294C918C372D524D /* SessionSummaryCard.swift */,
 				F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */,
+				9A06136957807D6629598F84 /* TrainingPanel.swift */,
 				DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */,
 			);
 			path = Views;
@@ -828,8 +841,10 @@
 		C40BDC1E44D196EE831FF7F0 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				74D2B2D02A1A450F8B402871 /* AudioRig.swift */,
 				B6F9DD1D7E64F957679DEDD8 /* PacerSounds.swift */,
 				F82FBF1E5C56F455E61F86AF /* PacerTone.swift */,
+				809CE64A972741CDF067E8FF /* SpokenTraining.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -1368,6 +1383,7 @@
 				BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */,
 				C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */,
 				8B0B9BB97EDBE05DC997680C /* AppPhase+ScenePhase.swift in Sources */,
+				F219B1DB31BE3EA4522E2C69 /* AudioRig.swift in Sources */,
 				2AFB706486EF36B55F9939B0 /* BreathingPacerView.swift in Sources */,
 				85A8485034546E661872BACF /* CommandFailed.swift in Sources */,
 				15B3E218B1E03FE7C5B4C84E /* CommandOutcome+Dialog.swift in Sources */,
@@ -1415,11 +1431,13 @@
 				C3B4D9CA1BA0566708C65A28 /* SensorStrip.swift in Sources */,
 				D3F8314132589AB611C06113 /* SessionSummaryCard.swift in Sources */,
 				A4E06A33A0FC27E3F258B8D8 /* ShareSheet.swift in Sources */,
+				09AEDCF129383F1A0D68E938 /* SpokenTraining.swift in Sources */,
 				3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */,
 				E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */,
 				562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */,
 				99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */,
 				2B57AF76460690ED27E4DEC8 /* StrapLogShortcuts.swift in Sources */,
+				E8AFB88BB7DFDBD700871A9E /* TrainingPanel.swift in Sources */,
 				00F7186A2452349E4586B43B /* TrendChart.swift in Sources */,
 				7E9D0F97F9254AAA97D9FEF2 /* WatchLink.swift in Sources */,
 			);
@@ -1469,6 +1487,7 @@
 				1DC59DF79AE9D8A7DD66098C /* AppPhase+ScenePhase.swift in Sources */,
 				421C8A7938C653FC6DD78851 /* ArmLogApp.swift in Sources */,
 				2024FFB6920DA0126F0FC8D3 /* ArmbandHeartSource.swift in Sources */,
+				C026D436F9EC214963A80AA3 /* AudioRig.swift in Sources */,
 				B975FCF784568549F0AC68FF /* BreathingPacerView.swift in Sources */,
 				7DA5523BDA795A2730A9452B /* DeviceSheet.swift in Sources */,
 				59CF7CEEA19750D1E3B1B196 /* EcgStripView.swift in Sources */,
@@ -1501,7 +1520,10 @@
 				B1BCB9AD28FA0E8417204BCB /* SensorStrip.swift in Sources */,
 				FCAC0B5E01CD32838FFAA9B0 /* SessionSummaryCard.swift in Sources */,
 				091D4C405879FA4559F77909 /* ShareSheet.swift in Sources */,
+				406D00D6B9E5DC3330EA98F4 /* SpokenTraining.swift in Sources */,
 				957320A49640493C9E868C4B /* StopFromLiveActivityIntent.swift in Sources */,
+				F03AC454479E3E66DD071E8B /* TrainingPanel.swift in Sources */,
+				4C653827F9845E4D6073F4B5 /* TrainingSlot.swift in Sources */,
 				213E6064C549941F43BCB490 /* TrendChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

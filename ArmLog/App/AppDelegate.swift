@@ -11,11 +11,14 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     /// `didFinishLaunching` returns. Fails only for a bad `-replay` fixture.
     let launcher: Result<Launcher, Error>
     private let source: (any HeartSource)?
+    /// Training mode's runner, once the database is open.
+    let training: TrainingSlot?
 
     override init() {
         let dependencies = Result { try AppDependencies(options: LaunchOptions()) }
         launcher = dependencies.map { Launcher(source: $0.source, openModel: $0.openModel) }
         source = try? dependencies.get().source
+        training = try? dependencies.get().training
         super.init()
     }
 

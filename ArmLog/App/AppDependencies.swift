@@ -11,6 +11,8 @@ import StrapLogCore
 struct AppDependencies {
     let source: any HeartSource
     let openModel: @MainActor () throws -> RecorderModel
+    /// Training mode's runner, filled in by `openModel`.
+    let training = TrainingSlot()
 
     init(options: LaunchOptions = LaunchOptions()) throws {
         let app = AppBrand.current.appName
@@ -27,9 +29,14 @@ struct AppDependencies {
         }
         let info = Bundle.main.infoDictionary ?? [:]
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
-        openModel = { [defaults] in
-            RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, display: LiveActivityDisplay(), cues: PacerSounds())
+        openModel = { [defaults, training] in
+            // One rig for the chimes and the training voice, so a run keeps one engine alive.
+            let rig = AudioRig()
+            let sounds = PacerSounds(rig: rig)
+            let model = RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
+                                      defaults: defaults, display: LiveActivityDisplay(), cues: sounds)
+            training.runner = TrainingRunner(model: model, voice: SpokenTraining(rig: rig, sounds: sounds))
+            return model
         }
 
         if let fixture = options.replayFixture {

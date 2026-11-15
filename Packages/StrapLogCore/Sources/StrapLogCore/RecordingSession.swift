@@ -24,6 +24,8 @@ public actor RecordingSession {
     private var lastSnapshotMs: Int64?
     /// Per-second accelerometer reduction for the active recording.
     private var motion: MotionReducer?
+    /// Next `acc.idx` for the active recording, or nil when it keeps no raw samples.
+    private var rawMotionIdx: Int64?
     /// Drops repeated temperature reports for the active recording.
     private var temperature = TemperatureThinner()
     /// The active recording's auto-stop plan; nil unless its preset is `overnight`.
@@ -69,9 +71,10 @@ public actor RecordingSession {
 
     /// Starts a recording of `activity`; an empty `name` becomes `activity.defaultName`.
     /// An `overnight` activity keeps `plan` (default: no wake time) in `recording.context`.
+    /// `rawMotion` also keeps every accelerometer sample in `acc` (training runs only: ~3 k rows a minute).
     @discardableResult
     public func start(_ activity: ActivityPreset = .other, name: String,
-                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil)) throws -> Int64 {
+                      plan: OvernightPlan = OvernightPlan(wakeAtMs: nil), rawMotion: Bool = false) throws -> Int64 {
         let plan = activity.overnight ? plan : nil
         guard recordingId == nil else { throw RecordingSessionError.alreadyRecording }
         let now = clock.nowMs()
@@ -102,6 +105,7 @@ public actor RecordingSession {
             return id
         }
         attach(id, lastSnapshotMs: now, plan: plan)
+        if rawMotion { rawMotionIdx = 0 }
         return id
     }
 
@@ -389,10 +393,16 @@ public actor RecordingSession {
             }
 
         case .motion(let samples):
-            guard let id = recordingId, let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples),
-                  !seconds.isEmpty else { return }
+            guard let id = recordingId, var reducer = motion else { return }
+            let times = reducer.place(receivedAtMs: event.atMs, samples: samples)
+            let seconds = reducer.add(samples, atMs: times)
+            motion = reducer
+            let raw = rawMotionIdx
+            if let raw { rawMotionIdx = raw + Int64(samples.count) }
+            guard raw != nil || !seconds.isEmpty else { return }
             let changes = plan == nil || !tracksPosture ? [] : posture.add(seconds)
             try database.writer.write { db in
+                if let raw { try Self.saveRaw(samples, atMs: times, recordingId: id, firstIdx: raw, db: db) }
                 try MotionSecond.save(seconds, db: db)
                 for change in changes {
                     var e = RecordingEvent(recordingId: id, atMs: change.atMs, kind: .posture, note: change.posture.rawValue)
@@ -415,6 +425,16 @@ public actor RecordingSession {
         return url
     }
 
+    /// One `acc` row per sample, numbered from `firstIdx`.
+    private static func saveRaw(_ samples: [AccSample], atMs times: [Int64], recordingId: Int64,
+                                firstIdx: Int64, db: Database) throws {
+        let insert = try db.cachedStatement(
+            sql: "INSERT INTO acc(recording_id, idx, at_ms, x_mg, y_mg, z_mg) VALUES (?, ?, ?, ?, ?, ?)")
+        for (i, (s, t)) in zip(samples, times).enumerated() {
+            try insert.execute(arguments: [recordingId, firstIdx + Int64(i), t, s.x, s.y, s.z])
+        }
+    }
+
     private func attach(_ id: Int64, lastSnapshotMs: Int64, plan: OvernightPlan?) {
         recordingId = id
         self.lastSnapshotMs = lastSnapshotMs
@@ -429,6 +449,7 @@ public actor RecordingSession {
         recordingId = nil
         lastSnapshotMs = nil
         motion = nil
+        rawMotionIdx = nil
         plan = nil
         posture = PostureTracker()
         restingStartMs = nil

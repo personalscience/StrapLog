@@ -6,9 +6,12 @@ import SwiftUI
 /// running pacer keeps going behind the other screens. Pick a rate and ratio and start it, or
 /// follow it and stop it. The rate and ratio are remembered (`PacerSettings`). With Heartbeat
 /// on, the strap streams its ECG while this screen is up, shown as a strip with the breath's
-/// turns marked, and the flower pulses on each beat.
+/// turns marked, and the flower pulses on each beat. With a `training` runner (ArmLog), the
+/// Training panel sits on top, and while a run is going the runner alone starts and stops the
+/// pacer and the recording.
 struct PacerScreen: View {
     let model: RecorderModel
+    var training: TrainingRunner?
     @AppStorage(PacerSettings.rateKey) private var savedRate = BreathingPacer.defaultRate
     @AppStorage(PacerSettings.ratioKey) private var savedRatio = BreathRatio.default.rawValue
     @AppStorage(PacerSettings.soundKey) private var soundOn = false
@@ -16,6 +19,7 @@ struct PacerScreen: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
+                if let training { TrainingPanel(runner: training) }
                 if let pacer = model.pacer {
                     BreathingPacerView(pacer: pacer, pulse: model.ecgShown ? model.ecg.pulse : nil,
                                        measured: model.breathOn ? model.breath?.volume : nil)
@@ -29,19 +33,21 @@ struct PacerScreen: View {
                         .font(.callout.monospacedDigit())
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("pacerHeartRate")
-                    Button("Stop pacer (\(pacer.rateText))", systemImage: "stop.fill") {
-                        Task { await model.stopPacer() }
+                    if !trainingRuns {
+                        Button("Stop pacer (\(pacer.rateText))", systemImage: "stop.fill") {
+                            Task { await model.stopPacer() }
+                        }
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("pacerStop")
                     }
-                    .buttonStyle(.bordered)
-                    .accessibilityIdentifier("pacerStop")
-                    if !model.isRecording {
+                    if !model.isRecording && !trainingRuns {
                         Button("Record this session", systemImage: "record.circle") {
                             Task { await model.start(.breathing, name: "") }
                         }
                         .buttonStyle(.bordered)
                         .accessibilityIdentifier("pacerRecord")
                     }
-                } else {
+                } else if !trainingRuns {
                     Stepper(value: rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
                         Text(Formats.rate(rate.wrappedValue)).monospacedDigit()
                     }
@@ -87,6 +93,8 @@ struct PacerScreen: View {
             .padding()
         }
     }
+
+    private var trainingRuns: Bool { training?.isRunning == true }
 
     private var breathCaption: String {
         if let breath = model.breath { return breath.caption }

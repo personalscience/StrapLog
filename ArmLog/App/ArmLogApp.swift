@@ -12,7 +12,7 @@ struct ArmLogApp: App {
             case .success(let launcher):
                 Group {
                     if let model = launcher.model {
-                        RootView(model: model)
+                        RootView(model: model, training: appDelegate.training?.runner)
                             .onChange(of: scenePhase, initial: true) { _, phase in
                                 guard let phase = AppPhase(phase) else { return }
                                 Task { await model.appPhase(phase) }

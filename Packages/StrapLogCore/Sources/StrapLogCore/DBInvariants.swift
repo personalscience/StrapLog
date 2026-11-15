@@ -40,6 +40,16 @@ public enum DBInvariants {
         }
 
         for row in try Row.fetchAll(db, sql: """
+            SELECT recording_id, idx FROM (
+              SELECT recording_id, idx, at_ms,
+                     LAG(at_ms) OVER (PARTITION BY recording_id ORDER BY idx) AS prev
+              FROM acc)
+            WHERE at_ms < prev
+            """) {
+            out.append("acc \(row["recording_id"] as Int64)/\(row["idx"] as Int64): at_ms goes backwards")
+        }
+
+        for row in try Row.fetchAll(db, sql: """
             SELECT r.id, r.ended_at_ms,
                    SUM(e.kind = 'start') AS starts, SUM(e.kind = 'stop') AS stops
             FROM recording r LEFT JOIN event e ON e.recording_id = r.id

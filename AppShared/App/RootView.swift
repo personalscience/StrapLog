@@ -7,6 +7,8 @@ struct RootView: View {
     let model: RecorderModel
     /// The app's guide, shown from the toolbar; nil hides the button.
     var help: (() -> AnyView)?
+    /// Training mode on the pacer screen; nil (StrapLog) hides it.
+    var training: TrainingRunner?
     @State private var showingHelp = false
     @State private var showingDevice = false
 
@@ -14,7 +16,7 @@ struct RootView: View {
         NavigationStack {
             Group {
                 if model.pacerScreenShown {
-                    PacerScreen(model: model)
+                    PacerScreen(model: model, training: training)
                 } else if model.isRecording {
                     RecordingView(model: model)
                 } else {

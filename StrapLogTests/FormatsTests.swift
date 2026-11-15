@@ -152,4 +152,14 @@ struct FormatsTests {
         #expect(Formats.strapHint(.bluetoothOff)?.contains("Bluetooth") == true)
         #expect(Formats.switchStrapFooter(recording: true) == "Stop recording to switch straps.")
     }
+
+    @Test("training: script length in whole minutes; step with rate and time left")
+    func training() {
+        #expect(Formats.trainingScript(.calibration) == "calibration · 19 min")
+        #expect(Formats.trainingScript(.rehearsal) == "rehearsal · 2 min")
+        let follow = TrainingStep.paced("follow_6", say: "", rate: 6, seconds: 180)
+        #expect(Formats.trainingStep(follow, secondsLeft: 83) == "follow_6 · 6.0/min · 1:23 left")
+        #expect(Formats.trainingStep(.quiet("hold_1", say: "", seconds: 30), secondsLeft: 20) == "hold_1 · 0:20 left")
+        #expect(Formats.trainingStep(nil, secondsLeft: nil) == "Starting…")
+    }
 }
