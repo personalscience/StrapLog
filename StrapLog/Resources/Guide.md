@@ -428,7 +428,7 @@ Only exercise as hard as is safe for you.
 
 ## Paced breathing
 
-Tap the **wind** button at the top of the screen to open the pacer screen and breathe along with a guide, any time, recording or not. Tap the wind button again to go back; the pacer keeps running behind Home or the recording, and the wind button stays filled while it does. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 7, and remembers the rate you chose. You can also pick an inhale:exhale ratio, **1:1**, **4:6** or **1:2**, and the pacer remembers it with the rate. The ratio is a preference. Studies disagree on whether a longer exhale changes HRV, so the file records which ratio you used and you can compare for yourself. The phone taps at each turn so you can close your eyes.
+Tap the **wind** button at the top of the screen to open the pacer screen and breathe along with a guide, any time, recording or not. Tap the wind button again to go back; the pacer keeps running behind Home or the recording, and the wind button stays filled while it does. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 10, and remembers the rate you chose. You can also pick an inhale:exhale ratio, **1:1**, **4:6** or **1:2**, and the pacer remembers it with the rate. The ratio is a preference. Studies disagree on whether a longer exhale changes HRV, so the file records which ratio you used and you can compare for yourself. The phone taps at each turn so you can close your eyes.
 
 ![The breathing pacer](guide-pacer.jpg)
 

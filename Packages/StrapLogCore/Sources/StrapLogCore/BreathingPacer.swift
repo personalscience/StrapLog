@@ -2,8 +2,10 @@ import Foundation
 
 /// A running breathing pacer: a fixed rate and inhale:exhale ratio, from `startedAtMs`.
 public struct BreathingPacer: Sendable, Equatable {
-    /// Allowed rates in breaths per minute, adjustable in `rateStep` steps.
-    public static let rates: ClosedRange<Double> = 4.5...7
+    /// Allowed rates in breaths per minute, adjustable in `rateStep` steps. Resonance rates sit
+    /// in 4.5–7; 7.5–10 are controls, e.g. breathing at 10/min to move breath away from the
+    /// ~0.1 Hz Mayer band.
+    public static let rates: ClosedRange<Double> = 4.5...10
     public static let rateStep = 0.5
     public static let defaultRate = 6.0
 
