@@ -106,13 +106,21 @@ public final class TrainingRunner {
             await model.stopPacer()
             await model.marker(label: TrainingScript.endLabel)
             await model.stop(.save)
-            let saved = model.lastFinished?.id == id
-            outcome = saved ? "Saved." : "Finished, but the recording may not have saved."
-            voice.say(saved ? "Done. Recording saved." : "Done, but check the phone.")
+            let finished = model.lastFinished?.id == id ? model.lastFinished : nil
+            outcome = finished == nil ? "Finished, but the recording may not have saved." : "Saved."
+            let ranking = model.capabilities.beatToBeat ? finished?.resonance : nil
+            voice.say(finished == nil ? "Done, but check the phone." : Self.doneLine(ranking))
         } catch {
             // In a fresh task: a cancelled one makes GRDB's async reads throw, losing the save.
             await Task { await abort(recordingId: id) }.value
         }
+    }
+
+    /// What a saved run ends with: the resonance finder's answer first when its recording ranks
+    /// two or more rates (straplog-9fr.10), so it is heard with eyes closed.
+    static func doneLine(_ ranking: ResonanceRanking?) -> String {
+        guard let ranking else { return "Done. Recording saved." }
+        return "Done. Largest swing at \(SpokenRate.words(ranking.best.rate)). Recording saved."
     }
 
     private func abort(recordingId id: Int64) async {

@@ -21,7 +21,7 @@ struct TrainingRunnerTests {
         await model.consume(FakeHeartSource(clock: clock, script: [.emit(.connected(deviceId: "band", firmware: nil))]))
     }
 
-    func run(_ script: TrainingScript, sleeper: HookSleeper? = nil) async -> TrainingRunner {
+    func run(_ script: TrainingScript, sleeper: (any PacerSleeper)? = nil) async -> TrainingRunner {
         let runner = TrainingRunner(model: model, voice: voice, device: "armband", scripts: TrainingScript.all, clock: clock,
                                     sleeper: sleeper ?? HookSleeper(clock: clock))
         runner.start(script)
@@ -107,6 +107,36 @@ struct TrainingRunnerTests {
         let rec = try #require(try read { try Recording.fetchOne($0) })
         #expect(rec.name == "resonance finder")
         #expect(runner.outcome == "Saved.")
+        #expect(voice.texts.last == "Done. Recording saved.", "no beats, no ranking: the plain ending")
+    }
+
+    @Test("the resonance finder ends by saying the rate where heart rate swung most")
+    func resonanceAnswer() async throws {
+        await connect()
+        let sleeper = BreathingSleeper(clock: clock, model: model) { 12 - 4 * abs($0 - 5.5) }
+        let runner = await run(.resonance, sleeper: sleeper)
+        #expect(runner.outcome == "Saved.")
+        #expect(model.lastFinished?.resonance?.best.rate == 5.5)
+        #expect(voice.texts.last == "Done. Largest swing at five and a half. Recording saved.")
+    }
+
+    @Test("a run whose recording ranks rates ends by saying the rate with the largest swing")
+    func doneLine() throws {
+        let ranking = try #require(ResonanceRanking(try ResonanceRankingTests.followed()))
+        let line = TrainingRunner.doneLine(ranking)
+        #expect(line == "Done. Largest swing at \(SpokenRate.words(ranking.best.rate)). Recording saved.")
+        #expect(["Done. Largest swing at four and a half. Recording saved.",
+                 "Done. Largest swing at six. Recording saved."].contains(line))
+        #expect(TrainingRunner.doneLine(nil) == "Done. Recording saved.")
+    }
+
+    @Test("rates are said in words, whole and half")
+    func spokenRates() {
+        #expect(SpokenRate.words(5.5) == "five and a half")
+        #expect(SpokenRate.words(7) == "seven")
+        #expect(SpokenRate.words(4.5) == "four and a half")
+        #expect(SpokenRate.words(10) == "ten")
+        #expect(SpokenRate.words(5.25) == "5.25")
     }
 
     @Test("the run keeps raw accelerometer samples; an ordinary recording afterwards does not")

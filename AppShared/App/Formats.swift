@@ -314,6 +314,12 @@ enum Formats {
         String(format: "Largest swing at %.1f/min", ranking.best.rate)
     }
 
+    /// The button that sets the pacer to the finder's answer, e.g. `Use 5.5/min for the pacer`,
+    /// or `Pacer set to 5.5/min` once it is.
+    static func resonanceUse(_ rate: Double, inUse: Bool) -> String {
+        String(format: inUse ? "Pacer set to %.1f/min" : "Use %.1f/min for the pacer", rate)
+    }
+
     /// One ranked rate, e.g. `5.5/min · swing 12.3 bpm · sync 88%`.
     static func resonanceEntry(_ entry: ResonanceRanking.Entry) -> String {
         String(format: "%.1f/min · swing %.1f bpm · sync %d%%", entry.rate, entry.swing,
