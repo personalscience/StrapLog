@@ -1,6 +1,6 @@
 /// Constants for respiratory sinus arrhythmia (heart rate following the breath).
 /// The first three are mirrored in `tools/gen_rsa_fixture.py` (the fixture records them);
-/// the two fit gates are Swift-only until straplog-py gets `rsa()` (straplog-9fr.6).
+/// all of them are mirrored in straplog-py's `rsa` module.
 public enum RSADefaults {
     /// Whole pacer breaths in one cosinor window (40 s at 6/min).
     public static let windowBreaths = 4

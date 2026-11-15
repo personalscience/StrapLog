@@ -57,6 +57,25 @@ struct RecorderModelDetailTests {
         #expect(model.errorMessage == nil)
     }
 
+    @Test("detail carries one RSA summary per pacer run, none without the pacer")
+    func rsa() async throws {
+        await model.start(name: "paced")
+        await model.startPacer(breathsPerMinute: 6)
+        await model.consume(FakeHeartSource(clock: clock, script: (0..<60).flatMap { _ in [.wait(ms: 1000), hr([1024])] }))
+        await model.stopPacer()
+        await model.stop()
+        await record("plain")
+        let pacedId = try #require(model.recordings.last?.id), plainId = try #require(model.recordings.first?.id)
+        let paced = try #require(await model.detail(pacedId))
+        #expect(paced.recording.name == "paced")
+        let run = try #require(paced.rsa.first)
+        #expect(paced.rsa.count == 1)
+        #expect(run.run.stamp.breathsPerMinute == 6)
+        #expect(run.block.breaths.count >= 4)
+        let plain = try #require(await model.detail(plainId))
+        #expect(plain.rsa.isEmpty)
+    }
+
     @Test("an edit renames the snapshot file, re-exports it and refreshes the index")
     func edit() async throws {
         defer { try? FileManager.default.removeItem(at: dir) }

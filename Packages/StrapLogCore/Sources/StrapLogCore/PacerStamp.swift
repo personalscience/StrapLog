@@ -31,6 +31,9 @@ public struct PacerStamp: Sendable, Equatable {
         t0Ms = match.4.flatMap { Int64($0) }
     }
 
+    /// The in-breath's share of the breath.
+    public var inhaleFraction: Double { inhaleS / (inhaleS + exhaleS) }
+
     /// The rate alone, e.g. `6.0/min`.
     public var rateText: String { String(format: "%.1f/min", breathsPerMinute) }
 

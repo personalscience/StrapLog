@@ -276,10 +276,37 @@ enum Formats {
     /// Where HR peaks against the pacer's turn from in to out, e.g.
     /// `HR peaks 1.0 s into the out-breath` or `HR peaks 0.5 s before the out-breath`.
     static func rsaPeak(_ fit: CosinorFit, pacer: BreathingPacer) -> String {
-        var d = fit.peakFraction - pacer.ratio.inhaleFraction
+        rsaPeak(fraction: fit.peakFraction, inhaleFraction: pacer.ratio.inhaleFraction, periodMs: pacer.periodMs)
+    }
+
+    /// `rsaPeak` for a peak `fraction` of a breath of `periodMs` whose in-breath is `inhaleFraction` of it.
+    static func rsaPeak(fraction: Double, inhaleFraction: Double, periodMs: Double) -> String {
+        var d = fraction - inhaleFraction
         d -= d.rounded()   // to [-0.5, 0.5] of a breath from the turn
-        let seconds = String(format: "%.1f s", abs(d) * pacer.periodMs / 1000)
+        let seconds = String(format: "%.1f s", abs(d) * periodMs / 1000)
         return d >= 0 ? "HR peaks \(seconds) into the out-breath" : "HR peaks \(seconds) before the out-breath"
+    }
+
+    /// A pacer run on the recording detail screen, e.g. `6.0/min · 3:00`.
+    static func rsaRunTitle(_ summary: RSASummary) -> String {
+        "\(summary.run.stamp.rateText) · \(elapsed(ms: summary.run.stopMs - summary.run.startMs))"
+    }
+
+    /// Its results, e.g. `swing 8.2 bpm · sync 88% · 15/15 breaths`, or `no fit · 3/3 breaths`
+    /// when the run is under `RSADefaults.windowBreaths` whole breaths.
+    static func rsaRunResult(_ summary: RSASummary) -> String {
+        let b = summary.block
+        let breaths = "\(b.validBreaths)/\(b.breaths.count) breaths"
+        guard let swing = b.swing, let sync = b.sync else { return "no fit · \(breaths)" }
+        return String(format: "swing %.1f bpm · sync %d%% · ", swing, Int((max(0, sync) * 100).rounded())) + breaths
+    }
+
+    /// Where HR peaked across the run, as `rsaPeak` words; nil with no fit.
+    static func rsaRunPeak(_ summary: RSASummary) -> String? {
+        summary.block.peakFraction.map {
+            rsaPeak(fraction: $0, inhaleFraction: summary.run.stamp.inhaleFraction,
+                    periodMs: summary.run.periodMs)
+        }
     }
 
     /// The panel's status line while it has no fit yet; nil once it has one.

@@ -6,6 +6,8 @@ public struct RecordingDetail: Sendable {
     /// Oldest first.
     public var markers: [RecordingEvent]
     public var summary: SessionSummary
+    /// One per pacer run, oldest first; empty when the pacer never ran.
+    public var rsa: [RSASummary]
     /// The beats replayed through the live analysis, so the detail chart draws what the
     /// recording screen drew. Keeps the whole recording, however long.
     public var live: LiveMetrics
@@ -24,11 +26,15 @@ public struct RecordingDetail: Sendable {
         let markers = try RecordingEvent.fetchAll(db, sql: """
             SELECT * FROM event WHERE recording_id = ? AND kind = 'marker' ORDER BY at_ms, id
             """, arguments: [id])
+        let pacerEvents = try RecordingEvent.fetchAll(db, sql: """
+            SELECT * FROM event WHERE recording_id = ? AND kind IN ('pacer_start', 'pacer_stop') ORDER BY at_ms, id
+            """, arguments: [id])
         var live = LiveMetrics(historySpanMs: .max)
         for beat in beats { live.add(beat) }
         return RecordingDetail(recording: recording, markers: markers,
                                summary: SessionSummary(recording, beats: beats,
                                                        coverage: try Coverage.of(recording: id, db: db)),
+                               rsa: RSASummary.of(recording, events: pacerEvents, beats: beats),
                                live: live)
     }
 }

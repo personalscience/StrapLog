@@ -181,6 +181,28 @@ struct FormatsTests {
         #expect(Formats.rsaPeak(fit, pacer: fourSix) == "HR peaks 2.0 s into the out-breath")
     }
 
+    @Test("RSA per pacer run: rate and length, results, and the peak")
+    func rsaRun() throws {
+        // 6/min for 70 s from t=0; HR 60 ± 5 peaking 0.6 into each breath.
+        var tEnd: [Int64] = [], rr: [Double] = [], t = 0.0
+        while t < 80 {
+            let wave = { (at: Double) in 60 + 5 * cos(2 * .pi * (at / 10 - 0.6)) }
+            let hr = wave(t + 30 / wave(t))   // the rate at the beat's midpoint, where InstantHR puts it
+            t += 60 / hr
+            tEnd.append(Int64((t * 1000).rounded()))
+            rr.append(60_000 / hr)
+        }
+        let run = PacerRun(stamp: try #require(PacerStamp(note: "6.0/min in5.0 out5.0 t0=0")), startMs: 0, stopMs: 70_000)
+        let s = try #require(RSASummary.of([run], tEndMs: tEnd, rrMs: rr).first)
+        #expect(Formats.rsaRunTitle(s) == "6.0/min · 1:10")
+        #expect(Formats.rsaRunResult(s) == "swing 10.0 bpm · sync 100% · 6/6 breaths")
+        #expect(Formats.rsaRunPeak(s) == "HR peaks 1.0 s into the out-breath")
+        let short = PacerRun(stamp: run.stamp, startMs: 0, stopMs: 40_000)
+        let few = try #require(RSASummary.of([short], tEndMs: tEnd, rrMs: rr).first)
+        #expect(Formats.rsaRunResult(few) == "no fit · 3/3 breaths")
+        #expect(Formats.rsaRunPeak(few) == nil)
+    }
+
     @Test("RSA waiting line: before beats, warming up, before the first fit, then none")
     func rsaWaiting() {
         #expect(Formats.rsaWaiting(nil, connected: false, device: "H10") == "Needs the H10 connected")

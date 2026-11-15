@@ -35,6 +35,13 @@ struct RecordingDetailView: View {
                            nowMs: detail.endMs, viewport: $viewport, defaultSpan: .all, followLabel: "End")
                     .padding(.vertical, 4)
             }
+            if model.capabilities.beatToBeat && !detail.rsa.isEmpty {
+                Section("Heart follows breath") {
+                    ForEach(detail.rsa.indices, id: \.self) { i in
+                        RSARunRow(summary: detail.rsa[i]).accessibilityIdentifier("rsaRun-\(i)")
+                    }
+                }
+            }
             if !detail.markers.isEmpty {
                 Section("Markers") {
                     ForEach(detail.markers.indices, id: \.self) { i in
