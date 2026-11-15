@@ -98,24 +98,24 @@ targets:
         # Link alerts (LinkAlertNotifier) may break through a Sleep Focus.
         com.apple.developer.usernotifications.time-sensitive: true
 
-  # The BaroShift armband (Chileaf CL831) through the same Core: no Polar SDK, Watch, widgets
-  # or Live Activity. Its only device code is BaroLog/Armband, read-only toward the band.
+  # The BaroShift armband (Chileaf CL831) through the same Core: no Polar SDK or Watch. Shares
+  # StrapLog's Live Activity (BaroLogWidgets). Its only device code is BaroLog/Armband, read-only
+  # toward the band.
   BaroLog:
     type: application
     platform: iOS
     sources:
       - path: BaroLog
       - path: AppShared
-      # Device-agnostic colours and marker visuals the shared views use (as StrapLogWatch does).
-      - path: Shared/Alpha1Band+Color.swift
-      - path: Shared/LiveMarkedLine.swift
-      - path: Shared/MarkerLandedEffect.swift
+      # Live Activity attributes, intents and colours, also compiled into BaroLogWidgets.
+      - path: Shared
       - path: Tests/fixtures/resting.json
         buildPhase: resources
     dependencies:
       - package: HRVKit
       - package: StrapLogCore
       - package: ChileafKit
+      - target: BaroLogWidgets
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.barolog
@@ -142,8 +142,40 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
         NSBluetoothAlwaysUsageDescription: BaroLog connects to your BaroShift armband to record heart rate, beat intervals, PPG and motion.
         UIBackgroundModes: [bluetooth-central, audio]
+        NSSupportsLiveActivities: true
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
+
+  # StrapLog's Live Activity, compiled again for BaroLog: every view is device-agnostic.
+  BaroLogWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: StrapLogWidgets
+        excludes: [Info.plist]
+      - path: Shared
+    dependencies:
+      - package: StrapLogCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.personalscience.barolog.widgets
+        TARGETED_DEVICE_FAMILY: "1"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+    # Extensions must carry the app's CFBundleVersion.
+    postBuildScripts:
+      - name: Stamp build
+        script: '"$SRCROOT/tools/stamp_build.sh"'
+        basedOnDependencyAnalysis: false
+        inputFiles:
+          - $(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)
+    info:
+      path: BaroLogWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: BaroLog
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
 
   StrapLogWidgets:
     type: app-extension

@@ -26,9 +26,9 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 |---|---|---|
 | Algorithms (RR cleaning, RMSSD, DFA α1) | `Packages/HRVKit` | constants mirror `~/dev/skills/straplog-skills/skills/h10-session/scripts/analyze_h10.py` |
 | Domain, GRDB schema, `RecordingSession` | `Packages/StrapLogCore` | `docs/SCHEMA.md` before touching migrations |
-| StrapLog app: Polar adapter, Watch link, Live Activity, intents, guide, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
-| Screens, formats and pacer audio shared by both apps | `AppShared/` | `AppShared/App/AppBrand.swift`: each app sets `AppBrand.current`; no product or device names here |
-| BaroLog: second app, BaroShift armband (Chileaf CL831) through the same Core | `BaroLog/` | plan `~/.claude/plans/cuddly-chasing-parrot.md`, epic `straplog-ydg` |
+| StrapLog app: Polar adapter, Watch link, intents, guide, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
+| Screens, formats, pacer audio and `LiveActivityDisplay` shared by both apps | `AppShared/` | `AppShared/App/AppBrand.swift`: each app sets `AppBrand.current`; no product or device names here |
+| BaroLog: second app, BaroShift armband (Chileaf CL831) through the same Core; its Live Activity is `StrapLogWidgets` + `Shared` recompiled as `BaroLogWidgets` | `BaroLog/` | plan `~/.claude/plans/cuddly-chasing-parrot.md`, epic `straplog-ydg` |
 | Armband bytes → `SensorEvent`s (2A37, vendor frames, PPG, dedupe, batching) | `Packages/ChileafKit` | `ArmbandTranslator.swift`; capture notes in `~/dev/baroshift/CLAUDE.md` |
 | Watch app (remote display/controller over WatchConnectivity) | `StrapLogWatch/`, `StrapLog/Watch/` | wire format is `WatchPayload` in Core; the phone stays the only recorder |
 | Python reader + `straplog` CLI | `~/dev/straplog-py` (separate repo) | the HRV skills depend on it; keep `straplog.db`'s API stable |
@@ -67,3 +67,4 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 - 2026-10-18: A `devicectl device install` that hangs with the phone wired and unlocked is a wedged Mac-side service: `killall CoreDeviceService`, then retry with `--timeout 120`.
 - 2026-11-02: `PacerClock` is the one sleeping task in Core, an exception to riding on BLE notifications: the pacer runs with no strap and a locked screen has nothing to ride on. `PacerSounds` builds its `AVAudioEngine` at the first audible cue, never at launch, because restoration launches have no use for audio.
 - 2026-11-15: `ArmbandHeartSource` runs a 5 s `DispatchSourceTimer` while connected (`HeartRateWatchdog`), a second exception to riding on notifications: a silent HR subscription leaves nothing to ride on. 10 s silent → resubscribe; 10 s more → report disconnect and reconnect. Also handles `didModifyServices`. Diagnose freezes in Console.app, subsystem `com.personalscience.barolog`, category `armband`.
+- 2026-11-15: The Mac menu-bar HR/α1 is the iPhone's Live Activity (macOS mirrors it); it exists only while a recording is open. BaroLog's comes from the shared `LiveActivityDisplay` and the `BaroLogWidgets` extension.

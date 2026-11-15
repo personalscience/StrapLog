@@ -5,7 +5,7 @@ import StrapLogCore
 /// The source is built at once (CoreBluetooth restoration needs its central manager before
 /// `didFinishLaunching` returns); the database opens when `openModel` is called, which can
 /// fail before first unlock after a reboot and is retried by `Launcher`.
-/// No Watch, widgets or Live Activity in v1; exports stay on the phone (Files → On My iPhone →
+/// No Watch in v1; the Live Activity is StrapLog's (`LiveActivityDisplay`). Exports stay on the phone (Files → On My iPhone →
 /// BaroLog), with no iCloud container yet.
 @MainActor
 struct AppDependencies {
@@ -29,7 +29,7 @@ struct AppDependencies {
         let appVersion = "\(info["CFBundleShortVersionString"] as? String ?? "?") (\(info["CFBundleVersion"] as? String ?? "?"))"
         openModel = { [defaults] in
             RecorderModel(database: try .live(at: dbURL), exports: exports, appVersion: appVersion,
-                          defaults: defaults, cues: PacerSounds())
+                          defaults: defaults, display: LiveActivityDisplay(), cues: PacerSounds())
         }
 
         if let fixture = options.replayFixture {

@@ -1,3 +1,4 @@
+import AppIntents
 import StrapLogCore
 import UIKit
 
@@ -20,7 +21,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        if case .success(let launcher) = launcher { launcher.start() }
+        if case .success(let launcher) = launcher {
+            launcher.start()
+            // The Live Activity's Stop and marker buttons run through the same launcher.
+            AppDependencyManager.shared.add(dependency: launcher)
+        }
         return true
     }
 

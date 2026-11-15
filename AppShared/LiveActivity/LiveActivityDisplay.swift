@@ -7,12 +7,13 @@ import StrapLogCore
 /// the Watch Smart Stack. ActivityKit only starts an activity from the foreground (or from a
 /// `LiveActivityIntent`); a refused start is retried with the next status, so it appears once
 /// the app is opened. The same retry replaces an activity the system ended at its 8 h limit.
+/// macOS shows the iPhone's Live Activities in the Mac menu bar, so this is also the Mac view.
 @MainActor
 final class LiveActivityDisplay: LiveStatusDisplay {
     private var activity: Activity<LiveRecordingAttributes>?
     /// Updates run in order, one at a time.
     private var queue: Task<Void, Never>?
-    private let log = Logger(subsystem: "com.personalscience.straplog", category: "LiveActivity")
+    private let log = Logger(subsystem: Bundle.main.bundleIdentifier ?? "app", category: "LiveActivity")
 
     func show(_ status: LiveStatus?) {
         let previous = queue
