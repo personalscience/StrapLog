@@ -45,6 +45,7 @@
 		385D941D12E5A5964D7EB637 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		38CB496B3C8BE1649841941F /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */; };
 		3C11B13ADFD74D4D22F21B8E /* GuideImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */; };
+		41F5CD3E23E0B95D3666DD20 /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		438334093334A24B13EAF704 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		45B8D967178CBCE7D80545AA /* AppBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7742A3D1D8E7F99E663B782F /* AppBrand.swift */; };
@@ -104,6 +105,7 @@
 		867F7877A4CE0DB3F26244BE /* StrapLogWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 4523D7A7703BED1E3B50C924 /* StrapLogWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		873B66A220166652B082DE45 /* DeviceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BDEDDA9C9C44B2D1AD1635 /* DeviceSheet.swift */; };
 		87E0A4FC572EA33E6570E50B /* PolarBleSdk.txt in Resources */ = {isa = PBXBuildFile; fileRef = 93109613355B501AC6E485DB /* PolarBleSdk.txt */; };
+		887465B9159F5A573043D639 /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
 		89AF1C8E3402D0B794A2EBC7 /* StrapLogWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 438F096A2F94758DA3612652 /* StrapLogWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8A904554BF975D9BE19F085D /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 46BA00BED411CB5443FBCAFF /* StrapLogCore */; };
 		8B0B9BB97EDBE05DC997680C /* AppPhase+ScenePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A88FA01FC20EF8D07E1AC3 /* AppPhase+ScenePhase.swift */; };
@@ -120,6 +122,7 @@
 		98AFECA5E9D8560B52E8F8AE /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A876E7964E0255F59141F5 /* RecordingView.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
 		9B49ECE744682F70866C7FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F900B418F2433FFA87A91B7 /* Assets.xcassets */; };
+		9CB78CE11AA73B00F0193978 /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
 		9E9BF68095364A979EEC1700 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		A136B8DE7A4A7398B868F538 /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B341CFE78122E2F64B2F743D /* Alpha1Tile.swift */; };
 		A2AE4578D153615B5669CFD5 /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EEA423294C918C372D524D /* SessionSummaryCard.swift */; };
@@ -154,6 +157,7 @@
 		BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407BC12CED71B5822CEB173A /* AppDelegate.swift */; };
 		BF4DA70A40AE32AFE1ABC759 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F6E8DE425DCF1F328114FC /* HeartRateTile.swift */; };
 		BFFB47C20EA7A8B13BB10788 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
+		C3B4D9CA1BA0566708C65A28 /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
 		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
 		C50A5BD842688B695A9456FC /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */; };
 		C6660A5D11B6F4B4E9E0AA07 /* GuideParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */; };
@@ -370,10 +374,12 @@
 		8AC569DA60A0A6EF546473CA /* BaroLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BaroLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GuideImages.xcassets; sourceTree = "<group>"; };
 		8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerToneTests.swift; sourceTree = "<group>"; };
+		90C29A482F1072D038FF1D6D /* PulseWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseWave.swift; sourceTree = "<group>"; };
 		9221BBDEA94E79A819D853DF /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		93109613355B501AC6E485DB /* PolarBleSdk.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PolarBleSdk.txt; sourceTree = "<group>"; };
 		99332494B44CF002893B4096 /* WatchLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLink.swift; sourceTree = "<group>"; };
 		99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopFromLiveActivityIntent.swift; sourceTree = "<group>"; };
+		9A3D129946274C578A7B89AB /* SensorStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorStrip.swift; sourceTree = "<group>"; };
 		9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandOutcome+Dialog.swift"; sourceTree = "<group>"; };
 		9DF7FA80EAC7B480C0B167AC /* BreathingPacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingPacerView.swift; sourceTree = "<group>"; };
 		A2120FB2743A69DFC480CA39 /* LicenseTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTextView.swift; sourceTree = "<group>"; };
@@ -714,10 +720,12 @@
 				E01F1EF326809784BF5298A0 /* MetricsHero.swift */,
 				78B6366AD274AAC7B3EBE389 /* PacerScreen.swift */,
 				387AE23553A1F415AE3946BB /* PacerToggle.swift */,
+				90C29A482F1072D038FF1D6D /* PulseWave.swift */,
 				C7F0AD82BB1BD7BEE0BE7764 /* RecordingDetailView.swift */,
 				01EA55BBF6E14B84B3348BBA /* RecordingRow.swift */,
 				25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */,
 				62A876E7964E0255F59141F5 /* RecordingView.swift */,
+				9A3D129946274C578A7B89AB /* SensorStrip.swift */,
 				76EEA423294C918C372D524D /* SessionSummaryCard.swift */,
 				F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */,
 				DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */,
@@ -1376,11 +1384,13 @@
 				B82AA8AF0C1027A51C466724 /* PacerSounds.swift in Sources */,
 				A3DE7A2A45FA229AD05C40FE /* PacerToggle.swift in Sources */,
 				1F543DFFA396B39430341908 /* PacerTone.swift in Sources */,
+				41F5CD3E23E0B95D3666DD20 /* PulseWave.swift in Sources */,
 				D6BBE54AA29DB230A141D617 /* RecordingDetailView.swift in Sources */,
 				F0E8649B5910E891BE9D21C6 /* RecordingRow.swift in Sources */,
 				EC43CE6768D65D91E1DBDFD2 /* RecordingTitle.swift in Sources */,
 				C81F814B3548C03D17EC954C /* RecordingView.swift in Sources */,
 				52D02988D381AC24D3A62A65 /* RootView.swift in Sources */,
+				9CB78CE11AA73B00F0193978 /* SensorStrip.swift in Sources */,
 				A2AE4578D153615B5669CFD5 /* SessionSummaryCard.swift in Sources */,
 				F33891202239885630A145B4 /* ShareSheet.swift in Sources */,
 				92DCE9388F073803D0485FD4 /* StopFromLiveActivityIntent.swift in Sources */,
@@ -1443,11 +1453,13 @@
 				7DF5503C0D5C8C5676493A98 /* PacerToggle.swift in Sources */,
 				E912A8BB437BB36C5B3A5424 /* PacerTone.swift in Sources */,
 				BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */,
+				887465B9159F5A573043D639 /* PulseWave.swift in Sources */,
 				6F24F572B4BFB47DD499536C /* RecordingDetailView.swift in Sources */,
 				CB516EEB95488FF20765B554 /* RecordingRow.swift in Sources */,
 				F0777A9C3E99C4E89B13C8FF /* RecordingTitle.swift in Sources */,
 				98AFECA5E9D8560B52E8F8AE /* RecordingView.swift in Sources */,
 				BFFB47C20EA7A8B13BB10788 /* RootView.swift in Sources */,
+				C3B4D9CA1BA0566708C65A28 /* SensorStrip.swift in Sources */,
 				D3F8314132589AB611C06113 /* SessionSummaryCard.swift in Sources */,
 				A4E06A33A0FC27E3F258B8D8 /* ShareSheet.swift in Sources */,
 				3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */,

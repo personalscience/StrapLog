@@ -38,9 +38,17 @@ public struct ArmbandTranslator: Sendable {
         return flush() + [SensorEvent(atMs: atMs, .heartRate(bpm: m.bpm, contact: m.contact, rr1024: m.rr1024))]
     }
 
-    /// One `aae28f01` notification. Frames other than accelerometer are dropped for now.
+    /// One `aae28f01` notification. Accelerometer samples are batched; a temperature passes
+    /// straight through (1/s); other frame types are dropped for now.
     public mutating func vendorFrame(_ bytes: [UInt8], atMs: Int64) -> [SensorEvent] {
-        guard case .accel(let counts) = VendorFrame.parse(bytes) else { return [] }
+        switch VendorFrame.parse(bytes) {
+        case .accel(let counts): return accelSample(counts, atMs: atMs)
+        case .temperature(let t): return [SensorEvent(atMs: atMs, .temperature(t))]
+        case .other, nil: return []
+        }
+    }
+
+    private mutating func accelSample(_ counts: AccelCounts, atMs: Int64) -> [SensorEvent] {
         let mg = counts.milliG
         accel.append(AccSample(deviceNs: accelCount * 1_000_000_000 / UInt64(Self.accelHz), x: mg.x, y: mg.y, z: mg.z))
         accelCount += 1

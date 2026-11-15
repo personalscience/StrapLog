@@ -26,7 +26,7 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
     /// Streamed only while motion is wanted (`setMotionStreaming`), to spare the band's battery.
     private static let motionCharacteristics = [ChileafGATT.vendorFrames, ChileafGATT.ppg].map(CBUUID.init(string:))
 
-    let capabilities = SensorCapabilities(ecg: false, placement: .arm)
+    let capabilities = SensorCapabilities(ecg: false, placement: .arm, optical: true)
 
     private let queue = DispatchQueue(label: "com.personalscience.barolog.armband")
     private let clock: any WallClock

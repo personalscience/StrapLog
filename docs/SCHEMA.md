@@ -1,4 +1,4 @@
-# Schema (v3)
+# Schema (v5)
 
 Source of truth: `Schema.migrations` in `Packages/StrapLogCore/Sources/StrapLogCore/Schema.swift`. Each `sql` block below is one migration, verbatim and in order; `SchemaTests.docsMatch` fails if they drift.
 
@@ -107,6 +107,22 @@ CREATE TABLE ppg(
 UPDATE meta SET value = '4' WHERE key = 'schema_version';
 ```
 
+### v5: temperature (BaroLog, straplog-ydg.9)
+
+The armband sends three temperatures once a second in vendor frame `0x38` and changes them about once a minute. A row is written when any value changes or a minute has passed since the last row (`TemperatureThinner`), so a flat stretch still shows as data. StrapLog's H10 reports no temperature, so its recordings leave the table empty.
+
+```sql
+CREATE TABLE temperature(
+  recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+  received_at_ms INTEGER NOT NULL,
+  ambient_deci INTEGER NOT NULL,
+  skin_deci INTEGER NOT NULL,
+  body_deci INTEGER NOT NULL,
+  PRIMARY KEY(recording_id, received_at_ms)
+) WITHOUT ROWID;
+UPDATE meta SET value = '5' WHERE key = 'schema_version';
+```
+
 ## Columns that need explaining
 
 - `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
@@ -119,9 +135,10 @@ UPDATE meta SET value = '4' WHERE key = 'schema_version';
 - `connect`/`disconnect` are logged on transitions only. A recording started while connected opens with `start, connect`.
 - `recording.context` for overnight presets (`sleep`) holds the auto-stop plan, `{"wake_at_ms": <epoch ms UTC>}` (`OvernightPlan`), or NULL with no wake time.
 - `recording.name`: typed on Home, or `<activity> <local date>` (`ActivityPreset.defaultName`, e.g. `sleep 2026-10-16`) when left blank.
-- `meta`: `format = straplog`, `schema_version = 4`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
+- `meta`: `format = straplog`, `schema_version = 5`, so loaders can recognise the file. Exports add (`ExportMeta`, not in the live DB): `app_version` (`0.2.0 (123)`: marketing version and build), `exported_at_ms`, `preset` (JSON of the recording's `ActivityPreset`: `id title markers overnight`, so the marker vocabulary travels with the file (exports before 1.1, 2026-10-23, also carry `pacer`, a bool for whether the activity offered the pacer; 1.1 dropped it when the pacer became available any time, so readers must not require it); `markers` is the bar as the user had it at export, edits included), `event_kinds` (JSON array of every `event.kind`), `time_basis` and `schema_doc` (this file's URL).
 - `motion`: one row per wall-clock second of accelerometer data (25 Hz, 8 G), written only while recording. `second_ms` is the second's start (epoch ms UTC, a multiple of 1000). `rms_mg` is the RMS of |a| − 1000 mg over the second: ~0 when still, larger with movement. `gx/gy/gz_mg` are the mean acceleration per axis, i.e. the gravity vector, so posture. `n` is the sample count (≈ 25). All are whole mg. Sample times are placed back from the phone's receipt by the strap's own clock deltas (`MotionReducer.timesMs`), clamped to be non-decreasing. A second split by a relaunch is merged as if reduced whole (`MotionSecond.merged`). The partial last second is written on Stop. From BaroLog's armband (`SensorPlacement.arm`): about 51 Hz, raw counts scaled at an inferred 4096 counts/g, and no `posture` events (arm axes cannot tell lying from upright).
 - `ppg` (BaroLog only): one row per raw PPG reading, written only while recording. `received_at_ms` is the phone's receipt of the packet (one reading per packet, about 32 Hz; several can share a millisecond). `counter` is the sensor's packet counter, 0–255, stepping by one: re-sent packets are dropped before storage (`PpgDeduper`), so a jump of more than one is lost packets. `value` is the raw reading, a signed 16-bit number with no unit; 32767 means off the skin.
+- `temperature` (BaroLog only): degrees Celsius × 10, written only while recording. Which sensor each column comes from is inferred from captures, not documented by Chileaf: `ambient_deci` climbs slowly after the band goes on (23.0 → 26.2 °C over 3 min, 2026-11-03), `skin_deci` runs a few degrees above it on the arm (32.9 vs 31.4), and `body_deci` stays at 35–36.5 as if estimated from the other two. Treat `ambient` as the band's own housing, not room air.
 
 ## Files
 

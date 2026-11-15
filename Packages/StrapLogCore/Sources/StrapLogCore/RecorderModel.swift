@@ -14,6 +14,15 @@ public final class RecorderModel {
     public private(set) var serialNumber: String?
     public private(set) var heartRate: Int?
     public private(set) var contact: Bool?
+    /// The sensor's latest temperature report; nil until one arrives (never, for the H10).
+    public private(set) var temperature: TemperatureReading?
+    /// The last seconds of raw PPG and its pulse amplitude, from a sensor that streams it.
+    public private(set) var ppg = PpgTrace()
+    /// How much the sensor moved in the last whole second: RMS of |a| − 1 g in mg (as
+    /// `motion.rms_mg`); nil before the first second completes.
+    public private(set) var movementMg: Double?
+    /// Reduces live accelerometer batches to seconds for `movementMg`; never saved.
+    private var movement = MotionReducer(recordingId: 0)
     /// The recording being written, or nil when idle.
     public private(set) var activeRecording: Recording?
     public private(set) var beatCount = 0
@@ -213,6 +222,7 @@ public final class RecorderModel {
         link = .searching
         heartRate = nil
         contact = nil
+        temperature = nil
         battery = nil
         firmware = nil
         serialNumber = nil
@@ -512,6 +522,10 @@ public final class RecorderModel {
         case .disconnected:
             link = .disconnected
             heartRate = nil
+            temperature = nil
+            ppg = PpgTrace()
+            movementMg = nil
+            movement = MotionReducer(recordingId: 0)
             ecg = EcgTrace()
             // The tracker starts afresh by itself after the gap (`BreathTracker.gapMs`).
             breath = nil
@@ -526,8 +540,11 @@ public final class RecorderModel {
             else if link == .bluetoothOff { link = .searching }
         case .motion(let samples):
             if breathTracker != nil { breath = breathTracker?.add(receivedAtMs: event.atMs, samples: samples) }
-        case .ppg:
-            break
+            if let second = movement.add(receivedAtMs: event.atMs, samples: samples).last { movementMg = second.rmsMg }
+        case .ppg(let samples):
+            ppg.add(samples)
+        case .temperature(let reading):
+            temperature = reading
         case .ecg(let samples):
             // A batch already in flight when the stream was turned off is dropped.
             if ecgWanted { ecg.add(samples, receivedAtMs: event.atMs) }

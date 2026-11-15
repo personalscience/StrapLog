@@ -102,8 +102,22 @@ public enum Schema {
         UPDATE meta SET value = '4' WHERE key = 'schema_version';
         """
 
+    /// Temperatures from a wearable that reports them (BaroLog's armband), in 0.1 °C, one row per
+    /// change or per minute. StrapLog's H10 reports none, so its recordings leave the table empty.
+    public static let v5 = """
+        CREATE TABLE temperature(
+          recording_id INTEGER NOT NULL REFERENCES recording(id) ON DELETE CASCADE,
+          received_at_ms INTEGER NOT NULL,
+          ambient_deci INTEGER NOT NULL,
+          skin_deci INTEGER NOT NULL,
+          body_deci INTEGER NOT NULL,
+          PRIMARY KEY(recording_id, received_at_ms)
+        ) WITHOUT ROWID;
+        UPDATE meta SET value = '5' WHERE key = 'schema_version';
+        """
+
     /// Migrations in order; `docs/SCHEMA.md` holds one SQL block per entry.
-    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3), ("v4", v4)]
+    public static let migrations = [("v1", v1), ("v2", v2), ("v3", v3), ("v4", v4), ("v5", v5)]
 
     public static var migrator: DatabaseMigrator {
         var m = DatabaseMigrator()

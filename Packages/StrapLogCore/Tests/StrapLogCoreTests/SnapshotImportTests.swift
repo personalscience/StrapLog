@@ -18,6 +18,7 @@ struct SnapshotImportTests {
             .emit(.connected(deviceId: "H10", firmware: "5.0")),
             .wait(ms: 1000), hr([1000]), .wait(ms: 1000), hr([700, 720]),
             ppg(8, fromMs: startMs + 2000, counter: 200),
+            .emit(.temperature(TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365))),
         ])
         try await rig.session.marker(label: "a")
         let out = dir.appendingPathComponent("export")
@@ -52,7 +53,7 @@ struct SnapshotImportTests {
         #expect(ids == [rec.id!])
         let copy = try read(fresh) { try Recording.fetchOne($0, key: rec.id!) }
         #expect(copy == rec)
-        for table in ["notification", "beat", "event", "motion", "ppg"] {
+        for table in ["notification", "beat", "event", "motion", "ppg", "temperature"] {
             let sql = "SELECT * FROM \(table) ORDER BY 1, 2"
             #expect(try rows(fresh, sql) == rows(rig.database, sql), "\(table)")
         }

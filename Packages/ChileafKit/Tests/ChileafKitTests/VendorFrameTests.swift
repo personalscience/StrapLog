@@ -1,3 +1,4 @@
+import StrapLogCore
 import Testing
 @testable import ChileafKit
 
@@ -17,8 +18,16 @@ struct VendorFrameTests {
         #expect(abs(g - 1000) < 60)
     }
 
+    @Test("temperature frame from the 11-10 capture: 31.5 / 32.9 / 36.5 °C, big-endian")
+    func temperature() {
+        #expect(VendorFrame.parse(hex("ff0a38013b0149016df1"))
+                == .temperature(TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365)))
+        #expect(VendorFrame.parse(hex("ff0a380126013a016bcb"))
+                == .temperature(TemperatureReading(ambientDeci: 294, skinDeci: 314, bodyDeci: 363)))
+    }
+
     @Test("other frame types pass the checksum and come back whole", arguments: [
-        "ff0a380126013a016bcb", "ff0d150000000000000000795c",
+        "ff0d150000000000000000795c",
         "ff1775000f1a0d013d017fffffff002336b00012ec8dca",
     ])
     func others(_ h: String) throws {

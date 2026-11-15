@@ -20,6 +20,9 @@ public struct SensorEvent: Sendable, Equatable {
         /// Raw PPG readings, oldest first, each with its own receive time. Streamed with motion
         /// (`setMotionStreaming`); written only while recording, to `ppg`.
         case ppg(samples: [PpgSample])
+        /// A temperature report. Written only while recording, to `temperature`, and only when a
+        /// value changes or a minute has passed since the last row.
+        case temperature(TemperatureReading)
     }
 
     /// Unix epoch ms UTC at which the phone received it.

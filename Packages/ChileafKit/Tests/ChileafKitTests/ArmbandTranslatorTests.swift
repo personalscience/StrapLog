@@ -56,11 +56,20 @@ struct ArmbandTranslatorTests {
         #expect(p.map(\.counter) == [3], "a lower counter after reconnecting is new data")
     }
 
+    @Test("a temperature frame passes straight through, without flushing the batches")
+    func temperature() {
+        var t = ArmbandTranslator()
+        _ = t.vendorFrame(accelFrame, atMs: 0)
+        let out = t.vendorFrame(hex("ff0a38013b0149016df1"), atMs: 1000)
+        #expect(out == [SensorEvent(atMs: 1000, .temperature(TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365)))])
+        #expect(t.flush().count == 1, "the accelerometer sample is still batched")
+    }
+
     @Test("bad bytes produce nothing")
     func garbage() {
         var t = ArmbandTranslator()
         #expect(t.vendorFrame(hex("ff0a0c40fac008400ba5"), atMs: 0).isEmpty)
-        #expect(t.vendorFrame(hex("ff0a380126013a016bcb"), atMs: 0).isEmpty, "undecoded frame types are skipped")
+        #expect(t.vendorFrame(hex("ff0d150000000000000000795c"), atMs: 0).isEmpty, "undecoded frame types are skipped")
         #expect(t.ppgPacket([1, 2], atMs: 0).isEmpty)
         #expect(t.heartRate([], atMs: 0).isEmpty)
     }

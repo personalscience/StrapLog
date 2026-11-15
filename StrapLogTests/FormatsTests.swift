@@ -18,6 +18,15 @@ struct FormatsTests {
         #expect(Formats.noBeats(device: "armband") == "No beats for 10 s: the armband may be moving or loose.")
     }
 
+    @Test("armband temperatures and pulse/movement line, with dashes before data")
+    func optical() {
+        #expect(Formats.temperatures(TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365))
+                == "Skin 32.9° · Band 31.5° · Body 36.5°")
+        #expect(Formats.temperatures(nil) == "Temperature —")
+        #expect(Formats.pulseAndMovement(amplitude: 320, movementMg: 11.6) == "Pulse size 320 · Movement 12 mg")
+        #expect(Formats.pulseAndMovement(amplitude: nil, movementMg: nil) == "Pulse size — · Movement —")
+    }
+
     @Test("gap in seconds with one decimal")
     func gap() {
         #expect(Formats.gap(ms: 4_000) == "4.0 s")

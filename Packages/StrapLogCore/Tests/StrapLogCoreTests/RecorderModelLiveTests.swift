@@ -48,6 +48,23 @@ struct RecorderModelLiveTests {
         #expect(relaunched.live.rrHistory == model.live.rrHistory)
     }
 
+    @Test("an optical sensor's temperature, PPG and movement reach the model; a disconnect clears them")
+    func opticalReadouts() async {
+        let warm = TemperatureReading(ambientDeci: 315, skinDeci: 329, bodyDeci: 365)
+        let ppg = (0..<160).map { PpgSample(receivedAtMs: Int64($0) * 31, counter: $0 % 256, value: 7000 + ($0 % 32) * 10) }
+        let still = (0..<60).map { AccSample(deviceNs: UInt64($0) * 20_000_000, x: 0, y: 0, z: 1000) }
+        await model.consume(FakeHeartSource(clock: clock, script: [
+            .emit(.connected(deviceId: "band", firmware: nil)), .emit(.temperature(warm)),
+            .emit(.ppg(samples: ppg)), .wait(ms: 1200), .emit(.motion(samples: still)),
+            .wait(ms: 1200), .emit(.motion(samples: still)),
+        ]))
+        #expect(model.temperature == warm)
+        #expect(model.ppg.pulseAmplitude == 310)
+        #expect(model.movementMg == 0)
+        await model.consume(FakeHeartSource(clock: clock, script: [.emit(.disconnected(reason: nil))]))
+        #expect(model.temperature == nil && model.ppg.values.isEmpty && model.movementMg == nil)
+    }
+
     @Test("notifications without beats for 10 s set the beat gap; a beat clears it")
     func beatGap() async {
         await model.start(name: "gap")

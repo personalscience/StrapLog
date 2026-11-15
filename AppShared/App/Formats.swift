@@ -27,6 +27,22 @@ enum Formats {
         "No beats for \(RecorderModel.beatGapAfterMs / 1000) s: the \(device) may be moving or loose."
     }
 
+    /// The armband's three temperatures, e.g. `Skin 32.9° · Band 31.5° · Body 36.5°`. The band
+    /// reading is its housing, not room air (docs/SCHEMA.md, `temperature`).
+    static func temperatures(_ t: TemperatureReading?) -> String {
+        guard let t else { return "Temperature —" }
+        func deg(_ deci: Int) -> String { String(format: "%.1f°", Double(deci) / 10) }
+        return "Skin \(deg(t.skinDeci)) · Band \(deg(t.ambientDeci)) · Body \(deg(t.bodyDeci))"
+    }
+
+    /// Pulse amplitude in the sensor's raw units, and how much the arm moved in the last second,
+    /// e.g. `Pulse size 320 · Movement 12 mg`.
+    static func pulseAndMovement(amplitude: Int?, movementMg: Double?) -> String {
+        let pulse = amplitude.map(String.init) ?? "—"
+        let movement = movementMg.map { "\(Int($0.rounded())) mg" } ?? "—"
+        return "Pulse size \(pulse) · Movement \(movement)"
+    }
+
     /// A marker label as a button title: `lights_out` → `lights out`.
     static func markerButton(_ label: String) -> String {
         LiveStatus.markerTitle(label)

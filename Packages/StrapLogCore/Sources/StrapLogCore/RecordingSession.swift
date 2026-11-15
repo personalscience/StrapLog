@@ -24,6 +24,8 @@ public actor RecordingSession {
     private var lastSnapshotMs: Int64?
     /// Per-second accelerometer reduction for the active recording.
     private var motion: MotionReducer?
+    /// Drops repeated temperature reports for the active recording.
+    private var temperature = TemperatureThinner()
     /// The active recording's auto-stop plan; nil unless its preset is `overnight`.
     private var plan: OvernightPlan?
     /// Posture of the active overnight recording, rebuilt from scratch after a relaunch.
@@ -377,6 +379,15 @@ public actor RecordingSession {
                 }
             }
 
+        case .temperature(let t):
+            guard let id = recordingId, temperature.keep(t, atMs: event.atMs) else { return }
+            try database.writer.write { db in
+                try db.execute(sql: """
+                    INSERT OR IGNORE INTO temperature(recording_id, received_at_ms, ambient_deci, skin_deci, body_deci)
+                    VALUES (?, ?, ?, ?, ?)
+                    """, arguments: [id, event.atMs, t.ambientDeci, t.skinDeci, t.bodyDeci])
+            }
+
         case .motion(let samples):
             guard let id = recordingId, let seconds = motion?.add(receivedAtMs: event.atMs, samples: samples),
                   !seconds.isEmpty else { return }
@@ -408,6 +419,7 @@ public actor RecordingSession {
         recordingId = id
         self.lastSnapshotMs = lastSnapshotMs
         motion = MotionReducer(recordingId: id)
+        temperature = TemperatureThinner()
         self.plan = plan
         posture = PostureTracker()
         restingStartMs = nil

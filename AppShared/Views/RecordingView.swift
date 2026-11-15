@@ -70,6 +70,9 @@ struct RecordingView: View {
                     .foregroundStyle(.orange)
                     .accessibilityIdentifier("noBeats")
             }
+            if model.capabilities.optical {
+                SensorStrip(model: model)
+            }
         }
     }
 
