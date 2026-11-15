@@ -1,7 +1,7 @@
 import StrapLogCore
 import SwiftUI
 
-/// What an optical sensor (BaroLog's armband) adds under the chart: the live pulse wave, its
+/// What an optical sensor (ArmLog's armband) adds under the chart: the live pulse wave, its
 /// size, how much the arm is moving, and the band's temperatures. Shown only when the sensor
 /// has them (`SensorCapabilities.optical`).
 struct SensorStrip: View {

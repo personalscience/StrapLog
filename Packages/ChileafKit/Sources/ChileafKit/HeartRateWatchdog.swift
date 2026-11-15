@@ -2,7 +2,7 @@ import StrapLogCore
 
 /// Notices when the band's 0x2A37 notifications stop while the link still looks connected.
 /// The band notifies about once a second, even off the arm (it sends HR 0), so silence always
-/// means a lost subscription: BaroLog's live HR froze at one value until relaunch (straplog-ydg.6).
+/// means a lost subscription: ArmLog's live HR froze at one value until relaunch (straplog-ydg.6).
 ///
 /// A periodic `check` answers `.resubscribe` after `stallMs` of silence, then `.reconnect` if HR
 /// is still silent `stallMs` after that. The source calls `reset` on every connect and disconnect.

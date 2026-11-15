@@ -9,7 +9,7 @@ struct ReadOnlyTests {
     static let source = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         .deletingLastPathComponent().deletingLastPathComponent()
-        .appending(path: "BaroLog/Armband/ArmbandHeartSource.swift")
+        .appending(path: "ArmLog/Armband/ArmbandHeartSource.swift")
 
     @Test("ArmbandHeartSource never calls writeValue")
     func noWrites() throws {

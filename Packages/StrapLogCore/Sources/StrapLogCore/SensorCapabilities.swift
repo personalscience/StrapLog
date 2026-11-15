@@ -4,7 +4,7 @@ public struct SensorCapabilities: Sendable, Equatable {
     /// Streams live ECG (`setECGStreaming`).
     public var ecg: Bool
     public var placement: SensorPlacement
-    /// Streams raw PPG and temperature (BaroLog's armband), so the recording screen shows them.
+    /// Streams raw PPG and temperature (ArmLog's armband), so the recording screen shows them.
     public var optical: Bool
 
     public init(ecg: Bool = true, placement: SensorPlacement = .chest, optical: Bool = false) {

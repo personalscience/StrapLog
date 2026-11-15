@@ -9,7 +9,7 @@ xcodegen generate                                   # after any project.yml or f
 (cd Packages/HRVKit && swift test)                  # pure algorithms, macOS, seconds
 (cd Packages/StrapLogCore && swift test)            # model, schema, session, macOS
 (cd Packages/ChileafKit && swift test)              # armband decoders + translator, macOS
-xcodebuild -scheme BaroLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build   # BaroLog app
+xcodebuild -scheme ArmLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build   # ArmLog app
 (cd ~/dev/straplog-py && uv run --group dev pytest -q)  # straplog Python package + CLI (separate repo)
 xcodebuild test -scheme StrapLog -destination 'platform=iOS Simulator,name=iPhone 17' -derivedDataPath build/dd
 xcodebuild -scheme StrapLog -destination 'generic/platform=iOS' -derivedDataPath build/dd build
@@ -28,7 +28,7 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 | Domain, GRDB schema, `RecordingSession` | `Packages/StrapLogCore` | `docs/SCHEMA.md` before touching migrations |
 | StrapLog app: Polar adapter, Watch link, intents, guide, AppDelegate | `StrapLog/` | `docs/SDK-NOTES.md` before touching `StrapLog/Polar/` |
 | Screens, formats, pacer audio and `LiveActivityDisplay` shared by both apps | `AppShared/` | `AppShared/App/AppBrand.swift`: each app sets `AppBrand.current`; no product or device names here |
-| BaroLog: second app, BaroShift armband (Chileaf CL831) through the same Core; its Live Activity is `StrapLogWidgets` + `Shared` recompiled as `BaroLogWidgets` | `BaroLog/` | plan `~/.claude/plans/cuddly-chasing-parrot.md`, epic `straplog-ydg` |
+| ArmLog (renamed from ArmLog 2026-11-15): second app, BaroShift armband (Chileaf CL831) through the same Core; its Live Activity is `StrapLogWidgets` + `Shared` recompiled as `ArmLogWidgets` | `ArmLog/` | plan `~/.claude/plans/cuddly-chasing-parrot.md`, epic `straplog-ydg` |
 | Armband bytes → `SensorEvent`s (2A37, vendor frames, PPG, dedupe, batching) | `Packages/ChileafKit` | `ArmbandTranslator.swift`; capture notes in `~/dev/baroshift/CLAUDE.md` |
 | Watch app (remote display/controller over WatchConnectivity) | `StrapLogWatch/`, `StrapLog/Watch/` | wire format is `WatchPayload` in Core; the phone stays the only recorder |
 | Python reader + `straplog` CLI | `~/dev/straplog-py` (separate repo) | the HRV skills depend on it; keep `straplog.db`'s API stable |
@@ -38,8 +38,8 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 
 ## Rules that the tree does not tell you
 
-- Only `StrapLog/Polar/` may `import PolarBleSdk`; everything else talks to `HeartSource`. Keeps the SDK swappable for a raw CoreBluetooth client. Likewise only `BaroLog/Armband/` imports CoreBluetooth for the armband.
-- BaroLog is read-only toward the armband: never write to it. Its command characteristic `aae28f02` takes shutdown and factory reset (Chileaf SDK). `ChileafKit`'s `ReadOnlyTests` fails on any `writeValue(` in `ArmbandHeartSource.swift`.
+- Only `StrapLog/Polar/` may `import PolarBleSdk`; everything else talks to `HeartSource`. Keeps the SDK swappable for a raw CoreBluetooth client. Likewise only `ArmLog/Armband/` imports CoreBluetooth for the armband.
+- ArmLog is read-only toward the armband: never write to it. Its command characteristic `aae28f02` takes shutdown and factory reset (Chileaf SDK). `ChileafKit`'s `ReadOnlyTests` fails on any `writeValue(` in `ArmbandHeartSource.swift`.
 - Packages stay macOS-buildable (no UIKit, no SDK) so all logic is testable with `swift test` and no Bluetooth.
 - Packages are Swift 6 language mode; the app target is Swift 5 mode with complete strict-concurrency checking, because the SDK's tuple typealiases are not `Sendable`.
 - Times in the DB are Unix epoch ms UTC plus `tz_offset_s`. HRV Logger stored local time as UTC; never repeat that.
@@ -66,5 +66,5 @@ tools/publish_site.sh                               # build docs page (Guide.md 
 - 2026-10-18: App Store signing uses Ensembio's cloud-managed "Distribution Managed" cert (no private key in the keychain); `-allowProvisioningUpdates` makes the App Store profiles. `-exportArchive` needs the system PATH: Homebrew rsync 3.x rejects the `-E` Xcode's openrsync passes ("Copy failed").
 - 2026-10-18: A `devicectl device install` that hangs with the phone wired and unlocked is a wedged Mac-side service: `killall CoreDeviceService`, then retry with `--timeout 120`.
 - 2026-11-02: `PacerClock` is the one sleeping task in Core, an exception to riding on BLE notifications: the pacer runs with no strap and a locked screen has nothing to ride on. `PacerSounds` builds its `AVAudioEngine` at the first audible cue, never at launch, because restoration launches have no use for audio.
-- 2026-11-15: `ArmbandHeartSource` runs a 5 s `DispatchSourceTimer` while connected (`HeartRateWatchdog`), a second exception to riding on notifications: a silent HR subscription leaves nothing to ride on. 10 s silent → resubscribe; 10 s more → report disconnect and reconnect. Also handles `didModifyServices`. Diagnose freezes in Console.app, subsystem `com.personalscience.barolog`, category `armband`.
-- 2026-11-15: The Mac menu-bar HR/α1 is the iPhone's Live Activity (macOS mirrors it); it exists only while a recording is open. BaroLog's comes from the shared `LiveActivityDisplay` and the `BaroLogWidgets` extension.
+- 2026-11-15: `ArmbandHeartSource` runs a 5 s `DispatchSourceTimer` while connected (`HeartRateWatchdog`), a second exception to riding on notifications: a silent HR subscription leaves nothing to ride on. 10 s silent → resubscribe; 10 s more → report disconnect and reconnect. Also handles `didModifyServices`. Diagnose freezes in Console.app, subsystem `com.personalscience.armlog`, category `armband`.
+- 2026-11-15: The Mac menu-bar HR/α1 is the iPhone's Live Activity (macOS mirrors it); it exists only while a recording is open. ArmLog's comes from the shared `LiveActivityDisplay` and the `ArmLogWidgets` extension.

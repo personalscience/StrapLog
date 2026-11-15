@@ -6,7 +6,7 @@ import StrapLogCore
 /// `didFinishLaunching` returns); the database opens when `openModel` is called, which can
 /// fail before first unlock after a reboot and is retried by `Launcher`.
 /// No Watch in v1; the Live Activity is StrapLog's (`LiveActivityDisplay`). Exports stay on the phone (Files → On My iPhone →
-/// BaroLog), with no iCloud container yet.
+/// ArmLog), with no iCloud container yet.
 @MainActor
 struct AppDependencies {
     let source: any HeartSource

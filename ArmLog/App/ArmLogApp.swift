@@ -2,7 +2,7 @@ import StrapLogCore
 import SwiftUI
 
 @main
-struct BaroLogApp: App {
+struct ArmLogApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @Environment(\.scenePhase) private var scenePhase
 
@@ -18,7 +18,7 @@ struct BaroLogApp: App {
                                 Task { await model.appPhase(phase) }
                             }
                     } else {
-                        ContentUnavailableView("BaroLog could not open its database", systemImage: "lock",
+                        ContentUnavailableView("ArmLog could not open its database", systemImage: "lock",
                                                description: Text(launcher.openError.map { String(describing: $0) } ?? ""))
                     }
                 }
@@ -27,7 +27,7 @@ struct BaroLogApp: App {
                     if phase == .active { launcher.start() }
                 }
             case .failure(let error):
-                ContentUnavailableView("BaroLog could not start", systemImage: "exclamationmark.triangle",
+                ContentUnavailableView("ArmLog could not start", systemImage: "exclamationmark.triangle",
                                        description: Text(String(describing: error)))
             }
         }

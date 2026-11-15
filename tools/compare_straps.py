@@ -3,7 +3,7 @@
 # dependencies = ["straplog>=0.3", "numpy", "pandas", "matplotlib"]
 # ///
 """Agreement between two sensors worn at the same time: a reference (Polar H10,
-StrapLog) and a test device (e.g. BaroShift armband, BaroLog).
+StrapLog) and a test device (e.g. BaroShift armband, ArmLog).
 
 Usage: uv run tools/compare_straps.py --ref H10.sqlite --test ARMBAND.sqlite [--out DIR]
 

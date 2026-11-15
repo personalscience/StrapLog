@@ -18,8 +18,8 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
     static let deviceIdKey = "armbandPeripheralId"
     /// CoreBluetooth state restoration: if iOS kills the app while connected, a later
     /// notification from the band relaunches it in the background.
-    private static let restoreIdentifier = "com.personalscience.barolog.central"
-    private static let log = Logger(subsystem: "com.personalscience.barolog", category: "armband")
+    private static let restoreIdentifier = "com.personalscience.armlog.central"
+    private static let log = Logger(subsystem: "com.personalscience.armlog", category: "armband")
     private static let heartRate = CBUUID(string: ChileafGATT.heartRateService)
     private static let services = [ChileafGATT.heartRateService, ChileafGATT.batteryService,
                                    ChileafGATT.deviceInformationService, ChileafGATT.vendorService].map(CBUUID.init(string:))
@@ -28,7 +28,7 @@ final class ArmbandHeartSource: NSObject, HeartSource, @unchecked Sendable {
 
     let capabilities = SensorCapabilities(ecg: false, placement: .arm, optical: true)
 
-    private let queue = DispatchQueue(label: "com.personalscience.barolog.armband")
+    private let queue = DispatchQueue(label: "com.personalscience.armlog.armband")
     private let clock: any WallClock
     private let defaults: UserDefaults
     private let continuation = Mutex<AsyncStream<SensorEvent>.Continuation?>(nil)

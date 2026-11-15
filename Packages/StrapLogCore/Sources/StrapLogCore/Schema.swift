@@ -89,7 +89,7 @@ public enum Schema {
         UPDATE meta SET value = '3' WHERE key = 'schema_version';
         """
 
-    /// Raw PPG from an optical sensor (BaroLog's armband), one row per reading. StrapLog's H10
+    /// Raw PPG from an optical sensor (ArmLog's armband), one row per reading. StrapLog's H10
     /// has no PPG, so its recordings leave the table empty.
     public static let v4 = """
         CREATE TABLE ppg(
@@ -102,7 +102,7 @@ public enum Schema {
         UPDATE meta SET value = '4' WHERE key = 'schema_version';
         """
 
-    /// Temperatures from a wearable that reports them (BaroLog's armband), in 0.1 °C, one row per
+    /// Temperatures from a wearable that reports them (ArmLog's armband), in 0.1 °C, one row per
     /// change or per minute. StrapLog's H10 reports none, so its recordings leave the table empty.
     public static let v5 = """
         CREATE TABLE temperature(

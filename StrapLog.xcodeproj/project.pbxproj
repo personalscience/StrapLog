@@ -7,98 +7,100 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0093E8E2002BF19A592AEA67 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		00F7186A2452349E4586B43B /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */; };
-		01CF8E4E668E27AE48392C58 /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
+		0359A99BC1C792670BEF6947 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01F1EF326809784BF5298A0 /* MetricsHero.swift */; };
 		05F53F86E453098B33096EC6 /* GuideParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598364997011C1C2FF07B2C7 /* GuideParser.swift */; };
 		07041807847556BCC199857A /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9221BBDEA94E79A819D853DF /* AcknowledgementsView.swift */; };
-		0807FB31B3808100AC10AD98 /* HeartLinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0715931948E272C6F0BA53EF /* HeartLinkButton.swift */; };
+		0877E0050DCD918344114C05 /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DE0F96DFB362507FB44F88 /* LaunchOptions.swift */; };
+		091D4C405879FA4559F77909 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */; };
 		0920575A6FA05BA45AE0997F /* XCUIElement+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70645AB7E9BC6C0E7CED65A9 /* XCUIElement+Helpers.swift */; };
 		09790EE3841FC10F5B218AC9 /* Guide.md in Resources */ = {isa = PBXBuildFile; fileRef = E7B8219DAE56CD77848AE9A1 /* Guide.md */; };
 		0AB6EF16A1337E4AC86C3301 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
-		0AC1FA74CA64C3E3590BCB2A /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE90FC8CAEA9C446BA2EFC62 /* Formats.swift */; };
 		0B9A7EA7B4FE42E702EB8589 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		0D288779196B901901F86299 /* ComplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4967ABE8CB6D2377481FFCB /* ComplicationEntry.swift */; };
 		0E3B34C945B2FDB082D85C96 /* GuideBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */; };
-		0EA8C1E25F5DA3A38DE6A998 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7B10FF783C74BC3306EFBEE8 /* PrivacyInfo.xcprivacy */; };
 		0F5987B8B1DFE6A1A6D5675D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FCE40FBE212BB7FB44DDF8E9 /* PrivacyInfo.xcprivacy */; };
-		11DE00F0246119C7F33FCFDA /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 03CAFD0532AF68DBFC80F758 /* HRVKit */; };
-		127AF4863DF314EB51E377A3 /* DeviceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BDEDDA9C9C44B2D1AD1635 /* DeviceSheet.swift */; };
+		1076D9FE0B6B40FBC9D7988A /* PacerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6366AD274AAC7B3EBE389 /* PacerScreen.swift */; };
 		14DB6CA3F97DA24705696F78 /* ReplaySmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E9DEBCC250F2521F40A7BF /* ReplaySmokeTests.swift */; };
 		15B3E218B1E03FE7C5B4C84E /* CommandOutcome+Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2F1BACA684609A0B370DED /* CommandOutcome+Dialog.swift */; };
-		15FB44226528A95FBDC524B9 /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
-		17A50A3EB1B7C733D95F78F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8682BD0CF8DC4327AFD079 /* AppDelegate.swift */; };
 		19A828ECE45D764939F3FF70 /* FormatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */; };
 		1AB56F48D329D40DC20A1FED /* GuideBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B454C5A912AFCDA3EC79691 /* GuideBook.swift */; };
 		1ABBBF3337BE973C324299DB /* HelpRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46015B49DFD7CF3E7C9F960C /* HelpRoute.swift */; };
 		1BCEC5BF7206F1D05BD345D0 /* MarkNextIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5990ECFEC25A9AA23909F07E /* MarkNextIntent.swift */; };
 		1C51B6B9E38E41E58947DEC5 /* PacerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6366AD274AAC7B3EBE389 /* PacerScreen.swift */; };
-		1F543DFFA396B39430341908 /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FBF1E5C56F455E61F86AF /* PacerTone.swift */; };
+		1DC59DF79AE9D8A7DD66098C /* AppPhase+ScenePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A88FA01FC20EF8D07E1AC3 /* AppPhase+ScenePhase.swift */; };
+		2024FFB6920DA0126F0FC8D3 /* ArmbandHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20DB32BEF896CB789E25E2EC /* ArmbandHeartSource.swift */; };
+		213E6064C549941F43BCB490 /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */; };
 		22AA87E24C7BDD1BF2499410 /* WatchPendingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5242B3303D3647F75E01A20B /* WatchPendingView.swift */; };
-		298A6719F569C773CB08ED55 /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */; };
 		2AFB706486EF36B55F9939B0 /* BreathingPacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7FA80EAC7B480C0B167AC /* BreathingPacerView.swift */; };
 		2B57AF76460690ED27E4DEC8 /* StrapLogShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */; };
 		2D35B8EDAD390F74B7F54858 /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */; };
-		30FCBBF2471706AA78238F52 /* LiveActivityDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8595B2B5495D681B8B51E86 /* LiveActivityDisplay.swift */; };
+		2EBD7422FE7A9F166F6E616E /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545FD7500623865D34362A9 /* MarkerNoteSheet.swift */; };
 		314948EAB56AACF748B12974 /* ComplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F613D88B2F297250AF939BC8 /* ComplicationView.swift */; };
 		325D6712F9E7717AACDC5540 /* LaunchOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */; };
+		328EB9A3D4990CDBE3C88552 /* LiveMetricLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2921990E24264C14F324C4DA /* LiveMetricLabel.swift */; };
 		3328CA223E0895F9DFDB0221 /* StartRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1447D79697757325A04B08 /* StartRecordingIntent.swift */; };
-		385D941D12E5A5964D7EB637 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
-		38CB496B3C8BE1649841941F /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */; };
 		3C11B13ADFD74D4D22F21B8E /* GuideImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */; };
-		41F5CD3E23E0B95D3666DD20 /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
+		404BC5D1F0D64DDB88441F0E /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
+		4149814D6016F012B2B88DA1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
 		41F95DD3904DCC1D18AC40C0 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
-		438334093334A24B13EAF704 /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
+		421C8A7938C653FC6DD78851 /* ArmLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E897E0F8F157C07061D8552E /* ArmLogApp.swift */; };
+		42D3D5AEEC5DF76D80105F2F /* PacerSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9DD1D7E64F957679DEDD8 /* PacerSounds.swift */; };
+		431E86586329E98B5499B442 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = A3270713BDD4CAF4981F45B2 /* StrapLogCore */; };
+		458C68AC432FF00ED0E7DDD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57D72A25324487C412F4120 /* AppDelegate.swift */; };
 		45B8D967178CBCE7D80545AA /* AppBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7742A3D1D8E7F99E663B782F /* AppBrand.swift */; };
+		45C9A23F240BF35747892C79 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A810955A3F13BED45FF34035 /* Alpha1MinutesBar.swift */; };
+		463379091EC69350292CF73D /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
 		4760D29377E5A18EF34EDD2B /* StrapScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF077986A9081AE0F646C2F1 /* StrapScanner.swift */; };
-		47C4DFCB5F22511A155E975C /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
 		488E950BB6061D01D1A5E1EF /* AppStoreScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */; };
-		48F2033A3DE2B9100E1860BB /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
-		4D265521BA94C15AF0D4053C /* BreathingPacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7FA80EAC7B480C0B167AC /* BreathingPacerView.swift */; };
-		4DC44F227FFC0FD75609B2C2 /* AppBrand+BaroLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A43E3FA1E6FA6D5A731F4A7 /* AppBrand+BaroLog.swift */; };
-		509897428805B1A4AE25C490 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A810955A3F13BED45FF34035 /* Alpha1MinutesBar.swift */; };
-		52D02988D381AC24D3A62A65 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
-		53025FDA32E27336E3DA6DE0 /* LiveStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB838F79AB96531AB2A91409 /* LiveStatusView.swift */; };
+		518BE349F18B22124310932E /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		55B22B900FB1F84127A44341 /* LiveMetricLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2921990E24264C14F324C4DA /* LiveMetricLabel.swift */; };
 		562A4D35D75CBE215D160733 /* StopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9C73CC0AFE53997BB3E887 /* StopRecordingIntent.swift */; };
-		56EB571E649EE6B64DABDF21 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		573182B5190038A0C4F13AC6 /* StrapLogWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FD0D5D022DCD8F64EBEFFE /* StrapLogWatchApp.swift */; };
 		5761A68DCF86142B6D373EC2 /* PacerToneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */; };
 		589C2FBACBA698559BDF94A8 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = DA5F5BE64ED9A4978504D76C /* StrapLogCore */; };
 		5942DD38CE7EA6F55B1DE763 /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545FD7500623865D34362A9 /* MarkerNoteSheet.swift */; };
-		59DE5B85CB38F75EA0AE9E47 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
-		6218EFF6B0266CED0560B4CF /* LiveControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71B999AA2EA9301B216B524 /* LiveControls.swift */; };
+		59CF7CEEA19750D1E3B1B196 /* EcgStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11578EAF74693C9BAC866DB /* EcgStripView.swift */; };
+		5A3AF93F526E373B1A58CBAF /* LiveControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71B999AA2EA9301B216B524 /* LiveControls.swift */; };
+		5E04C72D7C4E025E4AF50B10 /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
+		5F35F5B40432BD2AED41B21F /* AppBrand+ArmLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC4C3D50803679EE0E30AA /* AppBrand+ArmLog.swift */; };
 		6472F608490694F20E9FD56C /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DE0F96DFB362507FB44F88 /* LaunchOptions.swift */; };
 		650181B52A44B5D399E0D6AC /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
+		652907BBBA37136890F36AC9 /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE90FC8CAEA9C446BA2EFC62 /* Formats.swift */; };
 		69D419E57A59D1751BA6DDC6 /* LiveActivityDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8595B2B5495D681B8B51E86 /* LiveActivityDisplay.swift */; };
-		6ADC28CC1711B9D3C83A6A00 /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
-		6B2FC98371FC8CD7A16E7CE3 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		6C43E074DA6058621E974A38 /* StrapLogWatchWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC895AFF529382BCBEFAB00 /* StrapLogWatchWidgetsBundle.swift */; };
+		6D823B47E1118FBC5A87E698 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		6DA35C9709A4C8F43D2E2DF0 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
-		6DB0B73B283AAD39DA77C9BE /* AppBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7742A3D1D8E7F99E663B782F /* AppBrand.swift */; };
 		6F021ACDCE9DD828699947A1 /* StrapLogWatchShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */; };
 		6F24F572B4BFB47DD499536C /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0AD82BB1BD7BEE0BE7764 /* RecordingDetailView.swift */; };
-		6FF569F5C1865983F5D9F65B /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
+		6FB51B02D4D26635C7198E9F /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
 		709EDC933723275730834E4A /* Guide.swift in Sources */ = {isa = PBXBuildFile; fileRef = B913F13B0F39F7BBCC9175EB /* Guide.swift */; };
-		70D670DA7B4F391ADE2641B9 /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
+		710024C8D54AAF70D3517CDB /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B341CFE78122E2F64B2F743D /* Alpha1Tile.swift */; };
 		711056491FBEE5CD529700DA /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 050424C851AC49404C44C6E2 /* HelpView.swift */; };
-		72B51EA36A1E2E9B33F7C15C /* ChileafKit in Frameworks */ = {isa = PBXBuildFile; productRef = D50F86AFC42BFF263E055971 /* ChileafKit */; };
 		73E73B3A14755CDE4330D713 /* StrapHeart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */; };
 		741423D438C24F3CCFAD35DC /* ComplicationFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABF24144449A6848A0D60C /* ComplicationFeed.swift */; };
 		7429FF87AD23A3D043DA7160 /* AppBrand+StrapLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED0D5B0530DAE1E78597EA9 /* AppBrand+StrapLog.swift */; };
+		74CB274BA71F3CBBE3B0B8F5 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
 		75B71FC7F5DD63FB08180183 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B95A73F72D3E2290BC73FF0E /* PrivacyInfo.xcprivacy */; };
 		76FE7F8569A6CD7CF39F07C3 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F6E8DE425DCF1F328114FC /* HeartRateTile.swift */; };
 		770663FA7164529AD0373FED /* PacerSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9DD1D7E64F957679DEDD8 /* PacerSounds.swift */; };
 		7730FD507150FB82CB92E3CC /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BC0BB9F1D554004CD21BB0 /* HeroNumber.swift */; };
-		7AB056AFE649A9C8F8CE4AD3 /* ArmbandHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C61FEC9B1BBB8BCF498FC19 /* ArmbandHeartSource.swift */; };
 		7B12D446B6BA7F93C9F8D65C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7B10FF783C74BC3306EFBEE8 /* PrivacyInfo.xcprivacy */; };
 		7B261077183189BC7EA243D9 /* SwiftProtobuf.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7B6DC1C10916A1DD5AFF9C87 /* SwiftProtobuf.txt */; };
 		7B7BAC34E23DC4E2BC5AFA3F /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
+		7DA5523BDA795A2730A9452B /* DeviceSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BDEDDA9C9C44B2D1AD1635 /* DeviceSheet.swift */; };
 		7DF5503C0D5C8C5676493A98 /* PacerToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387AE23553A1F415AE3946BB /* PacerToggle.swift */; };
 		7E9D0F97F9254AAA97D9FEF2 /* WatchLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99332494B44CF002893B4096 /* WatchLink.swift */; };
 		7EBEE88F4CCE77E73AA02DE4 /* PhoneLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84A709F33EBB43E9292A1F8 /* PhoneLink.swift */; };
+		7ED414C92D6B231CD2E34D36 /* HeartLinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0715931948E272C6F0BA53EF /* HeartLinkButton.swift */; };
 		7EE381DDBD4E2FE0A5283C57 /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
-		81CFA6B8608510922D2416BD /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 851CFB92693DA953204063CC /* StrapLogCore */; };
+		817B306A4E190971D4670486 /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD67D8720A0ED9CF8BB578B7 /* AppDependencies.swift */; };
+		81B3CDDCF3B4215F39DE8B31 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
+		821D5FBC12A6C061B48D6F2D /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7B10FF783C74BC3306EFBEE8 /* PrivacyInfo.xcprivacy */; };
 		83C844AA8585673A8AAA59BE /* WristHaptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CF86972B76494B36BE609 /* WristHaptics.swift */; };
+		840C5EDA1D821D09DFB6AA01 /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
+		850AFDED02E906F4ECB5F565 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BC0BB9F1D554004CD21BB0 /* HeroNumber.swift */; };
 		856DE7E85732BDA83E912FA8 /* LiveRecordingAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */; };
 		85A8485034546E661872BACF /* CommandFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEACA2C4C97342C4AFD11AF /* CommandFailed.swift */; };
 		86599D179E37F6A55ABEC786 /* GuideBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52224F2DD8A002A51A709411 /* GuideBlockView.swift */; };
@@ -107,27 +109,20 @@
 		87E0A4FC572EA33E6570E50B /* PolarBleSdk.txt in Resources */ = {isa = PBXBuildFile; fileRef = 93109613355B501AC6E485DB /* PolarBleSdk.txt */; };
 		887465B9159F5A573043D639 /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C29A482F1072D038FF1D6D /* PulseWave.swift */; };
 		89AF1C8E3402D0B794A2EBC7 /* StrapLogWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 438F096A2F94758DA3612652 /* StrapLogWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		8A904554BF975D9BE19F085D /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 46BA00BED411CB5443FBCAFF /* StrapLogCore */; };
+		8A528A576998A517FFA32E07 /* ArmLogWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4A04A7F9F86238D73D2C1C4D /* ArmLogWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8B0B9BB97EDBE05DC997680C /* AppPhase+ScenePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A88FA01FC20EF8D07E1AC3 /* AppPhase+ScenePhase.swift */; };
-		8F18DE940B7396470428EF2A /* LiveMetricLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2921990E24264C14F324C4DA /* LiveMetricLabel.swift */; };
+		8EBCE1D11692BB36F66AC1F3 /* ChileafKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD5A539E739CD218BCBCBC43 /* ChileafKit */; };
 		8F87609FC672489A24D76EF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB90CBD1036662A389D1322E /* Assets.xcassets */; };
 		90111E755328A951120E8279 /* LinkAlertNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038379790F496348954FEBCE /* LinkAlertNotifier.swift */; };
 		92215478398C73BA1545D27C /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
-		92DCE9388F073803D0485FD4 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		93E6918CCCDD59605307F6F6 /* Alpha1MinutesBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A810955A3F13BED45FF34035 /* Alpha1MinutesBar.swift */; };
 		9423C9495E9B69FDBCDB38FB /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5482DEC502D29E67B901326 /* MarkerPresetEditor.swift */; };
 		94BD242404C96B643FA0E1BE /* AcknowledgementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EADFB81C6A3756F6E1EBA9 /* AcknowledgementTests.swift */; };
+		957320A49640493C9E868C4B /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		96D0C84D3367B546A2BCEC20 /* LicenseTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2120FB2743A69DFC480CA39 /* LicenseTextView.swift */; };
-		9812A75F6CAF88AD9CF566FF /* LaunchOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DE0F96DFB362507FB44F88 /* LaunchOptions.swift */; };
 		98AFECA5E9D8560B52E8F8AE /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A876E7964E0255F59141F5 /* RecordingView.swift */; };
 		99ABD0408980CDD0FAFC9859 /* StrapLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */; };
 		9B49ECE744682F70866C7FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F900B418F2433FFA87A91B7 /* Assets.xcassets */; };
-		9CB78CE11AA73B00F0193978 /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
-		9E9BF68095364A979EEC1700 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
-		A136B8DE7A4A7398B868F538 /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B341CFE78122E2F64B2F743D /* Alpha1Tile.swift */; };
-		A2AE4578D153615B5669CFD5 /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EEA423294C918C372D524D /* SessionSummaryCard.swift */; };
-		A3878D4C3B5EC827AB6A6C0D /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5482DEC502D29E67B901326 /* MarkerPresetEditor.swift */; };
-		A3DE7A2A45FA229AD05C40FE /* PacerToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387AE23553A1F415AE3946BB /* PacerToggle.swift */; };
 		A4E06A33A0FC27E3F258B8D8 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */; };
 		A5DB5F1A5E8C20BAEE6D134D /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38A30B8A880731261E37530F /* HRVKit */; };
 		A602A2A3D8202C76555A45DD /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EF227A076057A13F3E66B9 /* ActivityQuery.swift */; };
@@ -135,85 +130,84 @@
 		A94871E53FB0F3F01CA7AF68 /* RecordingComplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F4B5FD1F8B67483F169560 /* RecordingComplication.swift */; };
 		A9779F70A7B9DFC9FC05C910 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
 		AA7FD485D2612045629E6BDE /* EcgStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11578EAF74693C9BAC866DB /* EcgStripView.swift */; };
-		AB114D8972F9BE6608BCE7A5 /* BaroLogApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47EC9A38188FB5B89E5A710 /* BaroLogApp.swift */; };
+		AB909EF37B4AF2FFAE4BE856 /* LiveStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB838F79AB96531AB2A91409 /* LiveStatusView.swift */; };
 		AC1DFB056E0E801B2AFE3EB2 /* WatchDimmedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CF8C2E906BE484117E6DE4 /* WatchDimmedView.swift */; };
 		AC524F9D47C04BC1F194C5E9 /* GuideBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA4CA21E955F6812830CF36 /* GuideBookTests.swift */; };
+		AE7D30BBF6F13E70FD6AED9A /* LiveActivityDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8595B2B5495D681B8B51E86 /* LiveActivityDisplay.swift */; };
 		AFF2CDF21B9A7D40E3D7942E /* Zip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 77C5FFEF83BEA25D84A23C34 /* Zip.txt */; };
+		B074F2D6BFD5374384E79A00 /* MarkerPresetEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5482DEC502D29E67B901326 /* MarkerPresetEditor.swift */; };
 		B13308E245F3000E48BD7071 /* WatchStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB588AB1F0C0E99DABAFD47E /* WatchStatusView.swift */; };
-		B3D5078111A0075FD8B5072B /* BaroLogWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 43FBAD53111AA004248626DB /* BaroLogWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		B3DE58B7A507F0196B0C9674 /* HeroNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BC0BB9F1D554004CD21BB0 /* HeroNumber.swift */; };
+		B1BCB9AD28FA0E8417204BCB /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
 		B4359F4349CAF3B9FA54AB4C /* StrapHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */; };
 		B452400C1ECB5737788A4C37 /* PMDStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C6BF3B29985553300997CC /* PMDStream.swift */; };
 		B45C60E97136217EE50650E8 /* HeartLinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0715931948E272C6F0BA53EF /* HeartLinkButton.swift */; };
+		B520AB62C73573A797DC34B0 /* RecordingTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */; };
 		B526440ACD8350BE13748209 /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
 		B72877446400D2803528FE01 /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
 		B74E44AFBF645F8ABA175172 /* LiveStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB838F79AB96531AB2A91409 /* LiveStatusView.swift */; };
 		B7A3DFFBEE518D95F4228D7C /* GuideChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D775AA540707DFBAE113F86 /* GuideChapterView.swift */; };
-		B82AA8AF0C1027A51C466724 /* PacerSounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F9DD1D7E64F957679DEDD8 /* PacerSounds.swift */; };
+		B8507E6A707E343EA238BECB /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE03D2C9831BD11A2CB3177 /* LinkStatus+Heart.swift */; };
+		B975FCF784568549F0AC68FF /* BreathingPacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DF7FA80EAC7B480C0B167AC /* BreathingPacerView.swift */; };
 		B9B1249E21A08D152131C631 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
 		BAB3C4471AFCB4D9119204B2 /* MarkerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E9081B6C67A22222351E0B /* MarkerBar.swift */; };
 		BC4F1C4A934A13271F02CA34 /* PolarHeartSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */; };
+		BDB5ED593A6BFCC116076988 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = F21C05585A9C474B07A03471 /* StrapLogCore */; };
 		BDC2471C14938D142F1F1100 /* GRDB.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8392FC46A8840630FEF60B78 /* GRDB.txt */; };
 		BE6F1E5BEA77DAA9D64FCFDC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407BC12CED71B5822CEB173A /* AppDelegate.swift */; };
-		BF4DA70A40AE32AFE1ABC759 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F6E8DE425DCF1F328114FC /* HeartRateTile.swift */; };
 		BFFB47C20EA7A8B13BB10788 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D012E96207D6903E4A99D9 /* RootView.swift */; };
+		C2D092CD4E5527B79EF660FA /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FBF1E5C56F455E61F86AF /* PacerTone.swift */; };
 		C3B4D9CA1BA0566708C65A28 /* SensorStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A3D129946274C578A7B89AB /* SensorStrip.swift */; };
 		C4047BF1D1C9316948BD554E /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2EC470939C5D773CF85278 /* AppDependencies.swift */; };
+		C42758B1677BC0274CDB26FB /* RecordingLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */; };
+		C4A9C07BC528AEADA888B580 /* AppBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7742A3D1D8E7F99E663B782F /* AppBrand.swift */; };
 		C50A5BD842688B695A9456FC /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */; };
 		C6660A5D11B6F4B4E9E0AA07 /* GuideParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11681A8B207CE7FE02D727C1 /* GuideParserTests.swift */; };
-		C6B18015E41DD1DF8FBCA559 /* resting.json in Resources */ = {isa = PBXBuildFile; fileRef = B74EEB125A8732BB27725217 /* resting.json */; };
 		C795497B0B81B9420404C8D2 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01F1EF326809784BF5298A0 /* MetricsHero.swift */; };
-		C81F814B3548C03D17EC954C /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A876E7964E0255F59141F5 /* RecordingView.swift */; };
+		CA7BC951844A01BAF3914934 /* MarkerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E9081B6C67A22222351E0B /* MarkerBar.swift */; };
 		CB516EEB95488FF20765B554 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EA55BBF6E14B84B3348BBA /* RecordingRow.swift */; };
 		CE7BF9054CD8B3A104E3CD29 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99BB88652BC9B8691BEE254 /* HomeView.swift */; };
+		CF165FBB5C51FD164BA4700F /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EA55BBF6E14B84B3348BBA /* RecordingRow.swift */; };
 		D00A96A4C851402537B10002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 249DCE5F1CF99A56BD710A03 /* PrivacyInfo.xcprivacy */; };
+		D0230B17AF812ADFD312106F /* HRVKit in Frameworks */ = {isa = PBXBuildFile; productRef = CA75591D7C27DE5BCB89985B /* HRVKit */; };
 		D174E4F5FB799498E305382E /* Alpha1Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B341CFE78122E2F64B2F743D /* Alpha1Tile.swift */; };
+		D1FA3F76BEFC588F92D12315 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A876E7964E0255F59141F5 /* RecordingView.swift */; };
 		D3F8314132589AB611C06113 /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EEA423294C918C372D524D /* SessionSummaryCard.swift */; };
 		D4C6537612F0F3B9918CF861 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 76CC64949C4120565D9DFA8B /* StrapLogCore */; };
-		D6BBE54AA29DB230A141D617 /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0AD82BB1BD7BEE0BE7764 /* RecordingDetailView.swift */; };
 		D861014B8606CDFBA67FC8A5 /* PolarBleSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 1F50A2DF14FC2E71594AF61A /* PolarBleSdk */; };
+		DA83729DE0CFFCA4D5397DA1 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
 		DAEE078970FAB7C65D6AC724 /* WatchStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */; };
 		DDC793BDDC9831970B0DC6C1 /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7908B02825ED3D224A620B6B /* Acknowledgement.swift */; };
 		DDC88B6FC2396D3B40B38878 /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE90FC8CAEA9C446BA2EFC62 /* Formats.swift */; };
 		DE7D5B8C871E28194C2EC57D /* DimmedGlyph.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD93F1102F417D6BD1A2BFEA /* DimmedGlyph.swift */; };
-		E14308B8A4DEAC145D727F93 /* MetricsHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01F1EF326809784BF5298A0 /* MetricsHero.swift */; };
+		DF1F88262D55B2BE79B88F33 /* HeartRateTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F6E8DE425DCF1F328114FC /* HeartRateTile.swift */; };
 		E17C73D29E8536D0E525CDD9 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		E2581E0564DDF648D3F6A606 /* GuideChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2A712470E51A946333280 /* GuideChapter.swift */; };
-		E4FA9F0D14C8807B30BCF519 /* AppPhase+ScenePhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A88FA01FC20EF8D07E1AC3 /* AppPhase+ScenePhase.swift */; };
 		E5395F6E732BA51C1B7C7D69 /* LiveControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71B999AA2EA9301B216B524 /* LiveControls.swift */; };
 		E592B08D6CC75A0298658064 /* StopFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99AEBC2FB8B847F474BBA46A /* StopFromLiveActivityIntent.swift */; };
 		E61CCC4AEC06D9871DD16A87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA2003C809D989DFEF440A25 /* Assets.xcassets */; };
-		E83A0CB89D0749CF88925686 /* MarkerNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0545FD7500623865D34362A9 /* MarkerNoteSheet.swift */; };
+		E85B8867CBA455BF2B83B9B0 /* StrapLogWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF068BB2CF527C52139230F /* StrapLogWidgetsBundle.swift */; };
 		E912A8BB437BB36C5B3A5424 /* PacerTone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82FBF1E5C56F455E61F86AF /* PacerTone.swift */; };
-		EA2C5560AFE6AF55D65C3ACB /* MarkerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E9081B6C67A22222351E0B /* MarkerBar.swift */; };
 		EBDC5BB449B7ADD183C277C1 /* LiveMarkedLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */; };
-		EC43CE6768D65D91E1DBDFD2 /* RecordingTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */; };
-		EDD527BCE656071080B4986F /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE03D2C9831BD11A2CB3177 /* LinkStatus+Heart.swift */; };
 		EDF8E341B85485AEE040F4D3 /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = 752221A3371BB6F53C1AA52D /* StrapLogCore */; };
 		EF03BFA9167258C364CD317E /* StrapLogWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 30C2069D2EA0F12DCCEE55C5 /* StrapLogWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EF7FCBDEA9CBEF538C17D17F /* RecordingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F0AD82BB1BD7BEE0BE7764 /* RecordingDetailView.swift */; };
 		F0777A9C3E99C4E89B13C8FF /* RecordingTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */; };
-		F0E8649B5910E891BE9D21C6 /* RecordingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EA55BBF6E14B84B3348BBA /* RecordingRow.swift */; };
-		F255E7244A27BB6CF94495B1 /* EcgStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11578EAF74693C9BAC866DB /* EcgStripView.swift */; };
-		F26C02BD684239FE99DA360C /* PacerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B6366AD274AAC7B3EBE389 /* PacerScreen.swift */; };
-		F33891202239885630A145B4 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D32AF66130E478D5ACF9D7 /* ShareSheet.swift */; };
+		F3DDBB530E540BB4D4E5F8A7 /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
+		F56FC13ED228BE6EF65A41C3 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99BB88652BC9B8691BEE254 /* HomeView.swift */; };
+		F61E856651DAB369DC37F1A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7BEAD999EC45045C328A444 /* Assets.xcassets */; };
 		F720E0AC5198364F304E3023 /* ActivityEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F69DE0832B00DD6F9BDEBE5 /* ActivityEntity.swift */; };
+		F731C309DD28CD275A87B49F /* StandByStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65247064E529D68329C5D0D /* StandByStatusView.swift */; };
 		F74641AEF8C894B08C16BE6E /* StrapLogCore in Frameworks */ = {isa = PBXBuildFile; productRef = F10167115C60B07BFA3A9C66 /* StrapLogCore */; };
-		F74B3320FC639BF0A5A5215D /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2E42D056B95EE95FE9BEC8 /* AppDependencies.swift */; };
 		F7ADF3BC943D44AC9326AB8B /* Alpha1Band+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59400EE0EA738031AEE9402D /* Alpha1Band+Color.swift */; };
 		F7C67AB1FBCC5293404D8FEE /* AddMarkerIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D54421499ED5501162C196 /* AddMarkerIntent.swift */; };
-		F97E1D61F2584F0FF879B09D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99BB88652BC9B8691BEE254 /* HomeView.swift */; };
+		F80920F6AA2EECEA0191AEDF /* PacerToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387AE23553A1F415AE3946BB /* PacerToggle.swift */; };
 		F9999657D1FEAB36BD02E535 /* MarkFromLiveActivityIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */; };
+		FCAC0B5E01CD32838FFAA9B0 /* SessionSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76EEA423294C918C372D524D /* SessionSummaryCard.swift */; };
+		FF52755A3997CFD58A0E495C /* MarkerLandedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E763AD266A14049FD9F36AC /* MarkerLandedEffect.swift */; };
 		FFFDA555FB579AEA52E1A1C3 /* LinkStatus+Heart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE03D2C9831BD11A2CB3177 /* LinkStatus+Heart.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		02F8E8C93DC487840B16D26F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0D634FDA4416ACCC9F51585B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 235915129C123FF7F860B88C;
-			remoteInfo = BaroLogWidgets;
-		};
 		2949FC21BA3821199A4B07B6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0D634FDA4416ACCC9F51585B /* Project object */;
@@ -227,6 +221,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8AEC78E6D9D6B9645BB795EF;
 			remoteInfo = StrapLog;
+		};
+		9615C3FFE33F08FFCE8E64F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D634FDA4416ACCC9F51585B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 006650D4C0573B68BE459A5B;
+			remoteInfo = ArmLogWidgets;
 		};
 		99B5E97EE3FA250010BC247A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -252,17 +253,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1CDF07699DE12F1E0F890922 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				B3D5078111A0075FD8B5072B /* BaroLogWidgets.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5AB51B944833C5BB553A80AF /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,6 +271,17 @@
 			dstSubfolderSpec = 13;
 			files = (
 				EF03BFA9167258C364CD317E /* StrapLogWatchWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		97982CF8399409D311D0423C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8A528A576998A517FFA32E07 /* ArmLogWidgets.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -305,7 +306,6 @@
 		050424C851AC49404C44C6E2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = StrapLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0545FD7500623865D34362A9 /* MarkerNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerNoteSheet.swift; sourceTree = "<group>"; };
-		06049BAB9081EE67CF7C15F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0715931948E272C6F0BA53EF /* HeartLinkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartLinkButton.swift; sourceTree = "<group>"; };
 		0BB3C07F99A99DD61AA836F8 /* RecordingLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingLiveActivity.swift; sourceTree = "<group>"; };
 		0D5B311291D9A08A22F87556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -315,6 +315,7 @@
 		17AFF1C1324C354A0828AC1B /* LaunchOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchOptionsTests.swift; sourceTree = "<group>"; };
 		1A98BFF647C3FB26BE9F5A90 /* StrapLogWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLogWatch.entitlements; sourceTree = "<group>"; };
 		1E4495555FC839EC8B8E7474 /* LiveMarkedLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMarkedLine.swift; sourceTree = "<group>"; };
+		20DB32BEF896CB789E25E2EC /* ArmbandHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmbandHeartSource.swift; sourceTree = "<group>"; };
 		249DCE5F1CF99A56BD710A03 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		25F1EAACA89ABEB9E6740610 /* RecordingTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTitle.swift; sourceTree = "<group>"; };
 		2921990E24264C14F324C4DA /* LiveMetricLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMetricLabel.swift; sourceTree = "<group>"; };
@@ -328,16 +329,15 @@
 		3B454C5A912AFCDA3EC79691 /* GuideBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBook.swift; sourceTree = "<group>"; };
 		3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogShortcuts.swift; sourceTree = "<group>"; };
 		3C34ED074CC30BA085EEE046 /* LiveRecordingAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRecordingAttributes.swift; sourceTree = "<group>"; };
-		3C61FEC9B1BBB8BCF498FC19 /* ArmbandHeartSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmbandHeartSource.swift; sourceTree = "<group>"; };
 		407BC12CED71B5822CEB173A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40FD0D5D022DCD8F64EBEFFE /* StrapLogWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWatchApp.swift; sourceTree = "<group>"; };
 		427D7189DA817FA26FF1033E /* StrapLogWatchWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLogWatchWidgets.entitlements; sourceTree = "<group>"; };
 		438F096A2F94758DA3612652 /* StrapLogWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = StrapLogWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		43FBAD53111AA004248626DB /* BaroLogWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = BaroLogWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4523D7A7703BED1E3B50C924 /* StrapLogWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StrapLogWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		459579C6186A9FCE406ABA1F /* ChileafKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ChileafKit; path = Packages/ChileafKit; sourceTree = SOURCE_ROOT; };
 		46015B49DFD7CF3E7C9F960C /* HelpRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpRoute.swift; sourceTree = "<group>"; };
 		47BC0BB9F1D554004CD21BB0 /* HeroNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNumber.swift; sourceTree = "<group>"; };
+		4A04A7F9F86238D73D2C1C4D /* ArmLogWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ArmLogWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F69DE0832B00DD6F9BDEBE5 /* ActivityEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEntity.swift; sourceTree = "<group>"; };
 		5148B9B491E178AD1383E09D /* StrapLog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StrapLog.entitlements; sourceTree = "<group>"; };
 		52224F2DD8A002A51A709411 /* GuideBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlockView.swift; sourceTree = "<group>"; };
@@ -351,7 +351,6 @@
 		5B06DE6F4133873DC34EC0D3 /* ComplicationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationProvider.swift; sourceTree = "<group>"; };
 		5D2EC470939C5D773CF85278 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		5D775AA540707DFBAE113F86 /* GuideChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideChapterView.swift; sourceTree = "<group>"; };
-		5D8682BD0CF8DC4327AFD079 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F8DF74D6213EC590B4E27BD /* StrapHeart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeart.swift; sourceTree = "<group>"; };
 		60EADFB81C6A3756F6E1EBA9 /* AcknowledgementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementTests.swift; sourceTree = "<group>"; };
 		61E9081B6C67A22222351E0B /* MarkerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerBar.swift; sourceTree = "<group>"; };
@@ -367,11 +366,11 @@
 		7908B02825ED3D224A620B6B /* Acknowledgement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Acknowledgement.swift; sourceTree = "<group>"; };
 		7B10FF783C74BC3306EFBEE8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7B6DC1C10916A1DD5AFF9C87 /* SwiftProtobuf.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftProtobuf.txt; sourceTree = "<group>"; };
+		83464C2DAFA1D1D970D3C883 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8392FC46A8840630FEF60B78 /* GRDB.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = GRDB.txt; sourceTree = "<group>"; };
 		849DE00058EC3CD1F7CDB061 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		84ABF24144449A6848A0D60C /* ComplicationFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationFeed.swift; sourceTree = "<group>"; };
-		8A43E3FA1E6FA6D5A731F4A7 /* AppBrand+BaroLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppBrand+BaroLog.swift"; sourceTree = "<group>"; };
-		8AC569DA60A0A6EF546473CA /* BaroLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BaroLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89CC4C3D50803679EE0E30AA /* AppBrand+ArmLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppBrand+ArmLog.swift"; sourceTree = "<group>"; };
 		8F06C3930BCA5236310DFEF6 /* GuideImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = GuideImages.xcassets; sourceTree = "<group>"; };
 		8F17845665F4DD783F4ED0F0 /* PacerToneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacerToneTests.swift; sourceTree = "<group>"; };
 		90C29A482F1072D038FF1D6D /* PulseWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseWave.swift; sourceTree = "<group>"; };
@@ -408,23 +407,25 @@
 		C99BB88652BC9B8691BEE254 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CD9B1CEB7C173FA446ADF740 /* FormatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatsTests.swift; sourceTree = "<group>"; };
 		CDEACA2C4C97342C4AFD11AF /* CommandFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandFailed.swift; sourceTree = "<group>"; };
-		CE2E42D056B95EE95FE9BEC8 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		D3CF8C2E906BE484117E6DE4 /* WatchDimmedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDimmedView.swift; sourceTree = "<group>"; };
 		D44DFE1040B1E82DCB321EAC /* GuideBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBlock.swift; sourceTree = "<group>"; };
 		D4A88FA01FC20EF8D07E1AC3 /* AppPhase+ScenePhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPhase+ScenePhase.swift"; sourceTree = "<group>"; };
+		D57D72A25324487C412F4120 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D7BEAD999EC45045C328A444 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D84A709F33EBB43E9292A1F8 /* PhoneLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneLink.swift; sourceTree = "<group>"; };
 		DA2003C809D989DFEF440A25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB8EF7AAC11B29923B7CCCAC /* TrendChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChart.swift; sourceTree = "<group>"; };
 		DB90CBD1036662A389D1322E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DCA661F04701EF45C7F03F98 /* ArmLog.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ArmLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF077986A9081AE0F646C2F1 /* StrapScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapScanner.swift; sourceTree = "<group>"; };
 		DF63ACCB50233AABE1EE62B0 /* AppStoreScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshots.swift; sourceTree = "<group>"; };
 		E01F1EF326809784BF5298A0 /* MetricsHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsHero.swift; sourceTree = "<group>"; };
 		E3205B6C6A04EA35F6FB2B36 /* StrapHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapHeartView.swift; sourceTree = "<group>"; };
-		E47EC9A38188FB5B89E5A710 /* BaroLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaroLogApp.swift; sourceTree = "<group>"; };
 		E5C6BF3B29985553300997CC /* PMDStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMDStream.swift; sourceTree = "<group>"; };
 		E5EC5646153C84377DD363F4 /* StrapLogWatchShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapLogWatchShortcuts.swift; sourceTree = "<group>"; };
 		E7B8219DAE56CD77848AE9A1 /* Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Guide.md; sourceTree = "<group>"; };
 		E8595B2B5495D681B8B51E86 /* LiveActivityDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityDisplay.swift; sourceTree = "<group>"; };
+		E897E0F8F157C07061D8552E /* ArmLogApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmLogApp.swift; sourceTree = "<group>"; };
 		EBAFC2E200A40B07CBFDA927 /* WatchStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStartView.swift; sourceTree = "<group>"; };
 		EED0D5B0530DAE1E78597EA9 /* AppBrand+StrapLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppBrand+StrapLog.swift"; sourceTree = "<group>"; };
 		EF25977C59EE9E25E43E90DE /* MarkFromLiveActivityIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkFromLiveActivityIntent.swift; sourceTree = "<group>"; };
@@ -437,6 +438,7 @@
 		FCA4CA21E955F6812830CF36 /* GuideBookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideBookTests.swift; sourceTree = "<group>"; };
 		FCE40FBE212BB7FB44DDF8E9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FD2D5442358A337BFA7EBBC6 /* HRVKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HRVKit; path = Packages/HRVKit; sourceTree = SOURCE_ROOT; };
+		FD67D8720A0ED9CF8BB578B7 /* AppDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDependencies.swift; sourceTree = "<group>"; };
 		FD93F1102F417D6BD1A2BFEA /* DimmedGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimmedGlyph.swift; sourceTree = "<group>"; };
 		FE90FC8CAEA9C446BA2EFC62 /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -447,6 +449,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				589C2FBACBA698559BDF94A8 /* StrapLogCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		622D4F2802754AC7F52BF883 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB5ED593A6BFCC116076988 /* StrapLogCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,14 +478,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B2B75EA3668436527C59CE8A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8A904554BF975D9BE19F085D /* StrapLogCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DE576291166B43B294050FC3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -484,13 +486,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EC001A590AC17796ED4A542B /* Frameworks */ = {
+		F4B1F948421D8866C7D566DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11DE00F0246119C7F33FCFDA /* HRVKit in Frameworks */,
-				81CFA6B8608510922D2416BD /* StrapLogCore in Frameworks */,
-				72B51EA36A1E2E9B33F7C15C /* ChileafKit in Frameworks */,
+				D0230B17AF812ADFD312106F /* HRVKit in Frameworks */,
+				431E86586329E98B5499B442 /* StrapLogCore in Frameworks */,
+				8EBCE1D11692BB36F66AC1F3 /* ChileafKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,14 +508,6 @@
 				C7C5E8F08B4B5D567B2052D6 /* StrapLogApp.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		12BAFEB80905E90177E9FF83 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				06049BAB9081EE67CF7C15F7 /* Info.plist */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		18C1D084CE8643C29421025A /* Watch */ = {
@@ -593,6 +587,15 @@
 			path = AppShared;
 			sourceTree = "<group>";
 		};
+		43C7F4E2175CC9F4AFCD2BF3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7BEAD999EC45045C328A444 /* Assets.xcassets */,
+				83464C2DAFA1D1D970D3C883 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		465547A91DD766A92C361558 /* Polar */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,6 +603,17 @@
 				2F3F8873AB0D1C728DEE27A1 /* PolarHeartSource.swift */,
 			);
 			path = Polar;
+			sourceTree = "<group>";
+		};
+		503D8CD4F399213493E53FEE /* App */ = {
+			isa = PBXGroup;
+			children = (
+				89CC4C3D50803679EE0E30AA /* AppBrand+ArmLog.swift */,
+				D57D72A25324487C412F4120 /* AppDelegate.swift */,
+				FD67D8720A0ED9CF8BB578B7 /* AppDependencies.swift */,
+				E897E0F8F157C07061D8552E /* ArmLogApp.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		5A6A59CE157D2FE79426EA17 /* Views */ = {
@@ -627,6 +641,16 @@
 				3B60072C66DA7D2BDF0D5D17 /* StrapLogShortcuts.swift */,
 			);
 			path = Intents;
+			sourceTree = "<group>";
+		};
+		66ABB7B012D8A45E2CB5368E /* ArmLog */ = {
+			isa = PBXGroup;
+			children = (
+				503D8CD4F399213493E53FEE /* App */,
+				CDD3F6B6EADD3B36E3D98CE2 /* Armband */,
+				43C7F4E2175CC9F4AFCD2BF3 /* Resources */,
+			);
+			path = ArmLog;
 			sourceTree = "<group>";
 		};
 		6851314174183A63BB54F385 /* Tests */ = {
@@ -671,7 +695,7 @@
 			isa = PBXGroup;
 			children = (
 				425C5E5AC6C730695D23A3D2 /* AppShared */,
-				B70C2AC2978BA57215BC4AE4 /* BaroLog */,
+				66ABB7B012D8A45E2CB5368E /* ArmLog */,
 				3ABDAA8CDD6E7229CC834281 /* Packages */,
 				36D7A21338D75CC6E117EF3D /* Shared */,
 				E521BE11427C642DCD4E5AF1 /* StrapLog */,
@@ -736,8 +760,8 @@
 		ACD468BC484EF4747E149A07 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8AC569DA60A0A6EF546473CA /* BaroLog.app */,
-				43FBAD53111AA004248626DB /* BaroLogWidgets.appex */,
+				DCA661F04701EF45C7F03F98 /* ArmLog.app */,
+				4A04A7F9F86238D73D2C1C4D /* ArmLogWidgets.appex */,
 				A46081A1E699BACE9992A77C /* StrapLog.app */,
 				051EBE0E5BD87FF70AA05014 /* StrapLogTests.xctest */,
 				A6028DF7D4F0980710237018 /* StrapLogUITests.xctest */,
@@ -777,27 +801,6 @@
 			path = StrapLogWatchWidgets;
 			sourceTree = "<group>";
 		};
-		B30FC682D3B5F3757A18B9B8 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				8A43E3FA1E6FA6D5A731F4A7 /* AppBrand+BaroLog.swift */,
-				5D8682BD0CF8DC4327AFD079 /* AppDelegate.swift */,
-				CE2E42D056B95EE95FE9BEC8 /* AppDependencies.swift */,
-				E47EC9A38188FB5B89E5A710 /* BaroLogApp.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		B70C2AC2978BA57215BC4AE4 /* BaroLog */ = {
-			isa = PBXGroup;
-			children = (
-				B30FC682D3B5F3757A18B9B8 /* App */,
-				D1B9DD2F1CC4FAA819B180DB /* Armband */,
-				12BAFEB80905E90177E9FF83 /* Resources */,
-			);
-			path = BaroLog;
-			sourceTree = "<group>";
-		};
 		C14A98705389B823F48575F3 /* StrapLogWatch */ = {
 			isa = PBXGroup;
 			children = (
@@ -831,10 +834,10 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		D1B9DD2F1CC4FAA819B180DB /* Armband */ = {
+		CDD3F6B6EADD3B36E3D98CE2 /* Armband */ = {
 			isa = PBXGroup;
 			children = (
-				3C61FEC9B1BBB8BCF498FC19 /* ArmbandHeartSource.swift */,
+				20DB32BEF896CB789E25E2EC /* ArmbandHeartSource.swift */,
 			);
 			path = Armband;
 			sourceTree = "<group>";
@@ -886,51 +889,51 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		032EB243C29A446C047FF74E /* BaroLog */ = {
+		006650D4C0573B68BE459A5B /* ArmLogWidgets */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21F448A91A4A573F5D254D7B /* Build configuration list for PBXNativeTarget "BaroLog" */;
+			buildConfigurationList = A80B73ABE27B48E20D474186 /* Build configuration list for PBXNativeTarget "ArmLogWidgets" */;
 			buildPhases = (
-				45C2BE9B9D61E664FA22FCB3 /* Sources */,
-				AE15EC983974ABBE96EDFEB3 /* Resources */,
-				EC001A590AC17796ED4A542B /* Frameworks */,
-				1CDF07699DE12F1E0F890922 /* Embed Foundation Extensions */,
-				D47514B810AB41A76AF8BD8A /* Stamp build */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8560D02BF06FBE1562AEC1D8 /* PBXTargetDependency */,
-			);
-			name = BaroLog;
-			packageProductDependencies = (
-				03CAFD0532AF68DBFC80F758 /* HRVKit */,
-				851CFB92693DA953204063CC /* StrapLogCore */,
-				D50F86AFC42BFF263E055971 /* ChileafKit */,
-			);
-			productName = BaroLog;
-			productReference = 8AC569DA60A0A6EF546473CA /* BaroLog.app */;
-			productType = "com.apple.product-type.application";
-		};
-		235915129C123FF7F860B88C /* BaroLogWidgets */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 934498B93A30C6AF1A87E5FE /* Build configuration list for PBXNativeTarget "BaroLogWidgets" */;
-			buildPhases = (
-				8DC7436B3B76E62B1CF0D265 /* Sources */,
-				396146DF23B17E3118349961 /* Resources */,
-				B2B75EA3668436527C59CE8A /* Frameworks */,
-				43C656502C94753F34ACF5C2 /* Stamp build */,
+				7F5E5728D9B336F5C97AE41A /* Sources */,
+				74C43EF31D45EAD82EE50193 /* Resources */,
+				622D4F2802754AC7F52BF883 /* Frameworks */,
+				66C71418C27042628E9BF117 /* Stamp build */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = BaroLogWidgets;
+			name = ArmLogWidgets;
 			packageProductDependencies = (
-				46BA00BED411CB5443FBCAFF /* StrapLogCore */,
+				F21C05585A9C474B07A03471 /* StrapLogCore */,
 			);
-			productName = BaroLogWidgets;
-			productReference = 43FBAD53111AA004248626DB /* BaroLogWidgets.appex */;
+			productName = ArmLogWidgets;
+			productReference = 4A04A7F9F86238D73D2C1C4D /* ArmLogWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		603FCCBE15535E368664A702 /* ArmLog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0C0233E0C992AA818CBC9918 /* Build configuration list for PBXNativeTarget "ArmLog" */;
+			buildPhases = (
+				AC08F50713D99EBC1C199BFA /* Sources */,
+				B45D31E0205D182C9F28C105 /* Resources */,
+				F4B1F948421D8866C7D566DA /* Frameworks */,
+				97982CF8399409D311D0423C /* Embed Foundation Extensions */,
+				4A075386CC33AF57C7AA56A6 /* Stamp build */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3FE27A465AC5F524EB1B2669 /* PBXTargetDependency */,
+			);
+			name = ArmLog;
+			packageProductDependencies = (
+				CA75591D7C27DE5BCB89985B /* HRVKit */,
+				A3270713BDD4CAF4981F45B2 /* StrapLogCore */,
+				DD5A539E739CD218BCBCBC43 /* ChileafKit */,
+			);
+			productName = ArmLog;
+			productReference = DCA661F04701EF45C7F03F98 /* ArmLog.app */;
+			productType = "com.apple.product-type.application";
 		};
 		765107C6B4183FBE58CDAA54 /* StrapLogUITests */ = {
 			isa = PBXNativeTarget;
@@ -1069,11 +1072,11 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					032EB243C29A446C047FF74E = {
+					006650D4C0573B68BE459A5B = {
 						DevelopmentTeam = 4RZ2RJUXC8;
 						ProvisioningStyle = Automatic;
 					};
-					235915129C123FF7F860B88C = {
+					603FCCBE15535E368664A702 = {
 						DevelopmentTeam = 4RZ2RJUXC8;
 						ProvisioningStyle = Automatic;
 					};
@@ -1125,8 +1128,8 @@
 			projectRoot = "";
 			targets = (
 				8AEC78E6D9D6B9645BB795EF /* StrapLog */,
-				032EB243C29A446C047FF74E /* BaroLog */,
-				235915129C123FF7F860B88C /* BaroLogWidgets */,
+				603FCCBE15535E368664A702 /* ArmLog */,
+				006650D4C0573B68BE459A5B /* ArmLogWidgets */,
 				A47F1D92D7F65B57108E6E5F /* StrapLogWidgets */,
 				DD53B5DE10088B909575B67B /* StrapLogWatch */,
 				EC4BE633DF35BA2FD51439CE /* StrapLogWatchWidgets */,
@@ -1142,14 +1145,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B12D446B6BA7F93C9F8D65C /* PrivacyInfo.xcprivacy in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		396146DF23B17E3118349961 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0EA8C1E25F5DA3A38DE6A998 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1169,11 +1164,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AE15EC983974ABBE96EDFEB3 /* Resources */ = {
+		74C43EF31D45EAD82EE50193 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6B18015E41DD1DF8FBCA559 /* resting.json in Resources */,
+				821D5FBC12A6C061B48D6F2D /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B45D31E0205D182C9F28C105 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F61E856651DAB369DC37F1A8 /* Assets.xcassets in Resources */,
+				74CB274BA71F3CBBE3B0B8F5 /* resting.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,7 +1242,27 @@
 			shellPath = /bin/sh;
 			shellScript = "\"$SRCROOT/tools/stamp_build.sh\"";
 		};
-		43C656502C94753F34ACF5C2 /* Stamp build */ = {
+		4A075386CC33AF57C7AA56A6 /* Stamp build */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Stamp build";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/tools/stamp_build.sh\"";
+		};
+		66C71418C27042628E9BF117 /* Stamp build */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -1298,26 +1322,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"$SRCROOT/tools/stamp_build.sh\"";
 		};
-		D47514B810AB41A76AF8BD8A /* Stamp build */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Stamp build";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/tools/stamp_build.sh\"";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1344,57 +1348,6 @@
 				DE7D5B8C871E28194C2EC57D /* DimmedGlyph.swift in Sources */,
 				A94871E53FB0F3F01CA7AF68 /* RecordingComplication.swift in Sources */,
 				6C43E074DA6058621E974A38 /* StrapLogWatchWidgetsBundle.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		45C2BE9B9D61E664FA22FCB3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6B2FC98371FC8CD7A16E7CE3 /* Alpha1Band+Color.swift in Sources */,
-				509897428805B1A4AE25C490 /* Alpha1MinutesBar.swift in Sources */,
-				A136B8DE7A4A7398B868F538 /* Alpha1Tile.swift in Sources */,
-				4DC44F227FFC0FD75609B2C2 /* AppBrand+BaroLog.swift in Sources */,
-				6DB0B73B283AAD39DA77C9BE /* AppBrand.swift in Sources */,
-				17A50A3EB1B7C733D95F78F2 /* AppDelegate.swift in Sources */,
-				F74B3320FC639BF0A5A5215D /* AppDependencies.swift in Sources */,
-				E4FA9F0D14C8807B30BCF519 /* AppPhase+ScenePhase.swift in Sources */,
-				7AB056AFE649A9C8F8CE4AD3 /* ArmbandHeartSource.swift in Sources */,
-				AB114D8972F9BE6608BCE7A5 /* BaroLogApp.swift in Sources */,
-				4D265521BA94C15AF0D4053C /* BreathingPacerView.swift in Sources */,
-				127AF4863DF314EB51E377A3 /* DeviceSheet.swift in Sources */,
-				F255E7244A27BB6CF94495B1 /* EcgStripView.swift in Sources */,
-				0AC1FA74CA64C3E3590BCB2A /* Formats.swift in Sources */,
-				0807FB31B3808100AC10AD98 /* HeartLinkButton.swift in Sources */,
-				BF4DA70A40AE32AFE1ABC759 /* HeartRateTile.swift in Sources */,
-				B3DE58B7A507F0196B0C9674 /* HeroNumber.swift in Sources */,
-				F97E1D61F2584F0FF879B09D /* HomeView.swift in Sources */,
-				9812A75F6CAF88AD9CF566FF /* LaunchOptions.swift in Sources */,
-				EDD527BCE656071080B4986F /* LinkStatus+Heart.swift in Sources */,
-				30FCBBF2471706AA78238F52 /* LiveActivityDisplay.swift in Sources */,
-				59DE5B85CB38F75EA0AE9E47 /* LiveMarkedLine.swift in Sources */,
-				70D670DA7B4F391ADE2641B9 /* LiveRecordingAttributes.swift in Sources */,
-				6FF569F5C1865983F5D9F65B /* MarkFromLiveActivityIntent.swift in Sources */,
-				EA2C5560AFE6AF55D65C3ACB /* MarkerBar.swift in Sources */,
-				6ADC28CC1711B9D3C83A6A00 /* MarkerLandedEffect.swift in Sources */,
-				E83A0CB89D0749CF88925686 /* MarkerNoteSheet.swift in Sources */,
-				A3878D4C3B5EC827AB6A6C0D /* MarkerPresetEditor.swift in Sources */,
-				E14308B8A4DEAC145D727F93 /* MetricsHero.swift in Sources */,
-				F26C02BD684239FE99DA360C /* PacerScreen.swift in Sources */,
-				B82AA8AF0C1027A51C466724 /* PacerSounds.swift in Sources */,
-				A3DE7A2A45FA229AD05C40FE /* PacerToggle.swift in Sources */,
-				1F543DFFA396B39430341908 /* PacerTone.swift in Sources */,
-				41F5CD3E23E0B95D3666DD20 /* PulseWave.swift in Sources */,
-				D6BBE54AA29DB230A141D617 /* RecordingDetailView.swift in Sources */,
-				F0E8649B5910E891BE9D21C6 /* RecordingRow.swift in Sources */,
-				EC43CE6768D65D91E1DBDFD2 /* RecordingTitle.swift in Sources */,
-				C81F814B3548C03D17EC954C /* RecordingView.swift in Sources */,
-				52D02988D381AC24D3A62A65 /* RootView.swift in Sources */,
-				9CB78CE11AA73B00F0193978 /* SensorStrip.swift in Sources */,
-				A2AE4578D153615B5669CFD5 /* SessionSummaryCard.swift in Sources */,
-				F33891202239885630A145B4 /* ShareSheet.swift in Sources */,
-				92DCE9388F073803D0485FD4 /* StopFromLiveActivityIntent.swift in Sources */,
-				38CB496B3C8BE1649841941F /* TrendChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1472,6 +1425,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7F5E5728D9B336F5C97AE41A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3DDBB530E540BB4D4E5F8A7 /* Alpha1Band+Color.swift in Sources */,
+				5A3AF93F526E373B1A58CBAF /* LiveControls.swift in Sources */,
+				DA83729DE0CFFCA4D5397DA1 /* LiveMarkedLine.swift in Sources */,
+				328EB9A3D4990CDBE3C88552 /* LiveMetricLabel.swift in Sources */,
+				463379091EC69350292CF73D /* LiveRecordingAttributes.swift in Sources */,
+				AB909EF37B4AF2FFAE4BE856 /* LiveStatusView.swift in Sources */,
+				81B3CDDCF3B4215F39DE8B31 /* MarkFromLiveActivityIntent.swift in Sources */,
+				FF52755A3997CFD58A0E495C /* MarkerLandedEffect.swift in Sources */,
+				C42758B1677BC0274CDB26FB /* RecordingLiveActivity.swift in Sources */,
+				F731C309DD28CD275A87B49F /* StandByStatusView.swift in Sources */,
+				518BE349F18B22124310932E /* StopFromLiveActivityIntent.swift in Sources */,
+				E85B8867CBA455BF2B83B9B0 /* StrapLogWidgetsBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8A7E8C2F86C55A82CE7F7F57 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1483,22 +1455,54 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8DC7436B3B76E62B1CF0D265 /* Sources */ = {
+		AC08F50713D99EBC1C199BFA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				56EB571E649EE6B64DABDF21 /* Alpha1Band+Color.swift in Sources */,
-				6218EFF6B0266CED0560B4CF /* LiveControls.swift in Sources */,
-				9E9BF68095364A979EEC1700 /* LiveMarkedLine.swift in Sources */,
-				8F18DE940B7396470428EF2A /* LiveMetricLabel.swift in Sources */,
-				01CF8E4E668E27AE48392C58 /* LiveRecordingAttributes.swift in Sources */,
-				53025FDA32E27336E3DA6DE0 /* LiveStatusView.swift in Sources */,
-				48F2033A3DE2B9100E1860BB /* MarkFromLiveActivityIntent.swift in Sources */,
-				15FB44226528A95FBDC524B9 /* MarkerLandedEffect.swift in Sources */,
-				298A6719F569C773CB08ED55 /* RecordingLiveActivity.swift in Sources */,
-				438334093334A24B13EAF704 /* StandByStatusView.swift in Sources */,
-				385D941D12E5A5964D7EB637 /* StopFromLiveActivityIntent.swift in Sources */,
-				47C4DFCB5F22511A155E975C /* StrapLogWidgetsBundle.swift in Sources */,
+				0093E8E2002BF19A592AEA67 /* Alpha1Band+Color.swift in Sources */,
+				45C9A23F240BF35747892C79 /* Alpha1MinutesBar.swift in Sources */,
+				710024C8D54AAF70D3517CDB /* Alpha1Tile.swift in Sources */,
+				5F35F5B40432BD2AED41B21F /* AppBrand+ArmLog.swift in Sources */,
+				C4A9C07BC528AEADA888B580 /* AppBrand.swift in Sources */,
+				458C68AC432FF00ED0E7DDD6 /* AppDelegate.swift in Sources */,
+				817B306A4E190971D4670486 /* AppDependencies.swift in Sources */,
+				1DC59DF79AE9D8A7DD66098C /* AppPhase+ScenePhase.swift in Sources */,
+				421C8A7938C653FC6DD78851 /* ArmLogApp.swift in Sources */,
+				2024FFB6920DA0126F0FC8D3 /* ArmbandHeartSource.swift in Sources */,
+				B975FCF784568549F0AC68FF /* BreathingPacerView.swift in Sources */,
+				7DA5523BDA795A2730A9452B /* DeviceSheet.swift in Sources */,
+				59CF7CEEA19750D1E3B1B196 /* EcgStripView.swift in Sources */,
+				652907BBBA37136890F36AC9 /* Formats.swift in Sources */,
+				7ED414C92D6B231CD2E34D36 /* HeartLinkButton.swift in Sources */,
+				DF1F88262D55B2BE79B88F33 /* HeartRateTile.swift in Sources */,
+				850AFDED02E906F4ECB5F565 /* HeroNumber.swift in Sources */,
+				F56FC13ED228BE6EF65A41C3 /* HomeView.swift in Sources */,
+				0877E0050DCD918344114C05 /* LaunchOptions.swift in Sources */,
+				B8507E6A707E343EA238BECB /* LinkStatus+Heart.swift in Sources */,
+				AE7D30BBF6F13E70FD6AED9A /* LiveActivityDisplay.swift in Sources */,
+				6D823B47E1118FBC5A87E698 /* LiveMarkedLine.swift in Sources */,
+				5E04C72D7C4E025E4AF50B10 /* LiveRecordingAttributes.swift in Sources */,
+				6FB51B02D4D26635C7198E9F /* MarkFromLiveActivityIntent.swift in Sources */,
+				CA7BC951844A01BAF3914934 /* MarkerBar.swift in Sources */,
+				840C5EDA1D821D09DFB6AA01 /* MarkerLandedEffect.swift in Sources */,
+				2EBD7422FE7A9F166F6E616E /* MarkerNoteSheet.swift in Sources */,
+				B074F2D6BFD5374384E79A00 /* MarkerPresetEditor.swift in Sources */,
+				0359A99BC1C792670BEF6947 /* MetricsHero.swift in Sources */,
+				1076D9FE0B6B40FBC9D7988A /* PacerScreen.swift in Sources */,
+				42D3D5AEEC5DF76D80105F2F /* PacerSounds.swift in Sources */,
+				F80920F6AA2EECEA0191AEDF /* PacerToggle.swift in Sources */,
+				C2D092CD4E5527B79EF660FA /* PacerTone.swift in Sources */,
+				404BC5D1F0D64DDB88441F0E /* PulseWave.swift in Sources */,
+				EF7FCBDEA9CBEF538C17D17F /* RecordingDetailView.swift in Sources */,
+				CF165FBB5C51FD164BA4700F /* RecordingRow.swift in Sources */,
+				B520AB62C73573A797DC34B0 /* RecordingTitle.swift in Sources */,
+				D1FA3F76BEFC588F92D12315 /* RecordingView.swift in Sources */,
+				4149814D6016F012B2B88DA1 /* RootView.swift in Sources */,
+				B1BCB9AD28FA0E8417204BCB /* SensorStrip.swift in Sources */,
+				FCAC0B5E01CD32838FFAA9B0 /* SessionSummaryCard.swift in Sources */,
+				091D4C405879FA4559F77909 /* ShareSheet.swift in Sources */,
+				957320A49640493C9E868C4B /* StopFromLiveActivityIntent.swift in Sources */,
+				213E6064C549941F43BCB490 /* TrendChart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1552,6 +1556,11 @@
 			target = 8AEC78E6D9D6B9645BB795EF /* StrapLog */;
 			targetProxy = 2BFD40F3BD5AC4A38F7D2B72 /* PBXContainerItemProxy */;
 		};
+		3FE27A465AC5F524EB1B2669 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 006650D4C0573B68BE459A5B /* ArmLogWidgets */;
+			targetProxy = 9615C3FFE33F08FFCE8E64F0 /* PBXContainerItemProxy */;
+		};
 		7F12F76893BB6A2F583B96DB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EC4BE633DF35BA2FD51439CE /* StrapLogWatchWidgets */;
@@ -1561,11 +1570,6 @@
 			isa = PBXTargetDependency;
 			target = 8AEC78E6D9D6B9645BB795EF /* StrapLog */;
 			targetProxy = 99B5E97EE3FA250010BC247A /* PBXContainerItemProxy */;
-		};
-		8560D02BF06FBE1562AEC1D8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 235915129C123FF7F860B88C /* BaroLogWidgets */;
-			targetProxy = 02F8E8C93DC487840B16D26F /* PBXContainerItemProxy */;
 		};
 		BC0ED030A6BE608CA5259179 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1674,17 +1678,19 @@
 			};
 			name = Release;
 		};
-		2C87CDB51D98691FAFA1E0E4 /* Debug */ = {
+		2BCEA5678C133B0246E91984 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = BaroLogWidgets/Info.plist;
+				INFOPLIST_FILE = ArmLog/Resources/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.barolog.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.armlog;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1707,22 +1713,6 @@
 			};
 			name = Debug;
 		};
-		49267E975A63B9121A491608 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = BaroLogWidgets/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.barolog.widgets;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
 		499AE6C4CEB8D711E5FF00AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1738,20 +1728,17 @@
 			};
 			name = Release;
 		};
-		4AC3F1B6BA9800521CA3B98A /* Release */ = {
+		615A18EB3672C0E4AB72E6A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				EXCLUDED_SOURCE_FILE_NAMES = resting.json;
-				INFOPLIST_FILE = BaroLog/Resources/Info.plist;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_FILE = ArmLogWidgets/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.barolog;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.armlog.widgets;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1774,23 +1761,24 @@
 			};
 			name = Debug;
 		};
-		80DA4C397CFF84DF0E41C6EE /* Debug */ = {
+		8BBBCA2D3D0D0CE4BBE7CBBA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = BaroLog/Resources/Info.plist;
+				EXCLUDED_SOURCE_FILE_NAMES = resting.json;
+				INFOPLIST_FILE = ArmLog/Resources/Info.plist;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.barolog;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.armlog;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Debug;
+			name = Release;
 		};
 		8D29DDB2879DF3FD78994654 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1830,6 +1818,22 @@
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
+		};
+		B55E33AF5465795CBC95B14F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = ArmLogWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.personalscience.armlog.widgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
 		};
 		C1A7EF3995B90C5E7A92EC14 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1997,20 +2001,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		0C0233E0C992AA818CBC9918 /* Build configuration list for PBXNativeTarget "ArmLog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BCEA5678C133B0246E91984 /* Debug */,
+				8BBBCA2D3D0D0CE4BBE7CBBA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		16F4BEB9008823E312767FC2 /* Build configuration list for PBXNativeTarget "StrapLog" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8D29DDB2879DF3FD78994654 /* Debug */,
 				9D30E473F18971079B108A64 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		21F448A91A4A573F5D254D7B /* Build configuration list for PBXNativeTarget "BaroLog" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				80DA4C397CFF84DF0E41C6EE /* Debug */,
-				4AC3F1B6BA9800521CA3B98A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2042,11 +2046,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		934498B93A30C6AF1A87E5FE /* Build configuration list for PBXNativeTarget "BaroLogWidgets" */ = {
+		A80B73ABE27B48E20D474186 /* Build configuration list for PBXNativeTarget "ArmLogWidgets" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2C87CDB51D98691FAFA1E0E4 /* Debug */,
-				49267E975A63B9121A491608 /* Release */,
+				B55E33AF5465795CBC95B14F /* Debug */,
+				615A18EB3672C0E4AB72E6A9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2098,10 +2102,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		03CAFD0532AF68DBFC80F758 /* HRVKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = HRVKit;
-		};
 		1F50A2DF14FC2E71594AF61A /* PolarBleSdk */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = BE5EC883494510320C98141C /* XCRemoteSwiftPackageReference "polar-ble-sdk" */;
@@ -2111,10 +2111,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = HRVKit;
 		};
-		46BA00BED411CB5443FBCAFF /* StrapLogCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = StrapLogCore;
-		};
 		752221A3371BB6F53C1AA52D /* StrapLogCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StrapLogCore;
@@ -2123,19 +2119,27 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = StrapLogCore;
 		};
-		851CFB92693DA953204063CC /* StrapLogCore */ = {
+		A3270713BDD4CAF4981F45B2 /* StrapLogCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StrapLogCore;
 		};
-		D50F86AFC42BFF263E055971 /* ChileafKit */ = {
+		CA75591D7C27DE5BCB89985B /* HRVKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = ChileafKit;
+			productName = HRVKit;
 		};
 		DA5F5BE64ED9A4978504D76C /* StrapLogCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StrapLogCore;
 		};
+		DD5A539E739CD218BCBCBC43 /* ChileafKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ChileafKit;
+		};
 		F10167115C60B07BFA3A9C66 /* StrapLogCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StrapLogCore;
+		};
+		F21C05585A9C474B07A03471 /* StrapLogCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StrapLogCore;
 		};

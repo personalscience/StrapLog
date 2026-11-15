@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "032EB243C29A446C047FF74E"
-               BuildableName = "BaroLog.app"
-               BlueprintName = "BaroLog"
+               BlueprintIdentifier = "603FCCBE15535E368664A702"
+               BuildableName = "ArmLog.app"
+               BlueprintName = "ArmLog"
                ReferencedContainer = "container:StrapLog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "032EB243C29A446C047FF74E"
-            BuildableName = "BaroLog.app"
-            BlueprintName = "BaroLog"
+            BlueprintIdentifier = "603FCCBE15535E368664A702"
+            BuildableName = "ArmLog.app"
+            BlueprintName = "ArmLog"
             ReferencedContainer = "container:StrapLog.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -55,9 +55,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "032EB243C29A446C047FF74E"
-            BuildableName = "BaroLog.app"
-            BlueprintName = "BaroLog"
+            BlueprintIdentifier = "603FCCBE15535E368664A702"
+            BuildableName = "ArmLog.app"
+            BlueprintName = "ArmLog"
             ReferencedContainer = "container:StrapLog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -72,9 +72,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "032EB243C29A446C047FF74E"
-            BuildableName = "BaroLog.app"
-            BlueprintName = "BaroLog"
+            BlueprintIdentifier = "603FCCBE15535E368664A702"
+            BuildableName = "ArmLog.app"
+            BlueprintName = "ArmLog"
             ReferencedContainer = "container:StrapLog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
