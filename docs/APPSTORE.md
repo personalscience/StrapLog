@@ -78,7 +78,7 @@ StrapLog is a personal measurement tool, not a medical device. It does not diagn
 
 ## What's New (1.2)
 
-Not yet submitted for review.
+Build 115 submitted for review 2026-11-16.
 
 <!-- listing:whatsnew -->
 • The pacer has a screen of its own: tap the wind button to go back and forth while it keeps running.
