@@ -1,14 +1,26 @@
 import StrapLogCore
 import SwiftUI
 
-/// The pacer screen with no pacer running: pick a rate and an inhale:exhale ratio (both
-/// remembered, `PacerSettings`) and start it.
+/// The pacer screen with no pacer running: pick a rate (the model's `pacerRate`) and an
+/// inhale:exhale ratio (both remembered, `PacerSettings`) and start it. Shows your resonance
+/// rate once there is one, with a button to pace at it.
 struct PacerSetupView: View {
     let model: RecorderModel
-    @AppStorage(PacerSettings.rateKey) private var savedRate = BreathingPacer.defaultRate
     @AppStorage(PacerSettings.ratioKey) private var savedRatio = BreathRatio.default.rawValue
 
     var body: some View {
+        if model.capabilities.beatToBeat, let resonance = model.resonance {
+            HStack {
+                Text(Formats.resonanceRate(resonance)).font(.subheadline)
+                    .accessibilityIdentifier("resonanceRate")
+                Spacer()
+                if model.pacerRate != resonance.rate {
+                    Button("Use") { model.setPacerRate(resonance.rate) }
+                        .buttonStyle(.bordered)
+                        .accessibilityIdentifier("resonanceRateUse")
+                }
+            }
+        }
         Stepper(value: rate, in: BreathingPacer.rates, step: BreathingPacer.rateStep) {
             Text(Formats.rate(rate.wrappedValue)).monospacedDigit()
         }
@@ -31,6 +43,6 @@ struct PacerSetupView: View {
     }
 
     private var rate: Binding<Double> {
-        Binding(get: { PacerSettings.rate(savedRate) }, set: { savedRate = $0 })
+        Binding(get: { model.pacerRate }, set: { model.setPacerRate($0) })
     }
 }

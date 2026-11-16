@@ -20,6 +20,11 @@ struct TrainingPanel: View {
                         .buttonStyle(.bordered)
                         .accessibilityIdentifier("trainingCancel")
                 } else {
+                    if runner.promptsFinder {
+                        Text("Find your rate: the resonance finder paces you from 7 down to 4.5 breaths a minute and tells you where your heart rate swings most.")
+                            .font(.subheadline)
+                            .accessibilityIdentifier("trainingFindRate")
+                    }
                     Text("Eyes closed, hands free: a voice walks each step and records the \(AppBrand.current.device).")
                         .font(.footnote)
                         .foregroundStyle(.secondary)

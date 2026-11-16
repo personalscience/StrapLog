@@ -11,7 +11,6 @@ struct RecordingDetailView: View {
     @State private var exportURL: URL?
     @State private var busy = false
     @State private var viewport = ChartViewport(span: .all)
-    @AppStorage(PacerSettings.rateKey) private var pacerRate = BreathingPacer.defaultRate
 
     var body: some View {
         Group {
@@ -25,13 +24,13 @@ struct RecordingDetailView: View {
         .task(id: id) { show(await model.detail(id)) }
     }
 
-    /// Sets the pacer's remembered rate to the finder's answer (straplog-9fr.10).
-    private func useRateButton(_ rate: Double) -> some View {
-        let inUse = PacerSettings.rate(pacerRate) == rate
+    /// Makes the finder's answer your resonance rate and the pacer's rate (straplog-9fr.10).
+    private func useRateButton(_ result: ResonanceResult) -> some View {
+        let inUse = model.pacerRate == result.rate && model.resonance == result
         return Button {
-            pacerRate = rate
+            model.useResonance(result)
         } label: {
-            Label(Formats.resonanceUse(rate, inUse: inUse), systemImage: inUse ? "checkmark" : "wind")
+            Label(Formats.resonanceUse(result.rate, inUse: inUse), systemImage: inUse ? "checkmark" : "wind")
         }
         .disabled(inUse)
         .accessibilityIdentifier("resonanceUse")
@@ -58,7 +57,7 @@ struct RecordingDetailView: View {
                             .fontWeight(i == 0 ? .semibold : .regular)
                             .accessibilityIdentifier("resonanceRate-\(i)")
                     }
-                    useRateButton(ranking.best.rate)
+                    if let result = ResonanceResult(detail) { useRateButton(result) }
                 }
             }
             if model.capabilities.beatToBeat && !detail.rsa.isEmpty {

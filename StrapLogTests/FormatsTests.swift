@@ -215,4 +215,13 @@ struct FormatsTests {
         #expect(Formats.rsaWaiting(RSAReading(atMs: 0, trace: [], breaths: [], fit: fit, warmingUp: false),
                                    connected: true, device: "H10") == nil)
     }
+
+    @Test("your resonance rate, dated where it was found")
+    func resonanceRate() {
+        // 2025-11-15 09:46 UTC: still the 15th in Seattle, already the 16th at UTC+15.
+        let pacific = ResonanceResult(rate: 5.5, foundAtMs: 1_763_200_000_000, tzOffsetS: -28_800)
+        #expect(Formats.resonanceRate(pacific) == "Your rate: 5.5/min · found Nov 15")
+        let east = ResonanceResult(rate: 6, foundAtMs: 1_763_200_000_000, tzOffsetS: 54_000)
+        #expect(Formats.resonanceRate(east) == "Your rate: 6.0/min · found Nov 16")
+    }
 }

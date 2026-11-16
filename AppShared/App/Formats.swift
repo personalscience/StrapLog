@@ -314,6 +314,14 @@ enum Formats {
         String(format: "Largest swing at %.1f/min", ranking.best.rate)
     }
 
+    /// Your resonance rate on the pacer screen, e.g. `Your rate: 5.5/min · found Nov 15`.
+    static func resonanceRate(_ result: ResonanceResult) -> String {
+        let date = Date(timeIntervalSince1970: Double(result.foundAtMs) / 1000)
+        var style = Date.FormatStyle.dateTime.month(.abbreviated).day()
+        style.timeZone = TimeZone(secondsFromGMT: result.tzOffsetS) ?? .current
+        return String(format: "Your rate: %.1f/min · found ", result.rate) + date.formatted(style)
+    }
+
     /// The button that sets the pacer to the finder's answer, e.g. `Use 5.5/min for the pacer`,
     /// or `Pacer set to 5.5/min` once it is.
     static func resonanceUse(_ rate: Double, inUse: Bool) -> String {

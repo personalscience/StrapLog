@@ -30,6 +30,12 @@ public final class TrainingRunner {
 
     public var isRunning: Bool { script != nil }
 
+    /// Whether the Training panel prompts 'Find your rate': this app offers the resonance finder,
+    /// the sensor has beat-accurate RR, and there is no resonance rate yet (straplog-9fr.11).
+    public var promptsFinder: Bool {
+        scripts.contains(.resonance) && model.capabilities.beatToBeat && model.resonance == nil
+    }
+
     /// The scripts this app offers, in menu order.
     public let scripts: [TrainingScript]
 
@@ -109,6 +115,7 @@ public final class TrainingRunner {
             let finished = model.lastFinished?.id == id ? model.lastFinished : nil
             outcome = finished == nil ? "Finished, but the recording may not have saved." : "Saved."
             let ranking = model.capabilities.beatToBeat ? finished?.resonance : nil
+            if ranking != nil, let result = finished.flatMap(ResonanceResult.init) { model.recordResonance(result) }
             voice.say(finished == nil ? "Done, but check the phone." : Self.doneLine(ranking))
         } catch {
             // In a fresh task: a cancelled one makes GRDB's async reads throw, losing the save.

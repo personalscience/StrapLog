@@ -14,10 +14,17 @@ public enum PacerSettings {
     public static let breathKey = "pacerBreath"
     /// Whether the pacer screen shows heart rate following the breath (`RSATracker`); off by default.
     public static let rsaKey = "pacerRSA"
+    /// Your resonance rate and when it was found (`ResonanceResult`, JSON).
+    public static let resonanceKey = "resonanceResult"
 
     /// The saved inhale:exhale ratio; missing or unknown values read as the default.
     public static func ratio(_ stored: String?) -> BreathRatio {
         stored.flatMap(BreathRatio.init(rawValue:)) ?? .default
+    }
+
+    /// The saved rate, snapped; the default when none is saved.
+    public static func rate(in defaults: UserDefaults) -> Double {
+        (defaults.object(forKey: rateKey) as? Double).map(rate) ?? BreathingPacer.defaultRate
     }
 
     /// `stored` as a rate `BreathingPacer` accepts: snapped to `rateStep` within `rates`.

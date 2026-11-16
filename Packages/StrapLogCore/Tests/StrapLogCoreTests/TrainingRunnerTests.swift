@@ -8,12 +8,15 @@ import Testing
 struct TrainingRunnerTests {
     let database: StrapLogDatabase
     let clock = FakeClock()
+    let defaults: UserDefaults
     let model: RecorderModel
     let voice: VoiceSpy
 
     init() throws {
         database = try .inMemory()
-        model = RecorderModel(database: database, exports: ExportFolder(local: try scratchDirectory()), clock: clock)
+        defaults = try #require(UserDefaults(suiteName: "training-\(UUID())"))
+        model = RecorderModel(database: database, exports: ExportFolder(local: try scratchDirectory()), clock: clock,
+                              defaults: defaults)
         voice = VoiceSpy(clock: clock)
     }
 
@@ -118,6 +121,58 @@ struct TrainingRunnerTests {
         #expect(runner.outcome == "Saved.")
         #expect(model.lastFinished?.resonance?.best.rate == 5.5)
         #expect(voice.texts.last == "Done. Largest swing at five and a half. Recording saved.")
+        let rec = try #require(model.lastFinished?.recording)
+        let found = ResonanceResult(rate: 5.5, foundAtMs: rec.startedAtMs, tzOffsetS: rec.tzOffsetS)
+        #expect(model.resonance == found, "the answer becomes your rate")
+        #expect(ResonanceResult.load(from: defaults) == found, "across relaunches")
+        #expect(model.pacerRate == BreathingPacer.defaultRate, "the pacer's rate waits for 'Use'")
+        #expect(!runner.promptsFinder)
+    }
+
+    @Test("with no rate kept, launch takes the latest finder recording's answer (runs from before it was kept)")
+    func rateFromRecording() async throws {
+        await connect()
+        let sleeper = BreathingSleeper(clock: clock, model: model) { 12 - 4 * abs($0 - 5.5) }
+        _ = await run(.resonance, sleeper: sleeper)
+        let found = try #require(model.resonance)
+        let fresh = try #require(UserDefaults(suiteName: "training-\(UUID())"))
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: try scratchDirectory()),
+                                       clock: clock, defaults: fresh)
+        #expect(relaunched.resonance == nil)
+        await relaunched.launch()
+        #expect(relaunched.resonance == found)
+        #expect(ResonanceResult.load(from: fresh) == found, "kept from then on")
+        #expect(relaunched.pacerRate == BreathingPacer.defaultRate)
+    }
+
+    @Test("launch finds no rate without a finder recording that ranks")
+    func noRateFromOtherRecordings() async throws {
+        await connect()
+        _ = await run(.resonance)   // no beats: nothing ranks
+        let relaunched = RecorderModel(database: database, exports: ExportFolder(local: try scratchDirectory()),
+                                       clock: clock, defaults: try #require(UserDefaults(suiteName: "t-\(UUID())")))
+        await relaunched.launch()
+        #expect(relaunched.resonance == nil)
+    }
+
+    @Test("'Find your rate' shows with the finder offered, beat-accurate RR and no rate yet")
+    func findRatePrompt() async throws {
+        let strap = TrainingRunner(model: model, voice: voice, device: "strap", scripts: [.resonance], clock: clock)
+        let band = TrainingRunner(model: model, voice: voice, device: "armband", scripts: [.calibration, .rehearsal],
+                                  clock: clock)
+        await connect()
+        #expect(strap.promptsFinder)
+        #expect(!band.promptsFinder, "an app without the finder never prompts it")
+        model.recordResonance(ResonanceResult(rate: 6, foundAtMs: 0, tzOffsetS: 0))
+        #expect(!strap.promptsFinder)
+        let armband = FakeHeartSource(clock: clock, script: [.emit(.connected(deviceId: "band", firmware: nil))])
+        let fresh = try #require(UserDefaults(suiteName: "training-\(UUID())"))
+        let armModel = RecorderModel(database: database, exports: ExportFolder(local: try scratchDirectory()),
+                                     clock: clock, defaults: fresh)
+        await armModel.consume(HeartSourceSpy(armband, capabilities: SensorCapabilities(beatToBeat: false)))
+        let armRunner = TrainingRunner(model: armModel, voice: voice, device: "armband", scripts: [.resonance],
+                                       clock: clock)
+        #expect(!armRunner.promptsFinder, "no prompt without beat-accurate RR")
     }
 
     @Test("a run whose recording ranks rates ends by saying the rate with the largest swing")

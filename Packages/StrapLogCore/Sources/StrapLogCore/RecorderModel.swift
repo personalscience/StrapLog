@@ -66,6 +66,11 @@ public final class RecorderModel {
     /// Heart rate against the pacer's breath while the pacer screen shows it; nil otherwise.
     /// Fed with or without a recording; never written to the database.
     public private(set) var rsa: RSAReading?
+    /// The pacer setup's rate (`setPacerRate`), remembered in `PacerSettings.rateKey`.
+    public private(set) var pacerRate: Double
+    /// Your resonance rate (`recordResonance`, `useResonance`), remembered in
+    /// `PacerSettings.resonanceKey`.
+    public private(set) var resonance: ResonanceResult?
     public private(set) var recordings: [RecordingSummary] = []
     public private(set) var lastSnapshot: URL?
     /// The recording that just stopped, for Home's summary card; cleared by the next Start.
@@ -148,6 +153,8 @@ public final class RecorderModel {
         self.ecgOn = defaults.bool(forKey: PacerSettings.ecgKey)
         self.breathOn = defaults.bool(forKey: PacerSettings.breathKey)
         self.rsaOn = defaults.bool(forKey: PacerSettings.rsaKey)
+        self.pacerRate = PacerSettings.rate(in: defaults)
+        self.resonance = ResonanceResult.load(from: defaults)
         self.session = RecordingSession(database: database, clock: clock, appVersion: appVersion,
                                         markerPresets: markerPresets)
     }
@@ -158,6 +165,7 @@ public final class RecorderModel {
             if let id = try await session.resumeIfOpen() { try loadActive(id) }
             try refreshRecordings()
             try refreshRecentNotes()
+            try adoptFinderResultIfNone()
         }
         publishStatus()
     }
@@ -347,6 +355,31 @@ public final class RecorderModel {
         updateRSATracking()
     }
 
+    /// Sets the pacer setup's rate, snapped to what `BreathingPacer` takes, and remembers it.
+    public func setPacerRate(_ rate: Double) {
+        pacerRate = PacerSettings.rate(rate)
+        defaults.set(pacerRate, forKey: PacerSettings.rateKey)
+    }
+
+    /// Remembers `result` as your resonance rate, leaving the pacer's rate alone.
+    public func recordResonance(_ result: ResonanceResult) {
+        resonance = result
+        result.save(to: defaults)
+    }
+
+    /// With no resonance rate kept, takes the latest finder recording's answer (`latestFinder`).
+    private func adoptFinderResultIfNone() throws {
+        guard resonance == nil, let found = try database.writer.read({ try ResonanceResult.latestFinder(db: $0) })
+        else { return }
+        recordResonance(found)
+    }
+
+    /// Makes `result` your resonance rate and the pacer's rate ('Use X/min').
+    public func useResonance(_ result: ResonanceResult) {
+        recordResonance(result)
+        setPacerRate(result.rate)
+    }
+
     /// Scene phase changes. Going to the background while recording also exports a snapshot,
     /// since the app may not come back to the foreground before it is killed.
     /// Coming to the foreground also imports snapshots missing from the database.
@@ -373,6 +406,7 @@ public final class RecorderModel {
             for directory in folders { try await session.reindex(directory) }
             try refreshRecordings()
             try refreshRecentNotes()
+            try adoptFinderResultIfNone()
         }
     }
 
