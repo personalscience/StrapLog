@@ -57,7 +57,7 @@ SLEEP AND MORNING READINGS
 
 TRAINING ZONES
 • DFA alpha 1 refreshed every 20 seconds and coloured by intensity band, for finding your aerobic and anaerobic thresholds on a walk, ride or treadmill.
-• A breathing pacer for slow-breathing practice, any time, recording or not.
+• A breathing pacer for slow-breathing practice, any time, recording or not, with a hands-free finder for your resonance rate.
 
 MARKERS
 • Tap to stamp "lights out", "start stage 3" or "coffee" into the recording, from the app, the Lock Screen, the Dynamic Island, your Apple Watch or Siri.
@@ -85,6 +85,8 @@ Not yet submitted for review.
 • Pacer sound: an optional bell at each turn of the breath that fades as you breathe, so you can follow with the phone locked or in a pocket. Off by default. It plays alongside your music.
 • Heartbeat: see the strap's live ECG with the breath's turns marked, and a pulse on each beat to start a breath on.
 • Inhale:exhale ratio: 1:1, 4:6 or 1:2.
+• Heart follows breath: watch your heart rate rise and fall with each breath, with its swing and how closely it keeps time with the pacer.
+• Resonance finder: a 13-minute spoken session paces you from 7 down to 4.5 breaths a minute and tells you the rate where your heart swings most. The pacer remembers it as your rate.
 • New Breathing activity. Tap "Record this session" on the pacer to start recording without breaking the breath.
 • Recordings now store exactly what was paced: rate, inhale, exhale and start time.
 • Stopping a recording now offers Save, Save and share, or Delete.

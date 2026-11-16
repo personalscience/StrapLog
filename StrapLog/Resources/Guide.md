@@ -428,28 +428,67 @@ Only exercise as hard as is safe for you.
 
 ## Paced breathing
 
-Tap the **wind** button at the top of the screen to open the pacer screen and breathe along with a guide, any time, recording or not. Tap the wind button again to go back; the pacer keeps running behind Home or the recording, and the wind button stays filled while it does. It runs by default at **6 breaths per minute** (5 seconds in, 5 seconds out), adjustable from 4.5 to 10, and remembers the rate you chose. You can also pick an inhale:exhale ratio, **1:1**, **4:6** or **1:2**, and the pacer remembers it with the rate. The ratio is a preference. Studies disagree on whether a longer exhale changes HRV, so the file records which ratio you used and you can compare for yourself. The phone taps at each turn so you can close your eyes.
+Tap the **wind** button at the top of the screen to open the pacer screen and breathe along with a guide, any time, recording or not. Tap the wind button again to go back; the pacer keeps running behind Home or the recording, and the wind button stays filled while it does.
 
 ![The breathing pacer](guide-pacer.jpg)
 
-**Sound** is off by default. Turn it on to hear a bell at each turn: a higher one to breathe in, a lower one to breathe out, each fading across the whole half-breath. It plays with the phone locked or in a pocket. It plays alongside music and ignores the silent switch, so the Sound toggle is the mute. The phone's tap at each turn only works while the screen is on.
+### Resonance breathing in brief
 
-**Heartbeat (ECG)** shows the strap's live ECG under the pacer, with a dot on each beat and a line at each turn of the breath (teal in, indigo out). The flower pulses on each beat too, so you can start a breath on a beat. The ECG is for watching only: it isn't saved in the recording. The strap streams it only while the pacer screen is open with the app in front, which uses a little more strap battery. It shows a second or so late, because the strap sends ECG in batches.
+Your heart rate is never perfectly steady. Each time you breathe in it speeds up a little, and each time you breathe out it slows down. This rise and fall is called **respiratory sinus arrhythmia** (RSA), and it is a healthy sign: it shows the vagus nerve, the brake on your heart, working with every breath.
 
-**My breath** makes the flower follow your own breathing, read from the strap's motion sensor as your chest rises and falls. A dashed ring shows where the pacer wants you, so you can see whether you're ahead, behind or in step. For the first 20 seconds or so it shows "Finding your breath…" while it learns which way your chest moves, so follow the pacer closely at the start. After half a minute, **In step** shows how closely your breathing has followed the pacer over the last minute. Movement drowns out the breath: if you shift or turn, it asks you to hold still and then finds your breath again. Like the ECG, it works only with the pacer screen open and the app in front, and it uses a little more strap battery.
+A second rhythm runs alongside it. When your blood pressure rises, a reflex in your arteries (the *baroreflex*) slows the heart to bring it down, and the heart rate change itself nudges blood pressure a few seconds later. That loop has a natural period of about 10 seconds. If you breathe at the same period, about 6 breaths a minute, the two rhythms push together like a child on a swing pushed at just the right moment, and your heart rate swings far more than at any other pace. That pace is your **resonance rate**.
 
-**Heart follows breath** shows how your heart rate rises as you breathe in and falls as you breathe out (*respiratory sinus arrhythmia*), the swing that slow, resonance breathing aims to make as large as it can. The flower shrinks to make room for a chart of the last minute of heart rate, one dot per beat, over the pacer's breath (shaded: full lungs at the top). Below it:
+At resonance the RR chart turns into big, smooth waves, heart rate peaks just as you start to breathe out, and SDNN rises well above its usual resting value. Practising there exercises the baroreflex, which is why slow-breathing programmes (HRV biofeedback) aim for it, typically 10–20 minutes a day.
 
-- **Swing**: how far your heart rate rises and falls with the breath over the last four breaths, in beats per minute. Push this one up.
+Most people's resonance rate lies between **4.5 and 7 breaths a minute**. Taller people tend to sit at the slower end. It is personal, and fairly stable, so it is worth measuring once and checking now and then: see *Find your resonance rate* below.
+
+### Setting up the pacer
+
+- **Rate:** 6 breaths a minute by default (5 seconds in, 5 seconds out), adjustable from 4.5 to 10. The pacer remembers the rate you chose.
+- **Your rate:** once you have found your resonance rate, the pacer screen shows it above the rate (*Your rate: 5.5/min · found Nov 15*), with a **Use** button whenever the pacer is set to something else.
+- **Inhale to exhale:** **1:1**, **4:6** or **1:2**, remembered with the rate. The ratio is a preference. Studies disagree on whether a longer exhale changes HRV, so the file records which ratio you used and you can compare for yourself.
+- **Sound** is off by default. Turn it on to hear a bell at each turn: a higher one to breathe in, a lower one to breathe out, each fading across the whole half-breath. It plays with the phone locked or in a pocket. It plays alongside music and ignores the silent switch, so the Sound toggle is the mute. The phone also taps at each turn while the screen is on, so you can close your eyes.
+
+### Watching while you breathe
+
+Three switches under the pacer show what your body is doing. Each works only with the pacer screen open and the app in front, and each uses a little more strap battery.
+
+**Heartbeat (ECG)** shows the strap's live ECG under the pacer, with a dot on each beat and a line at each turn of the breath (teal in, indigo out). The flower pulses on each beat too, so you can start a breath on a beat. The ECG is for watching only: it isn't saved in the recording. It shows a second or so late, because the strap sends ECG in batches.
+
+**My breath** makes the flower follow your own breathing, read from the strap's motion sensor as your chest rises and falls. A dashed ring shows where the pacer wants you, so you can see whether you're ahead, behind or in step. For the first 20 seconds or so it shows "Finding your breath…" while it learns which way your chest moves, so follow the pacer closely at the start. After half a minute, **In step** shows how closely your breathing has followed the pacer over the last minute. Movement drowns out the breath: if you shift or turn, it asks you to hold still and then finds your breath again.
+
+**Heart follows breath** shows RSA as it happens. The flower shrinks to make room for a chart of the last minute of heart rate, one dot per beat, over the pacer's breath (shaded: full lungs at the top). Below it:
+
+- **Swing**: how far your heart rate rises and falls with the breath over the last four breaths, in beats per minute. Push this one up. It grows as you near your resonance rate, and is usually larger in younger hearts.
 - **Sync**: how much of your heart rate's movement keeps time with the pacer. High when your heart follows the breath; low when you hold your breath, breathe at another pace, or ignore the chimes.
-- **Where HR peaks**, against the turn from in to out. Green when it peaks about a tenth of a breath after the turn (1 second at 6 per minute), amber when near, red when far off, grey when sync is too low to judge.
+- **Where HR peaks**, against the turn from in to out. Green when it peaks about a tenth of a breath after the turn (1 second at 6 per minute), the timing you see at resonance; amber when near, red when far off, grey when sync is too low to judge.
 - One bar per breath: that breath's highest minus lowest heart rate. A gap means too few clean beats to measure.
 
-Swing and sync appear after four full breaths and follow your breathing about four breaths behind. They start afresh each time you change the rate. Nothing here is saved; the recording keeps every beat, so your analysis can work it out again.
+Swing and sync appear after four full breaths and follow your breathing about four breaths behind. They start afresh each time you change the rate. Nothing here is saved live; the recording keeps every beat, and the recording's page works the numbers out again afterwards.
 
-Around 6 breaths a minute, breathing and heart rate fall into step. The RR chart turns into big, smooth waves and SDNN rises well above its usual resting value.
+### Find your resonance rate
 
-Most people have a personal **resonance rate** between 4.5 and 7 breaths a minute. The **resonance finder** at the top of the pacer screen looks for yours, hands-free: with the strap connected and no recording open, tap **resonance · 13 min**, close your eyes, and follow the chimes. A voice steps the pacer from 7 breaths a minute down to 4.5, half a breath at a time, 2 minutes each, and StrapLog records the whole run and saves it. Open the recording afterwards: **Resonance** ranks the rates by swing, and the one at the top is your rate for that day. Run it again on another day; your rate should come out within half a breath a minute.
+The **resonance finder** in the **Training** panel at the top of the pacer screen finds your rate hands-free, by measuring your swing at six rates in one sitting. Until you have a rate, the panel says *Find your rate*.
+
+1. **Prepare.** Wet the strap and put it on. Sit upright in a chair, feet flat, hands resting in your lap, somewhere quiet. Not straight after a meal, coffee or exercise. Stop any open recording first; the finder makes its own.
+2. **Start.** Tap **resonance · 13 min** and close your eyes. The bells sound at each turn during the run even with **Sound** off, and a voice tells you each step, through the phone's speaker or your headphones. You can lock the phone.
+3. **Breathe.** A voice steps the pacer from **7 breaths a minute** down to **6.5, 6, 5.5, 5 and 4.5**, 2 minutes each, announcing each rate. Follow the chimes through the nose if you can, into the belly, gently. Slow breathing does not mean deep breathing: if you feel light-headed or tingly, breathe less air, not faster. Keep still and don't talk.
+4. **Listen for the answer.** At the end the voice says, for example, *"Done. Largest swing at five and a half. Recording saved."* Throughout, the Training panel shows the step and the time left in it; **Cancel training** stops early and saves what was recorded so far.
+
+StrapLog keeps the answer as **your rate** and offers it on the pacer screen from then on.
+
+**Check it on another day.** A single run can be thrown off by a restless night, a big meal or a wandering mind. Run the finder two or three times, on different days, at a similar time. Your rate should come out within half a breath a minute each time. If two neighbouring rates trade places, either one is fine; pick the one with the higher sync, or simply the one you find more comfortable.
+
+**Then practise.** Pace at your rate for 10–20 minutes, once or twice a day, ideally with **Heart follows breath** on so you can watch the swing grow. Re-run the finder every few months, or if your swing at your usual rate starts to look smaller.
+
+### What the recording shows
+
+Open any recording that ran the pacer to see how your heart followed it.
+
+- **Heart follows breath** lists each stretch of pacing at one rate (*6.0/min · 4:00*): its **swing**, **sync**, and how many of its breaths had enough clean beats to count. Use it to compare sessions, ratios or times of day.
+- **Resonance** appears when a recording paced two or more rates, as the finder does. It ranks the rates by swing, largest first (*Largest swing at 5.5/min*), with each rate's sync beside it. **Use 5.5/min for the pacer** makes that rate your rate and sets the pacer to it.
+
+### Recording the pacer
 
 The pacer is saved only while a recording is open. Start one while pacing and the recording notes the pacer from its first second; stop the recording and the pacer keeps going. While the pacer runs with no recording open, **Record this session** starts a **Breathing** recording without interrupting the breath. The recording stores the rate, the inhale and exhale lengths and the moment the pacer started, so your analysis knows exactly what was paced. Only **Stop pacer** stops it.
 
