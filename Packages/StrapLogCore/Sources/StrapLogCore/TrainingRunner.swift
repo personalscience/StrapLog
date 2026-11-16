@@ -30,10 +30,10 @@ public final class TrainingRunner {
 
     public var isRunning: Bool { script != nil }
 
-    /// Whether the Training panel prompts 'Find your rate': this app offers the resonance finder,
+    /// Whether the Training panel prompts 'Find your rate': this app offers a script that finds it,
     /// the sensor has beat-accurate RR, and there is no resonance rate yet (straplog-9fr.11).
     public var promptsFinder: Bool {
-        scripts.contains(.resonance) && model.capabilities.beatToBeat && model.resonance == nil
+        scripts.contains(where: \.findsResonance) && model.capabilities.beatToBeat && model.resonance == nil
     }
 
     /// The scripts this app offers, in menu order.
@@ -114,7 +114,7 @@ public final class TrainingRunner {
             await model.stop(.save)
             let finished = model.lastFinished?.id == id ? model.lastFinished : nil
             outcome = finished == nil ? "Finished, but the recording may not have saved." : "Saved."
-            let ranking = model.capabilities.beatToBeat ? finished?.resonance : nil
+            let ranking = script.findsResonance && model.capabilities.beatToBeat ? finished?.resonance : nil
             if ranking != nil, let result = finished.flatMap(ResonanceResult.init) { model.recordResonance(result) }
             voice.say(finished == nil ? "Done, but check the phone." : Self.doneLine(ranking))
         } catch {

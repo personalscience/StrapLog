@@ -129,6 +129,17 @@ struct TrainingRunnerTests {
         #expect(!runner.promptsFinder)
     }
 
+    @Test("a calibration run ranks its rates on the detail screen but does not claim your rate")
+    func calibrationKeepsNoRate() async throws {
+        await connect()
+        let sleeper = BreathingSleeper(clock: clock, model: model) { 12 - 4 * abs($0 - 5.5) }
+        _ = await run(.calibration, sleeper: sleeper)
+        #expect(model.lastFinished?.resonance != nil, "its paced steps do rank")
+        #expect(voice.texts.last == "Done. Recording saved.")
+        #expect(model.resonance == nil)
+        #expect(TrainingScript.all.filter(\.findsResonance) == [.resonance])
+    }
+
     @Test("with no rate kept, launch takes the latest finder recording's answer (runs from before it was kept)")
     func rateFromRecording() async throws {
         await connect()

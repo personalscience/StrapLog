@@ -9,13 +9,19 @@ public struct TrainingScript: Sendable, Equatable {
     /// Whether the run's recording keeps every accelerometer sample (`acc`), for replaying the
     /// breath tracker; only the armband scripts need it.
     public let rawMotion: Bool
+    /// Whether a run's answer is your resonance rate: said at the end and kept
+    /// (`TrainingRunner`). Only the resonance finder; other scripts that pace several rates
+    /// (the calibration) rank them on the detail screen but do not claim to have found it.
+    public let findsResonance: Bool
     public let steps: [TrainingStep]
 
-    public init(name: String, version: Int, recordingName: String, rawMotion: Bool, steps: [TrainingStep]) {
+    public init(name: String, version: Int, recordingName: String, rawMotion: Bool, findsResonance: Bool = false,
+                steps: [TrainingStep]) {
         self.name = name
         self.version = version
         self.recordingName = recordingName
         self.rawMotion = rawMotion
+        self.findsResonance = findsResonance
         self.steps = steps
     }
 
@@ -81,7 +87,7 @@ public struct TrainingScript: Sendable, Equatable {
     /// down to 4.5 /min in 0.5 steps, each a whole number of breaths. Afterwards the recording's
     /// pacer runs are ranked by median swing (`ResonanceRanking`) on its detail screen.
     public static let resonance = TrainingScript(name: "resonance", version: 1, recordingName: "resonance finder",
-                                                 rawMotion: false, steps: [
+                                                 rawMotion: false, findsResonance: true, steps: [
         intro("Resonance finder. Sit still and follow the chimes. The rate slows every two minutes."),
         .paced("follow_7", say: "Seven breaths a minute.", rate: 7, seconds: 120),
         .paced("follow_6.5", say: "Six and a half.", rate: 6.5, seconds: 120),
