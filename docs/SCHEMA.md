@@ -142,7 +142,7 @@ UPDATE meta SET value = '6' WHERE key = 'schema_version';
 
 ## Columns that need explaining
 
-- `beat.rr_1024`: RR as sent by the H10, in 1/1024 s; canonical. `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
+- `beat.rr_1024`: RR in 1/1024 s, as the H10 sends it; canonical. The armband sends whole ms and ArmLog converts on arrival (`ArmbandTranslator`, `BeatTiming.rr1024(fromMs:)`, ≤ 0.49 ms off); ArmLog builds before 2026-11-16 stored the ms unconverted, so their beats are 2.4% short (straplog-d1h; those recordings were discarded, not migrated). `rr_ms = rr_1024 * 1000 / 1024` (exact in floating point).
 - `beat.t_end_ms_est = received_at_ms − round(Σ later rr_1024 in the same notification × 1000/1024)`. The H10 sends no beat timestamps, so this is an estimate anchored on phone receipt.
 - `beat.idx`: position within the notification, oldest first. `notification.n_rr == count(beat)` always.
 - `notification.contact`: 1/0, NULL when the sensor does not report skin contact.

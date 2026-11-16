@@ -27,8 +27,20 @@ struct ArmbandTranslatorTests {
         #expect(acc[0] == AccSample(deviceNs: 0, x: -359, y: 546, z: 703), "counts → mg at 4096/g")
         #expect(acc[1].deviceNs == 20_000_000, "even 20 ms spacing at 50 Hz")
         #expect(ppg.map(\.counter) == [0, 1, 2] && ppg.map(\.receivedAtMs) == [1000, 1031, 1062])
-        #expect(bpm == 72 && rr == [0x03a1])
+        #expect(bpm == 72 && rr == [951], "the band's 929 ms (0x03a1) as 1/1024 s")
         #expect(t.heartRate(hex("0049"), atMs: 2100).count == 1, "nothing left batched")
+    }
+
+    @Test("RR arrives in ms and leaves in 1/1024 s, within half a millisecond (straplog-d1h)")
+    func rrUnits() {
+        var t = ArmbandTranslator()
+        let ms = [0x03a1, 0x037a, 0x044d, 0x0382]
+        guard case .heartRate(_, _, let rr) = t.heartRate(hex("1048a1037a034d048203"), atMs: 0).last?.payload else {
+            Issue.record("no heart rate"); return
+        }
+        #expect(rr.count == ms.count)
+        for (sent, stored) in zip(ms, rr) { #expect(abs(BeatTiming.ms(fromRR1024: stored) - Double(sent)) < 0.5) }
+        #expect(BeatTiming.rr1024(fromMs: 1000) == 1024)
     }
 
     @Test("a full batch flushes without waiting for HR")

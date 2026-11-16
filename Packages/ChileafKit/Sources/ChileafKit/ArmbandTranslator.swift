@@ -32,10 +32,12 @@ public struct ArmbandTranslator: Sendable {
         dedupe.reset()
     }
 
-    /// One 0x2A37 notification: flushes the batches first, so stored times stay in order.
+    /// One 0x2A37 notification: flushes the batches first, so stored times stay in order. The
+    /// band's RR milliseconds become the 1/1024 s every `SensorEvent` carries.
     public mutating func heartRate(_ bytes: [UInt8], atMs: Int64) -> [SensorEvent] {
         guard let m = HeartRateMeasurement(bytes) else { return flush() }
-        return flush() + [SensorEvent(atMs: atMs, .heartRate(bpm: m.bpm, contact: m.contact, rr1024: m.rr1024))]
+        let rr1024 = m.rrMs.map(BeatTiming.rr1024(fromMs:))
+        return flush() + [SensorEvent(atMs: atMs, .heartRate(bpm: m.bpm, contact: m.contact, rr1024: rr1024))]
     }
 
     /// One `aae28f01` notification. Accelerometer samples are batched; a temperature passes

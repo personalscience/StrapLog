@@ -1,6 +1,12 @@
 /// Per-beat arithmetic for an HR notification. The H10 sends RR in 1/1024 s with
 /// no device timestamp, so each beat's end time is estimated back from receipt.
 public enum BeatTiming {
+    /// Milliseconds to the nearest 1/1024 s, for a sensor that sends RR in ms (the armband,
+    /// straplog-d1h); off by at most 0.49 ms.
+    public static func rr1024(fromMs ms: Int) -> Int {
+        Int((Double(ms) * 1024 / 1000).rounded())
+    }
+
     /// `rr_1024 * 1000 / 1024`. Exact in binary floating point (÷1024 is a power of two).
     public static func ms(fromRR1024 rr: Int) -> Double {
         Double(rr) * 1000 / 1024

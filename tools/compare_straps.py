@@ -192,13 +192,9 @@ def main():
     ap.add_argument("--ref", required=True, type=Path)
     ap.add_argument("--test", required=True, type=Path)
     ap.add_argument("--out", type=Path)
-    ap.add_argument("--test-rr-ms", action="store_true",
-                    help="test device's stored rr_1024 is really milliseconds: rescale by 1024/1000")
     a = ap.parse_args()
 
     R, T = load(a.ref), load(a.test)
-    if a.test_rr_ms:
-        T["beats"]["rr_ms"] *= 1024 / 1000
     tz = R["tz"]
     out = a.out or Path("build/compare") / pd.to_datetime(R["t0"] + tz * 1000, unit="ms").strftime("%Y-%m-%d")
     out.mkdir(parents=True, exist_ok=True)
@@ -207,8 +203,7 @@ def main():
     tt, tr = rebuild_times(T["beats"]), T["beats"]["rr_ms"].to_numpy()
     t0, t1 = max(R["t0"], T["t0"]) + 60_000, min(R["t1"], T["t1"]) - 60_000
     lines = [f"# {R['device']} (ref) vs {T['device']} (test) — {R['name']}",
-             f"Overlap {local(t0, tz)}–{local(t1, tz)} ({(t1 - t0) / 3.6e6:.2f} h)"
-             + ("; test RR rescaled ×1024/1000 (read as ms)" if a.test_rr_ms else ""), ""]
+             f"Overlap {local(t0, tz)}–{local(t1, tz)} ({(t1 - t0) / 3.6e6:.2f} h)", ""]
 
     # lag, coarse then per-hour refinement on matched pairs
     lag = xcorr_lag(rt, rr, tt, tr, t0, t1)
